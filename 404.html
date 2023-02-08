@@ -1,0 +1,114 @@
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="novel.css">
+
+    <title>404 ERROR</title>
+
+  <style>
+    table {
+        width: 500px;
+        height: 500px;
+        border-collapse: collapse;
+        margin: 0 auto;
+      }
+      td {
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+        text-align: center;
+      }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="">My novel site</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="../index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="diba-yanbixiaosheng.html">帝霸</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="../index.html">Pricing</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav> 
+      <br><br>
+  <h1>404 Page Not Found</h1>
+  <p>不好意思，您所查找的頁面不存在。</p>
+  <p>不如玩點五子棋，消磨時間：</p>
+
+  <table align="center" id="board">
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+  <script>
+    var board = document.getElementById("board");
+    var turn = "black";
+    board.addEventListener("click", function(event) {
+      var cell = event.target;
+      if (cell.tagName === "TD" && !cell.innerHTML) {
+        cell.style.backgroundColor = turn;
+        cell.innerHTML = turn === "black" ? "●" : "○";
+        turn = turn === "black" ? "white" : "black";
+      }
+    });
+  </script>
+  <script>
+    var table = document.getElementsByTagName("td");
+    for (var i = 0; i < table.length; i++) {
+      table[i].addEventListener("click", function() {
+        this.style.backgroundColor = "black";
+      });
+    }
+  </script>
+</body>
+</html>
