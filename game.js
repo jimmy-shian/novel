@@ -1,72 +1,41 @@
-// game state variables
-let gameBoard = ["", "", "", "", "", "", "", "", ""];
-let turn = "O";
-let gameOver = false;
-let moves = 0;
-let startTime;
+const cards = ['A', 'B', 'C', 'D', 'E', 'F'];
+const game = document.getElementById('game');
+let flippedCards = [];
+let lockBoard = false;
 
-// winning combinations
-const combinations = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6]
-];
+function createCard(card) {
+  let div = document.createElement('div');
+  div.classList.add('card');
+  div.dataset.card = card;
+  div.innerHTML = card;
+  game.appendChild(div);
 
-// update game state when a box is clicked
-const boxClicked = (index) => {
-  // do not allow moves on a filled box or after game is over
-  if (gameBoard[index] || gameOver) return;
-  
-  gameBoard[index] = turn;
-  moves++;
-  
-  // update game board
-  document.getElementById(index).innerHTML = turn;
-  
-  // check for win
-  for (let i = 0; i < combinations.length; i++) {
-    const [a, b, c] = combinations[i];
-    if (gameBoard[a] === turn && gameBoard[b] === turn && gameBoard[c] === turn) {
-      gameOver = true;
-      displayMessage(`${turn} wins!`);
+  div.addEventListener('click', function () {
+    if (lockBoard) return;
+    if (this === flippedCards[0]) return;
+
+    this.classList.add('flipped');
+
+    if (flippedCards.length === 0) {
+      flippedCards[0] = this;
       return;
+    } else {
+      lockBoard = true;
+      flippedCards[1] = this;
+
+      if (flippedCards[0].dataset.card === flippedCards[1].dataset.card) {
+        flippedCards = [];
+        lockBoard = false;
+      } else {
+        setTimeout(() => {
+          flippedCards.forEach(card => card.classList.remove('flipped'));
+          flippedCards = [];
+          lockBoard = false;
+        }, 1000);
+      }
     }
-  }
-  
-  // check for draw
-  if (moves === 9) {
-    gameOver = true;
-    displayMessage("It's a draw.");
-    return;
-  }
-  
-  // switch turn
-  turn = turn === "O" ? "X" : "O";
-  displayMessage(`${turn}'s turn.`);
-};
+  });
+}
 
-// display message to user
-const displayMessage = (message) => {
-  document.getElementById("message").innerHTML = message;
-};
-
-// reset game
-const reset = () => {
-  gameBoard = ["", "", "", "", "", "", "", "", ""];
-  turn = "O";
-  gameOver = false;
-  moves = 0;
-  startTime = new Date();
-  for (let i = 0; i < 9; i++) {
-    document.getElementById(i).innerHTML = "";
-  }
-  displayMessage(`${turn} starts.`);
-};
-
-// start game
-reset();
+cards.forEach(card => createCard(card));
+cards.forEach(card => createCard(card));

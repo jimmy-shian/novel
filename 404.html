@@ -1,148 +1,87 @@
+
 <html>
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="novel.css">
-
-    <!-- <title>404 ERROR</title> -->
-
-  <style>
-    table {
-        width: 500px;
-        height: 500px;
-        border-collapse: collapse;
-        margin: 0 auto;
-      }
-      td {
-        width: 50px;
-        height: 50px;
-        border: 1px solid black;
-        text-align: center;
-      }
-  </style>
-</head>
-<body>
-  <title>404 ERROR</title>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="">My novel site</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="../index.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="diba-yanbixiaosheng.html">帝霸</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="../index.html">Pricing</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav> 
-      <br><br>
-  <h1>404 Page Not Found</h1>
-  <p>不好意思，您所查找的頁面不存在。</p>
-  <p>不如玩點五子棋，消磨時間：</p>
-  <!DOCTYPE html>
-  <html>
   <head>
-    <style>
-      table {
-        border-collapse: collapse;
-        width: 300px;
-        height: 300px;
-        margin: 0 auto;
-      }
-      td {
-        width: 100px;
-        height: 100px;
-        text-align: center;
-        vertical-align: middle;
-        border: 1px solid black;
-        background-color: yellow;
-      }
-      .warning {
-        color: red;
-        text-align: center;
-        margin-top: 20px;
-      }
-      .win {
-        color: green;
-        text-align: center;
-        font-size: 20px;
-        margin-top: 20px;
-      }
-    </style>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+      <link rel="stylesheet" type="text/css" href="novel.css">
+      <style>
+        body {
+
+          background-repeat: no-repeat;
+          background-size: cover;
+          text-align: center;
+          font-family: sans-serif;
+        }
+        h1 {
+          font-size: 280%;
+          padding: 0 10px;
+          color: rgb(172, 172, 172);
+          margin-top: 200px;
+        }
+        p {
+          padding: 0 10px;
+          font-size: 100%;
+          color: rgb(110, 110, 110);
+          margin-top: 50px;
+        }
+        pre {
+          white-space: pre-wrap;
+          overflow-wrap: break-word;
+          color: rgb(169, 165, 165);
+          max-width: 500px;
+        }
+      </style>
   </head>
   <body>
-    <table id="board">
-      <tr>
-        <td id="0"></td>
-        <td id="1"></td>
-        <td id="2"></td>
-      </tr>
-      <tr>
-        <td id="3"></td>
-        <td id="4"></td>
-        <td id="5"></td>
-      </tr>
-      <tr>
-        <td id="6"></td>
-        <td id="7"></td>
-        <td id="8"></td>
-      </tr>
-    </table>
-    <div class="warning" id="warning"></div>
-    <div class="win" id="win"></div>
-    <button id="reset">重置</button>
-  
-    <script>
-      const board = document.getElementById("board");
-      const resetBtn = document.getElementById("reset");
-      const warning = document.getElementById("warning");
-      const win = document.getElementById("win");
-  
-      let cells = board.getElementsByTagName("td");
-      let currentPlayer = "O";
-      let startTime;
-      let endTime;
-      let gameCount = 0;
-  
-      for (let i = 0; i < cells.length; i++) {
-        cells[i].addEventListener("click", function() {
-          if (this.innerHTML === "") {
-            this.innerHTML = currentPlayer;
-            checkWin();
-            switchPlayer();
-          } else {
-            warning.innerHTML = "不可以下在同一個位置";
-          }
-        });
-      }
-  
-      function checkWin() {
-        let cell0 = cells[0].innerHTML;
-        let cell1 = cells[1].innerHTML;
-        let cell2 = cells[2].innerHTML;
-        let cell3 = cells[3].innerHTML;
-        let cell4 = cells[4].innerHTML;
-        let cell5 = cells[5].innerHTML;
-        let cell6 = cells[6].innerHTML;
-        let cell7 = cells[7].innerHTML;
-        let cell8 = cells[8].innerHTML;
-      </script>
-  
+    <title>404 ERROR</title>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="">My novel site</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="diba-yanbixiaosheng/diba-yanbixiaosheng.html">帝霸</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html">Pricing</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav> 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
-  </body>
-</html>
+        
+        <h1>Arrr! Looks like we've lost the page ye be lookin' for!</h1>
+        <p>Don't fret, matey! Our librarian be searchin' high and low for it amongst the many tomes and volumes on our shelves.</p>
 
+        <br>
+        <center>
+          <pre>
+________ ________
+ _/          Y          \_
+ //   there   |   is no   \\
+     // serch page |  here ~ ~  \\    
+      //____________.|.____________\\     
+ `-------------`-'-------------'
+          </pre>          
+          <p style="margin-top: 25px;  color: rgb(78, 78, 78);">
+            ASCII Art by Original Unknown Diddled by David Issel
+          </p>
+        </center>
+
+          <div class="spacer"></div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    </body>
+  </html>
+  
+  
