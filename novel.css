@@ -1,14 +1,14 @@
 body {
-    background-color: rgb(21, 21, 21);
-    color: rgb(231, 231, 231);
+    background-color: #393939;
+    color: rgb(160, 160, 160);
     }
     .spacer {
         height: 50px;
         margin-bottom: 50px;
     }
 .catalogue_container {
-        background-color:  rgb(41, 41, 41);
-        color:  rgb(213,206,205);
+        background-color: #393939;
+        color: rgb(160, 160, 160);
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -21,12 +21,12 @@ body {
     justify-content: flex-end;
     padding: 0 25px;
     font-size: 200%;
-    background-color: rgb(21, 21, 21);
-    color: rgb(231, 231, 231);
+    background-color: #393939;
+    color: rgb(160, 160, 160);
     }
     .container {
-    background-color:  rgb(41, 41, 41);
-    color:  rgb(213,206,205);
+    background-color: #393939;
+    color: rgb(160, 160, 160);
     border: 1px solid rgb(209, 211, 162); /* 加入外框 */
     padding: 8px; /* 加入內間距 */
     border-radius: 10px; /* 設置圓弧半徑 */
@@ -56,12 +56,83 @@ body {
     .target:hover {
     background-color: #F0F0F0;
     }
-    
+    .card {
+        position: relative;
+        width: 50%;
+        margin: 50px auto;
+        text-align: center;
+        background: linear-gradient(to bottom, #ba8359, #73411d);
+        background-image:
+        radial-gradient(circle at top left, transparent 5%, #73411d 20%),
+        radial-gradient(circle at top right, transparent 20%, #73411d 20%),
+        radial-gradient(circle at bottom left, transparent 35%, #73411d 20%),
+        radial-gradient(circle at bottom right, transparent 40%, #73411d 20%),
+        linear-gradient(#73411d, #73411d) repeat 0 0;
+        color: white;
+        border: 1.5px solid white;
+        z-index: 0;
+        /* border-radius: 20px; */
+
+      }
+      .card:before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0px 55px 55px 0px;
+        border-color: transparent #fff #393939 transparent;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        transform: rotate(90deg);
+        box-shadow: 5px 0px 0px #ccc;
+        z-index: 1;
+      }
+      
+      .card:after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 70px 70px 0;
+        border-color: transparent #393939 #fff transparent;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        transform: rotate(90deg);
+        box-shadow: 0px 5px 0px #ccc;
+        z-index: 1;
+
+      }
+      .card-in {
+        position: relative;
+        width: 100%;
+        margin: 4vh auto;
+        border-style: hidden;
+        text-align: start;
+        margin-left: 10vh;
+        padding: 20px;
+        background-color: transparent;
+        color: rgb(223, 223, 223);
+        z-index: 0;
+        /* border-radius: 20px; */
+
+      }          
+      
+      .btn-change {
+        background-color: rgb(241, 183, 75);
+        transition: all 0.3s ease-in-out;
+        border: 1px solid white;
+      }
+      
+      .btn-change:hover {
+        box-shadow: 0 0 24px rgb(255, 112, 112);
+      }
 
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
     .catalogue_container {
-        background-color:  rgb(41, 41, 41);
-        color:  rgb(213,206,205);
+        background-color: #393939;
+        color: rgb(160, 160, 160);
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -73,8 +144,8 @@ body {
         justify-content: flex-end;
         padding: 0 25px;
         font-size: 200%;
-        background-color: rgb(21, 21, 21);
-        color: rgb(231, 231, 231);
+        background-color: #393939;
+        color: rgb(160, 160, 160);
         }
     .container {
         flex-direction: row; /* 改变布局方向为水平布局 /
@@ -83,8 +154,8 @@ body {
         }
         img {
         justify-content: flex-start; /* 靠右對齊 */
-        margin-left: 10%; /* 距離右邊邊界23px */
-        width: 10%; /* 图像的宽度 */
+        margin-left: 8%; /* 距離右邊邊界23px */
+        width: 6vh; /* 图像的宽度 */
         height: auto; /* 自动计算图像的高度 */
         }
         .text {
@@ -97,7 +168,26 @@ body {
         height: 25px;
         margin-bottom: 50px;
     }
-        
+    
+    .card {
+        width: 90%;
+      }
+      .card-in{
+        width: 90%;
+        border-style: hidden;
+        margin-left: 3vh;
+        padding: 10px;
+
+      }
+      .btn-change {
+        background-color: rgb(241, 183, 75);
+        transition: all 0.3s ease-in-out;
+        border: 1px solid white;
+      }
+      
+      .btn-change:hover {
+        box-shadow: 0 0 24px rgb(255, 112, 112);
+      }
     }
 
     
