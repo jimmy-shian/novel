@@ -48,9 +48,11 @@
                         耳根
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="xianni-ergen/xianni-ergen.html">仙逆</a></li>
+                        <li><a class="dropdown-item" href="qiumo-ergen/qiumo-ergen.html">求魔</a></li>
+                        <li><a class="dropdown-item" href="woyufengtian-ergen/woyufengtian-ergen.html">我欲封天</a></li>
                         <li><a class="dropdown-item" href="yinianyongheng-ergen/yinianyongheng-ergen.html">一念永恆</a></li>
                         <li><a class="dropdown-item" href="sancunrenjian-ergen/sancunrenjian-ergen.html">三寸人間</a></li>
-                        <li><a class="dropdown-item" href="qiumo-ergen/qiumo-ergen.html">求魔</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
@@ -63,7 +65,7 @@
     <!-- <center> -->
       <div class="card text-center mx-auto mt-5">
         <div class="card-body">
-          <button class="btn btn-change" id="changeBtn">Translate to Chinese</button>
+          <button  class="btn btn-change" id="changeBtn">Translate to Chinese</button>
           <div class="card-in">
           <p id="cardText" class="card-text">
             <h5 class="card-title">Enter the World of Web Novels</h5>
@@ -101,6 +103,8 @@
         
         changeBtn.addEventListener('click', function() {
           if (isChanged === '0') {
+            changeBtn.innerHTML = `翻譯成英文
+            `;
             cardText.innerHTML = `
             <br>
             <h4 class="card-title">進入網絡小說世界~</h4>
@@ -128,6 +132,8 @@
             isChanged = '1';
 
           } else {
+            changeBtn.innerHTML = `Translate to Chinese
+            `;
             cardText.innerHTML = `
             `;
             isChanged = '0';
