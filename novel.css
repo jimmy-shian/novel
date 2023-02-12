@@ -128,7 +128,43 @@ body {
       .btn-change:hover {
         box-shadow: 0 0 24px rgb(255, 112, 112);
       }
+    .title-table {
+      padding: 100vh;
+      width: 90%;
+      border-collapse: collapse;
+      margin: auto;
+    }
+    .title-td {
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .body-404 {
 
+      background-repeat: no-repeat;
+      background-size: cover;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .h1-404 {
+      font-size: 280%;
+      padding: 0 10px;
+      color: rgb(172, 172, 172);
+      margin-top: 200px;
+    }
+    .p-404 {
+      padding: 0 10px;
+      font-size: 100%;
+      color: rgb(110, 110, 110);
+      margin-top: 50px;
+    }
+    .pre-404 {
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      color: rgb(169, 165, 165);
+      max-width: 500px;
+    }
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
     .catalogue_container {
         background-color: #393939;
@@ -169,7 +205,7 @@ body {
         margin-bottom: 50px;
     }
     
-    .card {
+    .card-index {
         width: 90%;
       }
       .card-in{
@@ -187,6 +223,19 @@ body {
       
       .btn-change:hover {
         box-shadow: 0 0 24px rgb(255, 112, 112);
+      }
+      
+      .title-table {
+        width: 100%;
+      }
+      .title-td {
+        max-width: 150px;
+        height: 45px;
+        overflow: hidden;
+        margin-left: 20%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
       }
     }
 

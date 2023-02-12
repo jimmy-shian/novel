@@ -15,31 +15,9 @@
         <title>The Best Web Novel Reading Site!</title>
 
         <style>
-          .title-table {
-            padding: 100vh;
-            width: 90%;
-            border-collapse: collapse;
-            margin: auto;
-          }
-          .title-td {
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
+
           @media only screen and (max-width: 767px) {
-            .title-table {
-              width: 100%;
-            }
-            .title-td {
-              max-width: 150px;
-              height: 45px;
-              overflow: hidden;
-              margin-left: 20%;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              display: block;
-            }
+
           }
         </style>
 
