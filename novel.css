@@ -56,7 +56,7 @@ body {
     .target:hover {
     background-color: #F0F0F0;
     }
-    .card {
+    .card-index {
         position: relative;
         width: 50%;
         margin: 50px auto;
@@ -74,7 +74,7 @@ body {
         /* border-radius: 20px; */
 
       }
-      .card:before {
+      .card-index:before {
         content: "";
         width: 0;
         height: 0;
@@ -89,7 +89,7 @@ body {
         z-index: 1;
       }
       
-      .card:after {
+      .card-index:after {
         content: "";
         width: 0;
         height: 0;

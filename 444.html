@@ -47,6 +47,29 @@
     <div id="time">遊戲時間：0 秒</div>
     <div id="turns">遊戲次數：0 次</div>
 
+    <div id="content">
+      這段代碼會在網頁加載時發送一個請求到 "file.txt"，並在成功回應時將內容顯示到 HTML 頁面的 content 區域。您可以將 "file.txt" 替換為您的檔案路徑。
+    </div>
+
+    <script>
+    const contentDiv = document.getElementById("content");
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "index.txt", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        contentDiv.innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send();
+    </script>
+    
+    
+    
+    
+    
+    
+
     <script>
         let currentPlayer = "O";
         let gameBoard = ["", "", "", "", "", "", "", "", ""];
@@ -142,7 +165,7 @@
             
             // start the game
             resetGame();
-            })();      
+            
         </script>
 
     </body>
