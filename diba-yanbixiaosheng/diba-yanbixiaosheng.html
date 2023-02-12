@@ -70,6 +70,10 @@
                   if (event.keyCode === 13) {
                     form.submit();
                   }
+                document.querySelector('#numberInput').addEventListener('keyup', function(event) {
+                  if (event.keyCode === 10) {
+                    form.submit();
+                  }
                 });
               </script>
             </center>
