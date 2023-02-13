@@ -45,8 +45,16 @@ let isChanged = '0';
         isChanged = '0';
         }
     });
-
+    const contentDiv = document.getElementById("content-nav");
     
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "nav.txt", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        contentDiv.innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send();
 };
 
 // window.onload = function() {
