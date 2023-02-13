@@ -18,21 +18,51 @@
 <button  class="btn btn-change" id="openBtn">展開所有章節</button>
 <div id="table-list"> 不懂 </div>
 <script>
-  const openBtn = document.querySelector('#openBtn');
-  const tablelist = document.querySelector("#table-list");
+  const cardText = document.querySelector('#cardText');
+  const changeBtn = document.querySelector('#changeBtn');
   
-  openBtn.addEventListener('click', function() {
-      const table = new XMLHttpRequest();
-      table.open("GET", "https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/table.txt", true);
-      table.onreadystatechange = function() {
-          if (table.readyState === XMLHttpRequest.DONE || table.status === 200) {
-              tablelist.innerHTML = table.responseText;
+  console.log(cardText);
+  
+  let isChanged = '0';
+          
+  changeBtn.addEventListener('click', function changeText() {
+      if (isChanged === '0') {
+      cardText.innerHTML = `
+      <br>
+      `;
+      isChanged = '1';
+  
+      } else {
+      cardText.innerHTML = `
+      `;
+      isChanged = '0';
+      }
+  });
+  
+  const tableList = document.querySelector("#table-list");
+  const openBtn = document.querySelector('#openBtn');
+  
+  let tableChange = '0';
+          
+  openBtn.addEventListener('click', function openList() {
+      if (tableChange === '0') {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/table.txt", true);
+      xhr.onreadystatechange = function() {
+          if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
+          tableList.innerHTML = xhr.responseText;
           }
       };
-      
-  table.send();
-  console.log(tablelist);
+  
+      tableChange = '1';
+  
+      } else {
+      tableList.innerHTML = `
+      `;
+      tableChange = '0';
+      }
   });
+  
 </script>
 <!-- 
     <script>

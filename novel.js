@@ -28,12 +28,13 @@ console.log(contentEnd);
     // 翻譯index
 const cardText = document.querySelector('#cardText');
 const changeBtn = document.querySelector('#changeBtn');
+
 console.log(changeBtn);
 console.log(cardText);
 
 let isChanged = '0';
         
-    changeBtn.addEventListener('click', function() {
+    changeBtn.addEventListener('click', function changeindextex() {
         if (isChanged === '0') {
         changeBtn.innerHTML = `翻譯成英文
         `;
@@ -71,37 +72,7 @@ let isChanged = '0';
         isChanged = '0';
         }
     });
-//展開目錄
-const openBtn = document.querySelector('#openBtn');
-const tablelist = document.querySelector("#table-list");
-const loadingIndicator = document.querySelector('#loading-indicator');
 
-let tablechange = '0';
-openBtn.addEventListener('click', function() {
-    if (tablechange === '0') {
-        fetch("table.txt")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.text();
-        })
-        .then(data => {
-            tablelist.innerHTML = data;
-            loadingIndicator.style.display = "none";
-        })
-        .catch(error => {
-            console.error("There was a problem with the fetch operation:", error);
-            loadingIndicator.style.display = "none";
-        });
-        tablechange = '1';
-    } else {
-        tablelist.innerHTML = ``;
-        tablechange = '0';
-    }
-table.send();
-console.log(tablelist);
-});
 // window.onload = function() {
 
 //     };
