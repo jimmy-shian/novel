@@ -14,55 +14,47 @@
           });
         </script>
     </center>
-但是有一些优化可以考虑，如捕获异常、添加加载指示器等。              
-<button  class="btn btn-change" id="openBtn">展開所有章節</button>
-<div id="table-list"> 不懂 </div>
+    <button id="openBtn" class="btn btn-change" >展開章節列表</button>
+    <div id="table-list"></div>
+    <div id="loading-indicator" style="display:none;">正在加載...</div>
 <script>
-  const cardText = document.querySelector('#cardText');
-  const changeBtn = document.querySelector('#changeBtn');
-  
-  console.log(cardText);
-  
-  let isChanged = '0';
-          
-  changeBtn.addEventListener('click', function changeText() {
-      if (isChanged === '0') {
-      cardText.innerHTML = `
-      <br>
-      `;
-      isChanged = '1';
-  
-      } else {
-      cardText.innerHTML = `
-      `;
-      isChanged = '0';
-      }
-  });
-  
-  const tableList = document.querySelector("#table-list");
   const openBtn = document.querySelector('#openBtn');
+  const tablelist = document.querySelector('#table-list');
+  const loadingIndicator = document.querySelector('#loading-indicator');
+  let isOpen = '0';
   
-  let tableChange = '0';
-          
-  openBtn.addEventListener('click', function openList() {
-      if (tableChange === '0') {
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", "https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/table.txt", true);
-      xhr.onreadystatechange = function() {
-          if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
-          tableList.innerHTML = xhr.responseText;
+      openBtn.addEventListener('click', function() {
+      if (isOpen === '0') {
+      // 显示加载指示器
+      loadingIndicator.style.display = 'block';
+  
+      const table = new XMLHttpRequest();
+      table.open('GET', 'table.txt', true);
+      table.onreadystatechange = function() {
+          if (table.readyState === XMLHttpRequest.DONE) {
+          // 隐藏加载指示器
+          loadingIndicator.style.display = 'none';
+  
+          if (table.status === 200) {
+              tablelist.innerHTML = table.responseText;
+              openBtn.innerHTML = `收起章節列表
+              `;
+              isOpen = '1';
+          } else {
+              tablelist.innerHTML = '加載數據失敗，请稍后重试。';
+          }
           }
       };
-  
-      tableChange = '1';
-  
+      table.send();
       } else {
-      tableList.innerHTML = `
+      openBtn.innerHTML = `展開章節列表
       `;
-      tableChange = '0';
+      tablelist.innerHTML = `
+      `;
+      isOpen = '0';
       }
-  });
   
+      });
 </script>
 <!-- 
     <script>
