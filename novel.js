@@ -55,6 +55,17 @@ let isChanged = '0';
       }
     };
     xhr.send();
+
+    const contentEnd = document.getElementById("content-end");
+    
+    const end = new XMLHttpRequest();
+    end.open("GET", "nav.txt", true);
+    end.onreadystatechange = function() {
+      if (end.readyState === XMLHttpRequest.DONE && end.status === 200) {
+        contentEnd.innerHTML = end.responseText;
+      }
+    };
+    end.send();
 };
 
 // window.onload = function() {

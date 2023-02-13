@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      .board {
-        background-color: yellow;
-        border: solid 1px black;
-        display: flex;
-        flex-wrap: wrap;
-        width: 300px;
-        height: 300px;
-      }
-      .cell {
-        background-color: white;
-        border: solid 1px black;
-        color: black;
-        display: flex;
-        font-size: 48px;
-        font-weight: bold;
-        justify-content: center;
-        align-items: center;
-        width: 100px;
-        height: 100px;
-        box-sizing: border-box;
-      }
-      .warning {
-        color: red;
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
+<div id="content-nav">  </div>
+
     <div class="board">
       <div class="cell" id="cell-0"></div>
       <div class="cell" id="cell-1"></div>
@@ -47,28 +17,6 @@
     <div id="time">遊戲時間：0 秒</div>
     <div id="turns">遊戲次數：0 次</div>
 
-    <div id="content">
-      這段代碼會在網頁加載時發送一個請求到 "file.txt"，並在成功回應時將內容顯示到 HTML 頁面的 content 區域。您可以將 "file.txt" 替換為您的檔案路徑。
-    </div>
-
-    <script>
-    const contentDiv = document.getElementById("content");
-    
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "index.txt", true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        contentDiv.innerHTML = xhr.responseText;
-      }
-    };
-    xhr.send();
-    </script>
-    
-    
-    
-    
-    
-    
 
     <script>
         let currentPlayer = "O";
@@ -167,6 +115,4 @@
             resetGame();
             
         </script>
-
-    </body>
-    </html>
+<div id="content-end">  </div>

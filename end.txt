@@ -1,0 +1,11 @@
+      <div class="spacer"></div>
+      <center>
+              版權沒有 歡迎使用<br><br>
+              網站架設者 : jimmy<br>
+              <hr><br><br>
+        </center>
+      <div class="spacer"></div>
+    
+    </body>
+    </html>
+      
