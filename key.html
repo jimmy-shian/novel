@@ -9,12 +9,53 @@
         <input id="displayKeyCode">
         <script>
           const displayKeyCode = document.querySelector('#displayKeyCode');
-        
           document.addEventListener('keyup', function(event) {
             displayKeyCode.innerHTML = event.keyCode;
           });
         </script>
     </center>
-
+但是有一些优化可以考虑，如捕获异常、添加加载指示器等。              
+<button  class="btn btn-change" id="openBtn">展開所有章節</button>
+<div id="table-list"> 不懂 </div>
+<script>
+  const openBtn = document.querySelector('#openBtn');
+  const tablelist = document.querySelector("#table-list");
+  
+  openBtn.addEventListener('click', function() {
+      const table = new XMLHttpRequest();
+      table.open("GET", "https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/table.txt", true);
+      table.onreadystatechange = function() {
+          if (table.readyState === XMLHttpRequest.DONE || table.status === 200) {
+              tablelist.innerHTML = table.responseText;
+          }
+      };
+      
+  table.send();
+  console.log(tablelist);
+  });
+</script>
+<!-- 
+    <script>
+      const openBtn = document.querySelector('#openBtn');
+      const tablelist = document.getElementById("table-list");
+    /*  const tablelist = document.querySelector("#table-list");*/
+      let tablechange = '0';
+      
+      function handleOpenBtnClick() {
+          const table = new XMLHttpRequest();
+          table.open("GET", "table.txt", true);
+          table.onreadystatechange = function() {
+            if (table.readyState === XMLHttpRequest.DONE || table.status === 200) {
+              tablelist.innerHTML = table.responseText;
+            }
+          };
+          tablechange = '0';
+        
+        console.log(tablelist);
+      }
+      
+      openBtn.addEventListener('click', handleOpenBtnClick);
+      
+    </script> -->
 </body>
 </html>
