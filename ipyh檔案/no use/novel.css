@@ -1,0 +1,103 @@
+body {
+    background-color: #393939;
+    color: rgb(160, 160, 160);
+    }
+    .spacer {
+        height: 50px;
+        margin-bottom: 50px;
+    }
+.catalogue_container {
+        background-color: #393939;
+        color: rgb(160, 160, 160);
+        border: 1px solid rgb(209, 211, 162); /* 加入外框 */
+        padding: 8px; /* 加入內間距 */
+        border-radius: 10px; /* 設置圓弧半徑 */
+        width: 60vh; 
+        height: auto; 
+        text-align:center;
+    }
+
+.responsive-div {
+    justify-content: flex-end;
+    padding: 0 25px;
+    font-size: 200%;
+    background-color: #393939;
+    color: rgb(160, 160, 160);
+    }
+    .container {
+    background-color: #393939;
+    color: rgb(160, 160, 160);
+    border: 1px solid rgb(209, 211, 162); /* 加入外框 */
+    padding: 8px; /* 加入內間距 */
+    border-radius: 10px; /* 設置圓弧半徑 */
+
+    display: flex;
+    align-items: center;
+    }
+        img {
+        justify-content: flex-start; /* 靠右對齊 */
+        margin-left: 70px; /* 距離右邊邊界23px */
+        width: 105px;
+        height: 85px;
+        }
+        .text {
+        font-size: 80%;
+        margin-left: 5vh; /* 文字左邊間距 */
+        text-align: center; /* 文字水平置中 */
+        margin-top: 5px;
+
+        }
+    a {
+    color: rgb(213,206,205); /* 设置默认颜色 */
+    }
+    a:hover {
+    color: rgb(255, 159, 159); /* 设置鼠标停留颜色 */
+    }
+    .target:hover {
+    background-color: #F0F0F0;
+    }
+    
+
+@media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
+    .catalogue_container {
+        background-color: #393939;
+        color: rgb(160, 160, 160);
+        border: 1px solid rgb(209, 211, 162); /* 加入外框 */
+        padding: 8px; /* 加入內間距 */
+        border-radius: 10px; /* 設置圓弧半徑 */
+        width: 80%; 
+        height: auto; 
+        text-align:center;
+    }
+    .responsive-div {
+        justify-content: flex-end;
+        padding: 0 25px;
+        font-size: 200%;
+        background-color: #393939;
+        color: rgb(160, 160, 160);
+        }
+    .container {
+        flex-direction: row; /* 改变布局方向为水平布局 /
+        align-items: flex-start; /* 元素靠左对齐 */
+        display: flex;
+        }
+        img {
+        justify-content: flex-start; /* 靠右對齊 */
+        margin-left: 10%; /* 距離右邊邊界23px */
+        width: 10%; /* 图像的宽度 */
+        height: auto; /* 自动计算图像的高度 */
+        }
+        .text {
+        font-size: 50%; /* 文字的大小 */
+        margin-left: 2vh; /* 文字与左边界的距离 */
+        text-align: start ; /* 文字水平居中 */
+        margin-top: 5px; /* 文字与上边界的距离 */
+        }
+    .spacer {
+        height: 25px;
+        margin-bottom: 50px;
+    }
+        
+    }
+
+    

@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -7,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../novel.css">
+    <link rel="stylesheet" type="text/css" href="https://jimmy-shian.github.io/novel/novel.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script> -->
     <!-- <script src="https://jimmy-shian.github.io/novel/novel.js"></script> -->
     <!-- <script src="https://jimmy-shian.github.io/novel/table.js"></script> -->
@@ -15,14 +16,15 @@
   <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
   <!-- <style>
   </style> -->
+          <title>《帝霸》目錄</title>
 
   </head>
   <body>
-<div id="content-nav">    </div>
-
+    <div id="content-nav">    </div>
             <div class="spacer"></div>
             <center>
               <h2>
+                <img src="https://jimmy-shian.github.io/novel/picture/帝霸封面.jpg" alt="《帝霸》">
                 《帝霸》章節網頁跳轉
               </h2>
               <br> 
@@ -38,30 +40,28 @@
               <div id="table-list"></div>
               <div id="loading-indicator" style="display:none;">正在加載...</div>
 
-              <!-- <script>
- 
-              </script> -->
-
-                <script>
-                  const form = document.querySelector('form');
-                  form.addEventListener('submit', function(event) {
-                  event.preventDefault();
-                  const numberInput = document.querySelector('#numberInput').value;
-                    if (numberInput.trim() === '') {
-                      alert('輸入數字');
-                      } else if (!Number.isInteger(+numberInput) || +numberInput <= 0) {
-                      alert('輸入正整數');
-                      } else {
-                      window.location.href = '帝霸_html' + numberInput + '.html';
-                      }
-                    });
-  
-                  document.querySelector('#numberInput').addEventListener('keyup', function(event) {
-                    if (event.keyCode === 13) {
-                      form.submit();
+              <script>
+                const form = document.querySelector('form');
+                form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const numberInput = document.querySelector('#numberInput').value;
+                  if (numberInput.trim() === '') {
+                    alert('輸入數字');
+                    } else if (!Number.isInteger(+numberInput) || +numberInput <= 0) {
+                    alert('輸入正整數');
+                    } else {
+                      
+                    window.location.href = '帝霸_html' + numberInput + '.html';
+                           
                     }
                   });
-                </script>
+
+                document.querySelector('#numberInput').addEventListener('keyup', function(event) {
+                  if (event.keyCode === 13) {
+                    form.submit();
+                  }
+                });
+              </script>
             </center>
           <div class="spacer"></div>    <div class="spacer"></div>
           <div id="content-end">  </div>
@@ -71,4 +71,5 @@
 
         </body>
         </html>
+    
         
