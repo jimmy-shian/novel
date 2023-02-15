@@ -142,17 +142,15 @@ body {
       white-space: nowrap;
     }
     .body-404 {
-
-      background-repeat: no-repeat;
       background-size: cover;
       text-align: center;
       font-family: sans-serif;
     }
-    .h1-404 {
+    .h-404 {
       font-size: 280%;
       padding: 0 10px;
       color: rgb(172, 172, 172);
-      margin-top: 200px;
+      /* margin-top: 10px; */
     }
     .p-404 {
       padding: 0 10px;
@@ -237,6 +235,25 @@ body {
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
+      }
+
+      .h-404 {
+        font-size: 80%;
+        padding: 0 10px;
+        color: rgb(172, 172, 172);
+        /* margin-top: 20%; */
+      }
+      .p-404 {
+        padding: 0 10px;
+        font-size: 50%;
+        color: rgb(110, 110, 110);
+        margin-top: 50px;
+      }
+      .pre-404 {
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        color: rgb(169, 165, 165);
+        max-width: 500px;
       }
     }
 
