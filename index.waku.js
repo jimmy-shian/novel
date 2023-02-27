@@ -4,11 +4,11 @@
 
    console.log(changeBtn);
    console.log(cardText);
-   if (cardText !== 'null' && changeBtn !== 'null') {
+   if (cardText !== 'null') {}
 
    let isChanged = '0';
            
-       changeBtn.addEventListener('click', function changeindextex() {
+       changeBtn?.addEventListener('click', function changeindextex() {
            if (isChanged === '0') {
            changeBtn.innerHTML = `翻譯成英文
            `;
@@ -68,7 +68,7 @@
            isChanged = '0';
            }
        });
-    }
+   
 cardText.innerHTML = `
            <h5 class="card-title">Enter the World of Web Novels</h5>
                <p class="card-text">
@@ -128,8 +128,7 @@ const bookTitle = match ? match[1] : '';
 console.log(bookTitle);
 
 const form = document.querySelector('form');
-if (form !== 'null') {
-form.addEventListener('submit', function(event) {
+form?.addEventListener('submit', function(event) {
     event.preventDefault();
     const numberInput = document.querySelector('#numberInput').value.trim();
     if (!/^\d+$/.test(numberInput)) {
@@ -138,8 +137,8 @@ form.addEventListener('submit', function(event) {
         window.location.href = `${bookTitle}_html${numberInput}.html`;
     }
 });
-}
-document.querySelector('#numberInput').addEventListener('keyup', function(event) {
+
+document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         form.submit();
     }
@@ -148,11 +147,9 @@ document.querySelector('#numberInput').addEventListener('keyup', function(event)
 const openBtn = document.querySelector('#openBtn');
 const tablelist = document.querySelector('#table-list');
 const loadingIndicator = document.querySelector('#loading-indicator');
-
 let isOpen = '0';
 
-if (openBtn !== 'null') {
-openBtn.addEventListener('click', function() {
+openBtn?.addEventListener('click', function() {
 if (isOpen === '0') {
 // 显示加载指示器
 loadingIndicator.style.display = 'block';
@@ -184,5 +181,4 @@ isOpen = '0';
 }
 
 });
-
-}
+                
