@@ -1,14 +1,17 @@
 body {
     background-color: #393939;
-    color: rgb(160, 160, 160);
+    color: #999999;
+    overflow-y:auto;
     }
     .spacer {
         height: 50px;
         margin-bottom: 50px;
     }
 .catalogue_container {
+        /*background-color: #393939;
+        color: rgb(160, 160, 160);*/
         background-color: #393939;
-        color: rgb(160, 160, 160);
+        color: #999999;
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -22,11 +25,11 @@ body {
     padding: 0 25px;
     font-size: 200%;
     background-color: #393939;
-    color: rgb(160, 160, 160);
+    color: #999999;
     }
     .container {
-    background-color: #393939;
-    color: rgb(160, 160, 160);
+      background-color: #393939;
+      color: #999999;
     border: 1px solid rgb(209, 211, 162); /* 加入外框 */
     padding: 8px; /* 加入內間距 */
     border-radius: 10px; /* 設置圓弧半徑 */
@@ -167,7 +170,7 @@ body {
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
     .catalogue_container {
         background-color: #393939;
-        color: rgb(160, 160, 160);
+        color: #999999;
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -180,7 +183,7 @@ body {
         padding: 0 25px;
         font-size: 200%;
         background-color: #393939;
-        color: rgb(160, 160, 160);
+        color: #999999;
         }
     .container {
         flex-direction: row; /* 改变布局方向为水平布局 /
