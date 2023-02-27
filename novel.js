@@ -22,6 +22,28 @@ end.send();
 console.log(contentDiv);
 console.log(contentEnd);
 
+
+const title = document.querySelector('h2').textContent.trim();
+const match = title.match(/《([^》]*)》/);
+const bookTitle = match ? match[1] : '';
+console.log(bookTitle);
+
+const form = document.querySelector('form');
+form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const numberInput = document.querySelector('#numberInput').value.trim();
+    if (!/^\d+$/.test(numberInput)) {
+        alert('輸入數字');
+    } else {
+        window.location.href = `${bookTitle}_html${numberInput}.html`;
+    }
+});
+
+document.querySelector('#numberInput').addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+        form.submit();
+    }
+});
 };
 
 

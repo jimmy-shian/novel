@@ -1,4 +1,4 @@
-// 翻譯index
+   // 翻譯index
 const cardText = document.querySelector('#cardText');
 const changeBtn = document.querySelector('#changeBtn');
 
@@ -12,7 +12,6 @@ let isChanged = '0';
         changeBtn.innerHTML = `翻譯成英文
         `;
         cardText.innerHTML = `
-        <br>
         <h4 class="card-title">進入網絡小說世界~</h4>
         
         看啊，一個新的平台到來了，<br>
@@ -41,12 +40,34 @@ let isChanged = '0';
         changeBtn.innerHTML = `Translate to Chinese
         `;
         cardText.innerHTML = `
-        `;
+            <h5 class="card-title">Enter the World of Web Novels</h5>
+                <p class="card-text">
+                Behold, a new platform doth arrive,<br>
+                With tales of fiction that doth strive,<br>
+                To entertain and captivate the mind,<br>
+                In a world of letters, a joy to find.
+                </p>
+                <p class="card-text">
+            Ad-free, with content sourced with care,<br>
+            By a student using technology fair,<br>
+            The world of web novels doth repair,<br>
+            And offer a reading experience rare.
+                </p>
+                <p class="card-text">
+            So come, dear reader, and take a seat,<br>
+            With a cup of thy favored drink to heat,<br>
+            And immerse thyself in this world so sweet,<br>
+            Where tales of adventure and love doth meet.
+                </p>
+                <p class="card-text">
+            Enjoy thy reading, in this place so bright,<br>
+            And lose thyself in tales of endless night.
+                </p>
+                `;
         isChanged = '0';
         }
     });
 
-window.onload = function() {
     cardText.innerHTML = `
         <h5 class="card-title">Enter the World of Web Novels</h5>
             <p class="card-text">
@@ -72,4 +93,3 @@ window.onload = function() {
         And lose thyself in tales of endless night.
             </p>
             `;
-        };
