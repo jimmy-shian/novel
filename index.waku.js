@@ -1,6 +1,6 @@
    // 翻譯index
-    const cardText = document.querySelector('#cardText');
-    const changeBtn = document.querySelector('#changeBtn');
+    let cardText = document.querySelector('#cardText');
+    let changeBtn = document.querySelector('#changeBtn');
    
    console.log(changeBtn);
    console.log(cardText);
@@ -97,8 +97,8 @@ cardText.innerHTML = `
 window.onload = function() {
 
 };
-const contentDiv = document.getElementById("content-nav");
-const xhr = new XMLHttpRequest();
+let contentDiv = document.getElementById("content-nav");
+let xhr = new XMLHttpRequest();
 xhr.open("GET", "https://jimmy-shian.github.io/novel/nav.txt", true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
@@ -107,9 +107,9 @@ xhr.onreadystatechange = function() {
 };
 xhr.send();
 
-const contentEnd = document.getElementById("content-end");
+let contentEnd = document.getElementById("content-end");
 
-const end = new XMLHttpRequest();
+let end = new XMLHttpRequest();
 end.open("GET", "https://jimmy-shian.github.io/novel/end.txt", true);
 end.onreadystatechange = function() {
     if (end.readyState === XMLHttpRequest.DONE || end.status === 200) {
@@ -121,15 +121,15 @@ console.log(contentDiv);
 console.log(contentEnd);
 
 
-const title = document.querySelector('h2').textContent.trim();
-const match = title.match(/《([^》]*)》/);
-const bookTitle = match ? match[1] : '';
+let title = document.querySelector('h2').textContent.trim();
+let match = title.match(/《([^》]*)》/);
+let bookTitle = match ? match[1] : '';
 console.log(bookTitle);
 
-const form = document.querySelector('form');
+let form = document.querySelector('form');
 form.addEventListener('submit', function(event) {
     event.preventDefault();
-    const numberInput = document.querySelector('#numberInput').value.trim();
+    let numberInput = document.querySelector('#numberInput').value.trim();
     if (!/^\d+$/.test(numberInput)) {
         alert('輸入數字');
     } else {
@@ -143,9 +143,9 @@ document.querySelector('#numberInput').addEventListener('keyup', function(event)
     }
 });
 
-const openBtn = document.querySelector('#openBtn');
-const tablelist = document.querySelector('#table-list');
-const loadingIndicator = document.querySelector('#loading-indicator');
+let openBtn = document.querySelector('#openBtn');
+let tablelist = document.querySelector('#table-list');
+let loadingIndicator = document.querySelector('#loading-indicator');
 let isOpen = '0';
 
 openBtn.addEventListener('click', function() {
@@ -153,7 +153,7 @@ if (isOpen === '0') {
 // 显示加载指示器
 loadingIndicator.style.display = 'block';
 
-const table = new XMLHttpRequest();
+let table = new XMLHttpRequest();
 table.open('GET', 'table.txt', true);
 table.onreadystatechange = function() {
     if (table.readyState === XMLHttpRequest.DONE) {
