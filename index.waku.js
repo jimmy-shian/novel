@@ -69,7 +69,7 @@
            }
        });
    
-cardText.innerHTML = `
+cardText?.innerHTML = `
            <h5 class="card-title">Enter the World of Web Novels</h5>
                <p class="card-text">
                Behold, a new platform doth arrive,<br>
