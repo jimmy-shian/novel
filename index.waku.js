@@ -1,10 +1,11 @@
    // 翻譯index
-     cardText = document.querySelector('#cardText');
-     changeBtn = document.querySelector('#changeBtn');
-   
+    const cardText = document.querySelector('#cardText');
+    const changeBtn = document.querySelector('#changeBtn');
+
    console.log(changeBtn);
    console.log(cardText);
-   
+   if (cardText !== 'null' && changeBtn !== 'null') {
+
    let isChanged = '0';
            
        changeBtn.addEventListener('click', function changeindextex() {
@@ -67,7 +68,7 @@
            isChanged = '0';
            }
        });
-   
+    }
 cardText.innerHTML = `
            <h5 class="card-title">Enter the World of Web Novels</h5>
                <p class="card-text">
@@ -97,8 +98,8 @@ cardText.innerHTML = `
 window.onload = function() {
 
 };
- contentDiv = document.getElementById("content-nav");
- xhr = new XMLHttpRequest();
+const contentDiv = document.getElementById("content-nav");
+const xhr = new XMLHttpRequest();
 xhr.open("GET", "https://jimmy-shian.github.io/novel/nav.txt", true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
@@ -107,9 +108,9 @@ xhr.onreadystatechange = function() {
 };
 xhr.send();
 
- contentEnd = document.getElementById("content-end");
+const contentEnd = document.getElementById("content-end");
 
- end = new XMLHttpRequest();
+const end = new XMLHttpRequest();
 end.open("GET", "https://jimmy-shian.github.io/novel/end.txt", true);
 end.onreadystatechange = function() {
     if (end.readyState === XMLHttpRequest.DONE || end.status === 200) {
@@ -121,39 +122,42 @@ console.log(contentDiv);
 console.log(contentEnd);
 
 
- title = document.querySelector('h2').textContent.trim();
- match = title.match(/《([^》]*)》/);
- bookTitle = match ? match[1] : '';
+const title = document.querySelector('h2').textContent.trim();
+const match = title.match(/《([^》]*)》/);
+const bookTitle = match ? match[1] : '';
 console.log(bookTitle);
 
- form = document.querySelector('form');
+const form = document.querySelector('form');
+if (form !== 'null') {
 form.addEventListener('submit', function(event) {
     event.preventDefault();
-     numberInput = document.querySelector('#numberInput').value.trim();
+    const numberInput = document.querySelector('#numberInput').value.trim();
     if (!/^\d+$/.test(numberInput)) {
         alert('輸入數字');
     } else {
         window.location.href = `${bookTitle}_html${numberInput}.html`;
     }
 });
-
+}
 document.querySelector('#numberInput').addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         form.submit();
     }
 });
 
- openBtn = document.querySelector('#openBtn');
- tablelist = document.querySelector('#table-list');
- loadingIndicator = document.querySelector('#loading-indicator');
+const openBtn = document.querySelector('#openBtn');
+const tablelist = document.querySelector('#table-list');
+const loadingIndicator = document.querySelector('#loading-indicator');
+
 let isOpen = '0';
 
+if (openBtn !== 'null') {
 openBtn.addEventListener('click', function() {
 if (isOpen === '0') {
 // 显示加载指示器
 loadingIndicator.style.display = 'block';
 
- table = new XMLHttpRequest();
+const table = new XMLHttpRequest();
 table.open('GET', 'table.txt', true);
 table.onreadystatechange = function() {
     if (table.readyState === XMLHttpRequest.DONE) {
@@ -180,4 +184,5 @@ isOpen = '0';
 }
 
 });
-                
+
+}
