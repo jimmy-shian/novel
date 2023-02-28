@@ -216,3 +216,5 @@ fetch(txtname)
         // 在頁面上顯示錯誤訊息
         document.getElementById("content").innerHTML = error.message;
     });
+
+console.log(txtname);
