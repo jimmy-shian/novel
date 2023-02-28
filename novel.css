@@ -1,7 +1,7 @@
 body {
     background-color: #393939;
     color: #999999;
-    overflow-y:auto;
+    overflow-y:scroll;
     }
     .spacer {
         height: 50px;
@@ -21,7 +21,7 @@ body {
     }
 
 .responsive-div {
-    /*overflow-y:auto;*/
+    /*overflow-y:scroll;*/
     justify-content: flex-end;
     padding: 0 25px;
     font-size: 200%;
@@ -182,7 +182,7 @@ body {
         text-align:center;
     }
     .responsive-div {
-        overflow-y:auto;
+        overflow-y:scroll;
         justify-content: flex-end;
         padding: 0 25px;
         font-size: 200%;

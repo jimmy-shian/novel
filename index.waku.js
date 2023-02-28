@@ -218,3 +218,18 @@ fetch(txtname)
     });
 
 console.log(txtname);
+
+// 引入 index.waku.js
+const indexWaku = require('/path/to/your/root/directory/index.waku.js');
+
+// 取得所有的變數名稱
+const constVariables = Object.entries(indexWaku)
+  .filter(([name, value]) => typeof value !== 'function')
+  .filter(([name, value]) => Object.is(value, indexWaku[name]))
+  .map(([name, value]) => name);
+
+// 顯示變數名稱和值
+constVariables.forEach((variable) => {
+  console.log(`${variable}:`, indexWaku[variable]);
+});
+
