@@ -128,7 +128,7 @@ console.log(contentEnd);
 
 /*jump url*/ 
 const titleElement = document.querySelector('h2');
-if (titleElement) { // !== null
+if (titleElement !== null ) { // !== null
   const title = titleElement.textContent.trim();
   const match = title.match(/《([^》]*)》/);
   const bookTitle = match ? match[1] : '';
@@ -144,7 +144,7 @@ if (titleElement) { // !== null
           window.location.href = `${bookTitle}_html${numberInput}.html`;
       }
     });
-    numberInput?.addEventListener('keyup', function(event) {
+    document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
         if (event.keyCode === 13) {
             form.submit();
         }
