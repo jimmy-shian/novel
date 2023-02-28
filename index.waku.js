@@ -135,7 +135,7 @@ if (titleElement) { // !== null
   console.log(bookTitle);
 
   const form = document.querySelector('form');
-  form?.addEventListener('submit', function(event) {
+    form?.addEventListener('submit', function(event) {
       event.preventDefault();
       const numberInput = document.querySelector('#numberInput').value.trim();
       if (!/^\d+$/.test(numberInput)) {
@@ -143,14 +143,14 @@ if (titleElement) { // !== null
       } else {
           window.location.href = `${bookTitle}_html${numberInput}.html`;
       }
-  });
+    });
+    numberInput?.addEventListener('keyup', function(event) {
+        if (event.keyCode === 13) {
+            form.submit();
+        }
+    });
 }
 
-numberInput?.addEventListener('keyup', function(event) {
-    if (event.keyCode === 13) {
-        form.submit();
-    }
-});
 
 /*章節總列表顯示 */
 const openBtn = document.querySelector('#openBtn');
