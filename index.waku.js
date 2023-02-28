@@ -135,6 +135,10 @@ if (titleElement !== null ) { // !== null
   console.log(bookTitle);
 
   const form = document.querySelector('form');
+  document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
+      if (event.keyCode === 13) {
+          form.submit();
+      }
     form?.addEventListener('submit', function(event) {
       event.preventDefault();
       const numberInput = document.querySelector('#numberInput').value.trim();
@@ -144,10 +148,6 @@ if (titleElement !== null ) { // !== null
           window.location.href = `${bookTitle}_html${numberInput}.html`;
       }
     });
-    document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
-        if (event.keyCode === 13) {
-            form.submit();
-        }
     });
 }
 
