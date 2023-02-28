@@ -98,7 +98,7 @@
                         console.log('cardText not found');
                       }
 
-
+/*頁面載入時的各種欄位*/
 window.onload = function() {
 
 };
@@ -126,28 +126,33 @@ console.log(contentDiv);
 console.log(contentEnd);
 
 
-const title = document.querySelector('h2').textContent.trim();
-const match = title.match(/《([^》]*)》/);
-const bookTitle = match ? match[1] : '';
-console.log(bookTitle);
+/*jump url*/ 
+const titleElement = document.querySelector('h2');
+if (titleElement) { // !== null
+  const title = titleElement.textContent.trim();
+  const match = title.match(/《([^》]*)》/);
+  const bookTitle = match ? match[1] : '';
+  console.log(bookTitle);
 
-const form = document.querySelector('form');
-form?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const numberInput = document.querySelector('#numberInput').value.trim();
-    if (!/^\d+$/.test(numberInput)) {
-        alert('輸入數字');
-    } else {
-        window.location.href = `${bookTitle}_html${numberInput}.html`;
-    }
-});
+  const form = document.querySelector('form');
+  form?.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const numberInput = document.querySelector('#numberInput').value.trim();
+      if (!/^\d+$/.test(numberInput)) {
+          alert('輸入數字');
+      } else {
+          window.location.href = `${bookTitle}_html${numberInput}.html`;
+      }
+  });
+}
 
-document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
+numberInput?.addEventListener('keyup', function(event) {
     if (event.keyCode === 13) {
         form.submit();
     }
 });
 
+/*章節總列表顯示 */
 const openBtn = document.querySelector('#openBtn');
 const tablelist = document.querySelector('#table-list');
 const loadingIndicator = document.querySelector('#loading-indicator');
@@ -185,4 +190,29 @@ isOpen = '0';
 }
 
 });
-                
+            
+
+/**文字內容載入 */
+
+const url = window.location.href;
+// 提取URL中的文件名
+const filename = url.substring(url.lastIndexOf('/') + 1);
+// 將文件名中的HTML後綴替換為TXT後綴
+const txtname = filename.replace(".html", ".txt");
+// 發送請求並匯入文件內容
+fetch(txtname)
+    .then(response => {
+        // 如果請求成功，插入文件內容
+        if (response.ok) {
+            return response.text();
+        }
+        // 否則拋出錯誤
+        throw new Error('無法獲取內容');
+    })
+    .then(text => {
+        document.getElementById("content").innerHTML = text;
+    })
+    .catch(error => {
+        // 在頁面上顯示錯誤訊息
+        document.getElementById("content").innerHTML = error.message;
+    });
