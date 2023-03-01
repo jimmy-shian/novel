@@ -148,24 +148,22 @@ if (titleElement !== null) {
 
   // 取得輸入框元素和提交按鈕元素
   const numberInput = document.querySelector('#numberInput');
-  const submitButton = document.querySelector('#submitButton');
-
+  // const submitButton = document.querySelector('#submitButton');
+  numberInput?.addEventListener('keyup', function(event) {
+    if (event.keyCode === 13) {
+      formElement.submit();
+    }
+  });
   // 如果輸入框和提交按鈕存在，則設置事件監聽器
-  if (numberInput !== null && submitButton !== null) {
+  if (numberInput !== null) {
     // 在輸入框上設置keyup事件監聽器，如果按下enter則提交表單
-    numberInput.addEventListener('keyup', function(event) {
-      if (event.keyCode === 13) {
-        formElement.submit();
-      }
-    });
-
     // 在表單上設置submit事件監聽器，防止表單提交並重新定向網頁
-    formElement.addEventListener('submit', function(event) {
+    formElement?.addEventListener('submit', function(event) {
       event.preventDefault();
       const inputNumber = numberInput.value.trim();
       if (/^\d+$/.test(inputNumber)) {
         // 構造新的URL並重新定向網頁
-        window.location.href = `${bookTitle}_html${numberInput}.html`;
+        window.location.href = `${bookTitle}_html${inputNumber}.html`;
         // const newUrl = `${bookTitle}_html${inputNumber}.html`;
         // window.location.href = newUrl;
       } else {
