@@ -128,7 +128,7 @@ console.log(contentEnd);
 
 /*jump url*/ 
 // 將主要的程式碼包裝在一個自執行函式中，以避免全域變數污染
-(function () {
+//(function () {
     // 取得標題元素和表單元素
     const titleElement = document.querySelector('h2');
     const formElement = document.querySelector('form');
@@ -167,7 +167,7 @@ console.log(contentEnd);
         });
       }
     }
-  })();
+  //})();
   
 
 
