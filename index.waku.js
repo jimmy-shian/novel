@@ -127,29 +127,48 @@ console.log(contentEnd);
 
 
 /*jump url*/ 
-const titleElement = document.querySelector('h2');
-if (titleElement !== null ) { // !== null
-  const title = titleElement.textContent.trim();
-  const match = title.match(/《([^》]*)》/);
-  const bookTitle = match ? match[1] : '';
-  console.log(bookTitle);
-
-  const form = document.querySelector('form');
-  document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
-      if (event.keyCode === 13) {
-          form.submit();
+// 將主要的程式碼包裝在一個自執行函式中，以避免全域變數污染
+(function () {
+    // 取得標題元素和表單元素
+    const titleElement = document.querySelector('h2');
+    const formElement = document.querySelector('form');
+  
+    // 如果標題元素和表單元素存在，則進一步處理
+    if (titleElement !== null && formElement !== null) {
+      // 從標題中解析出書名
+      const title = titleElement.textContent.trim();
+      const match = title.match(/《([^》]*)》/);
+      const bookTitle = match ? match[1] : '';
+  
+      // 取得輸入框元素和提交按鈕元素
+      const numberInput = document.querySelector('#numberInput');
+      const submitButton = document.querySelector('#submitButton');
+  
+      // 如果輸入框和提交按鈕存在，則設置事件監聽器
+      if (numberInput !== null && submitButton !== null) {
+        // 在輸入框上設置keyup事件監聽器，如果按下enter則提交表單
+        numberInput.addEventListener('keyup', function(event) {
+          if (event.keyCode === 13) {
+            formElement.submit();
+          }
+        });
+  
+        // 在表單上設置submit事件監聽器，防止表單提交並重新定向網頁
+        formElement.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const inputNumber = numberInput.value.trim();
+          if (/^\d+$/.test(inputNumber)) {
+            // 構造新的URL並重新定向網頁
+            const newUrl = `${bookTitle}_html${inputNumber}.html`;
+            window.location.href = newUrl;
+          } else {
+            alert('請輸入一個有效的數字');
+          }
+        });
       }
-    form?.addEventListener('submit', function(event) {
-      event.preventDefault();
-      const numberInput = document.querySelector('#numberInput').value.trim();
-      if (!/^\d+$/.test(numberInput)) {
-          alert('輸入數字');
-      } else {
-          window.location.href = `${bookTitle}_html${numberInput}.html`;
-      }
-    });
-    });
-}
+    }
+  })();
+  
 
 
 /*章節總列表顯示 */
@@ -194,42 +213,43 @@ isOpen = '0';
 
 /**文字內容載入 */
 
-const url = window.location.href;
-// 提取URL中的文件名
-const filename = url.substring(url.lastIndexOf('/') + 1);
-// 將文件名中的HTML後綴替換為TXT後綴
-const txtname = filename.replace(".html", ".txt");
-// 發送請求並匯入文件內容
-fetch(txtname)
+const contentElement = document.getElementById('content');
+if (contentElement) {
+  const url = window.location.href;
+  // 提取URL中的文件名
+  const filename = url.substring(url.lastIndexOf('/') + 1);
+  // 將文件名中的HTML後綴替換為TXT後綴
+  const txtname = filename.replace(".html", ".txt");
+  
+  console.log(txtname);
+  // 發送請求並匯入文件內容
+  fetch(txtname)
     .then(response => {
-        // 如果請求成功，插入文件內容
-        if (response.ok) {
-            return response.text();
-        }
-        // 否則拋出錯誤
-        throw new Error('無法獲取內容');
+      // 如果請求成功，插入文件內容
+      if (response.ok) {
+          return response.text();
+      }
+      // 否則拋出錯誤
+      throw new Error('無法獲取內容');
     })
     .then(text => {
-        document.getElementById("content").innerHTML = text;
+        contentElement.innerHTML = text;
     })
     .catch(error => {
         // 在頁面上顯示錯誤訊息
-        document.getElementById("content").innerHTML = error.message;
+        contentElement.innerHTML = '無法獲取內容，請重新整理頁面';
     });
+}
 
-console.log(txtname);
 
-// 引入 index.waku.js
-const indexWaku = require('/path/to/your/root/directory/index.waku.js');
 
-// 取得所有的變數名稱
-const constVariables = Object.entries(indexWaku)
+// 取得所有的變數名稱和值
+const constVariables = Object.entries(window)
   .filter(([name, value]) => typeof value !== 'function')
-  .filter(([name, value]) => Object.is(value, indexWaku[name]))
-  .map(([name, value]) => name);
+  .filter(([name, value]) => Object.is(value, window[name]));
 
 // 顯示變數名稱和值
-constVariables.forEach((variable) => {
-  console.log(`${variable}:`, indexWaku[variable]);
+constVariables.forEach(([name, value]) => {
+  console.log(`${name}: ${value}`);
 });
 
