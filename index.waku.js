@@ -150,7 +150,7 @@ if (titleElement !== null) {
   const numberInput = document.querySelector('#numberInput');
   // const submitButton = document.querySelector('#submitButton');
   numberInput?.addEventListener('keyup', function(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode = 13) {
       formElement.submit();
     }
   });
@@ -167,7 +167,7 @@ if (titleElement !== null) {
         // const newUrl = `${bookTitle}_html${inputNumber}.html`;
         // window.location.href = newUrl;
       } else {
-        alert('請輸入一個有效的數字');
+        window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
       }
     });
   }

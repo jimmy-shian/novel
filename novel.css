@@ -1,3 +1,16 @@
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  pointer-events: none;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+
 body {
     background-color: #393939;
     color: #999999;
@@ -171,6 +184,17 @@ body {
       max-width: 500px;
     }
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    pointer-events: none;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+  }
     .catalogue_container {
         background-color: #393939;
         color: #999999;
