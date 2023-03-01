@@ -1,5 +1,5 @@
 //(function() {
-window.onload = function() {
+//window.onload = function() {
   // 在這裡編寫你的全部程式碼
 
    // 翻譯index
@@ -284,5 +284,5 @@ constVariables.forEach(([name, value]) => {
   console.log(`${name}: ${value}`);
 });
 
-};
+//};
 //})(); 
