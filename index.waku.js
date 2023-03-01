@@ -1,3 +1,6 @@
+(function() {
+  // 在這裡編寫你的全部程式碼
+
    // 翻譯index
     const cardText = document.querySelector('#cardText');
     const changeBtn = document.querySelector('#changeBtn');
@@ -246,10 +249,14 @@ if (contentElement) {
 // 取得所有的變數名稱和值
 const constVariables = Object.entries(window)
   .filter(([name, value]) => typeof value !== 'function')
-  .filter(([name, value]) => Object.is(value, window[name]));
+  .filter(([name, value]) => Object.is(value, window[name]))
+  .filter(([name, value]) => document.querySelector(`[data-const="${name}"]`) !== null)
+  .filter(([name, value]) => value !== null);
 
 // 顯示變數名稱和值
 constVariables.forEach(([name, value]) => {
   console.log(`${name}: ${value}`);
 });
 
+
+})(); 
