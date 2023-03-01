@@ -135,14 +135,16 @@ console.log(contentEnd);
 //(function () {
     // 取得標題元素和表單元素
 const titleElement = document.querySelector('h2');
-const formElement = document.querySelector('form');
   
 // 如果標題元素和表單元素存在，則進一步處理
-if (titleElement !== null && formElement !== null) {
+if (titleElement !== null) {
   // 從標題中解析出書名
   const title = titleElement.textContent.trim();
   const match = title.match(/《([^》]*)》/);
   const bookTitle = match ? match[1] : '';
+  console.log(bookTitle);
+
+  const formElement = document.querySelector('form');
 
   // 取得輸入框元素和提交按鈕元素
   const numberInput = document.querySelector('#numberInput');
@@ -170,7 +172,30 @@ if (titleElement !== null && formElement !== null) {
       }
     });
   }
-}
+}/*
+const titleElement = document.querySelector('h2');
+if (titleElement !== null ) { // !== null
+  const title = titleElement.textContent.trim();
+  const match = title.match(/《([^》]*)》/);
+  const bookTitle = match ? match[1] : '';
+  console.log(bookTitle);
+
+  const form = document.querySelector('form');
+  document.querySelector('#numberInput')?.addEventListener('keyup', function(event) {
+      if (event.keyCode === 13) {
+          form.submit();
+      }
+    form?.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const numberInput = document.querySelector('#numberInput').value.trim();
+      if (!/^\d+$/.test(numberInput)) {
+          alert('輸入數字');
+      } else {
+          window.location.href = `${bookTitle}_html${numberInput}.html`;
+      }
+    });
+    });
+}*/
   //})();
   
 
