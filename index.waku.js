@@ -165,8 +165,9 @@ if (titleElement !== null) {
       const inputNumber = numberInput.value.trim();
       if (/^\d+$/.test(inputNumber)) {
         // 構造新的URL並重新定向網頁
-        const newUrl = `${bookTitle}_html${inputNumber}.html`;
-        window.location.href = newUrl;
+        window.location.href = `${bookTitle}_html${numberInput}.html`;
+        // const newUrl = `${bookTitle}_html${inputNumber}.html`;
+        // window.location.href = newUrl;
       } else {
         alert('請輸入一個有效的數字');
       }
