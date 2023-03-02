@@ -80,9 +80,9 @@ body {
         text-align: center;
         background: linear-gradient(to bottom, #ba8359, #73411d);
         background-image:
-        radial-gradient(circle at top left, transparent 5%, #73411d 20%),
-        radial-gradient(circle at top right, transparent 20%, #73411d 20%),
-        radial-gradient(circle at bottom left, transparent 35%, #73411d 20%),
+        radial-gradient(circle at top left, transparent 5%, #73411d 10%),
+        radial-gradient(circle at top right, transparent 20%, #73411d 25%),
+        radial-gradient(circle at bottom left, transparent 35%, #73411d 25%),
         radial-gradient(circle at bottom right, transparent 40%, #73411d 20%),
         linear-gradient(#73411d, #73411d) repeat 0 0;
         color: white;
