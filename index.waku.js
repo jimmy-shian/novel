@@ -149,10 +149,13 @@ if (titleElement !== null) {
   // 取得輸入框元素和提交按鈕元素
   const numberInput = document.querySelector('#numberInput');
   // const submitButton = document.querySelector('#submitButton');
-  numberInput?.addEventListener('keyup', function(event) {
-    if (event.keyCode = 13) {
-      formElement.submit();
-    }
+  // numberInput?.addEventListener('keyup', function(event) {
+  //   if (event.keyCode = 13) {
+  //     formElement.submit();
+  //   }
+  // });
+  window.addEventListener('popstate', function(event) {
+    formElement.submit();
   });
   // 如果輸入框和提交按鈕存在，則設置事件監聽器
   if (numberInput !== null) {
