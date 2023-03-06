@@ -1,5 +1,12 @@
 //(function() {
-//window.onload = function() {
+window.onload = function() {
+  function checkScrollbar() {
+    var body = document.body;
+    var html = document.documentElement;
+    location.reload();
+  }
+  checkScrollbar();
+};
   // 在這裡編寫你的全部程式碼
 
    // 翻譯index
