@@ -7,7 +7,7 @@
       var hasScrollbar = body.scrollHeight > html.clientHeight;
       var overflowStyle = window.getComputedStyle(body).overflowY;
     
-      if (hasScrollbar && overflowStyle !== 'hidden') {
+      if (overflowStyle == 'scroll') {
         console.log('The webpage has a scrollbar.');
       } else {
         console.log('The webpage does not have a scrollbar.');
