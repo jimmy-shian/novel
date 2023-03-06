@@ -5,9 +5,9 @@
    // 翻譯index
     const cardText = document.querySelector('#cardText');
     const changeBtn = document.querySelector('#changeBtn');
+    console.log(`changeBtn = ${changeBtn}`);
+    console.log(`cardText = ${cardText}`);
 
-   console.log(changeBtn);
-   console.log(cardText);
    if (cardText !== 'null') {}
 
    let isChanged = '0';
@@ -124,10 +124,39 @@ end.onreadystatechange = function() {
     if (end.readyState === XMLHttpRequest.DONE || end.status === 200) {
     contentEnd.innerHTML = end.responseText;
     }
-};
+
+    const currentUrl = window.location.href;
+    // 获取当前页面链接中的数字部分
+    const currentPageNum = parseInt(currentUrl.match(/\d+.html/)[0].replace('.html', ''));
+    // 左键被按下，如果当前页面不是第一页，则跳转到前一页
+console.log(`currentPageNum = ${currentPageNum}`);
+    function goLeft() {
+      const prevPageNum = currentPageNum - 1;
+      if (prevPageNum >= 1) {
+        const prevUrl = currentUrl.replace(currentPageNum + '.html', prevPageNum + '.html');
+        window.location.href = prevUrl;
+      } else {
+        window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
+      }
+    }
+    // 右键被按下，跳转到下一页
+    function goRight() {
+      const nextPageNum = currentPageNum + 1;
+      const nextUrl = currentUrl.replace(currentPageNum + '.html', nextPageNum + '.html');
+      window.location.href = nextUrl;
+    }
+    // 监听键盘事件，按下左右键时执行相应的函数
+    document.onkeydown = function (event) {
+      if (event.key === 'ArrowLeft') { // 左键
+        goLeft();
+      } else if (event.key === 'ArrowRight') { // 右键
+        goRight();
+      }
+    };
+  };
 end.send();
-console.log(contentDiv);
-console.log(contentEnd);
+console.log(`contentDiv = ${contentDiv}`);
+console.log(`contentEnd = ${contentEnd}`);
 
 
 /*jump url*/ 
@@ -142,7 +171,8 @@ if (titleElement !== null) {
   const title = titleElement.textContent.trim();
   const match = title.match(/《([^》]*)》/);
   const bookTitle = match ? match[1] : '';
-  console.log(bookTitle);
+  console.log(`bookTitle = ${bookTitle}`);
+
 
   const formElement = document.querySelector('form');
 
@@ -251,8 +281,8 @@ if (contentElement) {
   const filename = url.substring(url.lastIndexOf('/') + 1);
   // 將文件名中的HTML後綴替換為TXT後綴
   const txtname = filename.replace(".html", ".txt");
-  
-  console.log(txtname);
+  console.log(`txtname = ${txtname}`);
+
   // 發送請求並匯入文件內容
   fetch(txtname)
     .then(response => {
@@ -271,6 +301,9 @@ if (contentElement) {
         contentElement.innerHTML = '無法獲取內容，請重新整理頁面';
     });
 }
+
+
+
 
 
 
