@@ -1,22 +1,20 @@
 //(function() {
-  let a = 0;  //將變數a的定義移動到函數之外
+// window.onload = function() {
 
-  window.onload = function() {
     function checkScrollbar() {
       var body = document.body;
       var html = document.documentElement;
       var hasScrollbar = body.scrollHeight > html.clientHeight;
-      
-      if (a < 1) {
-        a++;  //使用全局變數a的值，而不是重新定義一個新的區域變數
+      var overflowStyle = window.getComputedStyle(body).overflowY;
+    
+      if (hasScrollbar && overflowStyle !== 'hidden') {
+        console.log('The webpage has a scrollbar.');
+      } else {
+        console.log('The webpage does not have a scrollbar.');
         location.reload();
-        if (!hasScrollbar) {
-          location.reload();
-        }
       }
     }
     checkScrollbar();
-  };
   
   // 在這裡編寫你的全部程式碼
 
