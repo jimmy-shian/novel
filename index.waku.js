@@ -275,13 +275,13 @@ if (contentElement) {
 
 const currentUrl = window.location.href;
     // 获取当前页面链接中的数字部分
-    const currentPageNum = parseInt(currentUrl.match(/\d+.html/)[0].replace('.html', ''));
+const currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
     // 左键被按下，如果当前页面不是第一页，则跳转到前一页
 console.log(`currentPageNum = ${currentPageNum}`);
     function goLeft() {
       const prevPageNum = currentPageNum - 1;
       if (prevPageNum >= 1) {
-        const prevUrl = currentUrl.replace(currentPageNum + '.html', prevPageNum + '.html');
+        const prevUrl = currentUrl.replace(currentPageNum, prevPageNum);
         window.location.href = prevUrl;
       } else {
         window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
@@ -290,7 +290,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     // 右键被按下，跳转到下一页
     function goRight() {
       const nextPageNum = currentPageNum + 1;
-      const nextUrl = currentUrl.replace(currentPageNum + '.html', nextPageNum + '.html');
+      const nextUrl = currentUrl.replace(currentPageNum, nextPageNum);
       window.location.href = nextUrl;
     }
     // 监听键盘事件，按下左右键时执行相应的函数
