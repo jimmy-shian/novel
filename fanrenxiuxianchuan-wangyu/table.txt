@@ -7354,8 +7354,10 @@
             
                   <td class="title-td"><a href="https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/凡人修仙傳_html2451.html">凡人外傳二</a></td>
             
-                </tr>
+                  <td class="title-td"><a href="https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/凡人修仙傳_html2452.html">凡人仙界篇外傳一</a></td>
             
+                    </tr>
+                
             </table>
       <div class="spacer"></div>
         
