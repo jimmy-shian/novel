@@ -183,6 +183,9 @@ body {
       color: rgb(169, 165, 165);
       max-width: 500px;
     }
+
+    /* ======================================================================== */
+    
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
@@ -197,7 +200,7 @@ body {
   }
     .catalogue_container {
         background-color: #393939;
-        color: #999999;
+        color: #bbbbbb;
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -211,7 +214,7 @@ body {
         padding: 0 25px;
         font-size: 200%;
         background-color: #393939;
-        color: #999999;
+        color: #bbbbbb;
         }
     .container {
         flex-direction: row; /* 改变布局方向为水平布局 /
