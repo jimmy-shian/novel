@@ -38,12 +38,12 @@ body {
     justify-content: flex-end;
     padding: 0 25px;
     font-size: 200%;
-    background-color:#999999;
-    color:  #393939;
+    /* background-color:#999999;
+    color:  #393939; */
     }
     .container {
-    background-color:#999999;
-    color:  #393939;
+    /* background-color:#999999;
+    color:  #393939; */
     border: 1px solid rgb(209, 211, 162); /* 加入外框 */
     padding: 8px; /* 加入內間距 */
     border-radius: 10px; /* 設置圓弧半徑 */
@@ -65,7 +65,9 @@ body {
 
         }
     a {
-    color: rgb(213,206,205); /* 设置默认颜色 */
+    /* color: rgb(213,206,205); 设置默认颜色 */
+    color:  #393939; 
+
     }
     a:hover {
     color: rgb(255, 159, 159); /* 设置鼠标停留颜色 */
@@ -137,7 +139,9 @@ body {
       }          
       
       .btn-change {
-        background-color: rgb(241, 183, 75);
+        /* background-color: rgb(241, 183, 75); */
+        background-color: rgb(174, 116, 8);
+
         transition: all 0.3s ease-in-out;
         border: 1px solid white;
       }
@@ -198,9 +202,14 @@ body {
   input[type="number"]::-webkit-inner-spin-button {
     display: none;
   }
+  body {
+    background-color: #393939;
+    color: #bbbbbb;
+    overflow-y:scroll;
+    }
     .catalogue_container {
-        background-color: #393939;
-        color: #bbbbbb;
+        /* background-color: #393939;
+        color: #bbbbbb; */
         border: 1px solid rgb(209, 211, 162); /* 加入外框 */
         padding: 8px; /* 加入內間距 */
         border-radius: 10px; /* 設置圓弧半徑 */
@@ -213,8 +222,8 @@ body {
         justify-content: flex-end;
         padding: 0 25px;
         font-size: 200%;
-        background-color: #393939;
-        color: #bbbbbb;
+        /* background-color: #393939;
+        color: #bbbbbb; */
         }
     .container {
         flex-direction: row; /* 改变布局方向为水平布局 /
