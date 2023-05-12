@@ -246,7 +246,10 @@ body {
         height: 25px;
         margin-bottom: 50px;
     }
-    
+    a {
+      /* color: rgb(213,206,205); 设置默认颜色 */
+      color: #bbbbbb;
+      }
     .card-index {
         width: 90%;
       }
