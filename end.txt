@@ -1,7 +1,7 @@
       <div class="spacer"></div>
       <center>
               版權沒有 歡迎使用<br><br>
-              網站架設者 : jimmy<br>
+              網站架設者聯絡方式 : jimmy910824@gmail.com<br>
               <hr><br><br>
         </center>
       <div class="spacer"></div>
