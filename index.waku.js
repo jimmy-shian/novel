@@ -322,7 +322,6 @@ console.log(`currentPageNum = ${currentPageNum}`);
 var buttons = document.querySelectorAll(".copy-p-button");
 // var ytspeed = document.querySelectorAll(".ytspeed");
 
-
 // 為每個按鈕綁定 click 事件
 buttons.forEach(function(button) {
     button.addEventListener("click", function() {

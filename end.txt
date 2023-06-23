@@ -2,12 +2,11 @@
       <center>
               版權沒有 歡迎使用<br><br>
               網站架設者聯絡方式 : 
-              <div class="copy-p">
-                  <span id="text1"jimmy910824@gmail.com</span> &nbsp;
-                  <button class="copy-p-button">Copy</button>
-              </div>
-              <br>
-              <hr><br><br>
+
+            <span class="copy-p">jimmy9108234@gmail.com</span> &nbsp;
+            <button class="copy-p-button">Copy</button>
+              
+              <br><hr><br><br>
         </center>
       <div class="spacer"></div>
 	<br>
