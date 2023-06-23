@@ -1,12 +1,12 @@
       <div class="spacer"></div>
       <center>
               版權沒有 歡迎使用<br><br>
+              <div class="copy-container">
               網站架設者聯絡方式 : 
-
-            <span-copy class="span-copy" style="color: black; font-weight: bold; border-bottom: 2px solid lightgrey;">jimmy910824@gmail.com</span-copy>&nbsp;&nbsp;
-        
-            <button class="copy-p-button">Copy</button>
-              
+                <span-copy class="span-copy" style="color: black; font-weight: bold; border-bottom: 2px solid lightgrey;">jimmy910824@gmail.com</span-copy>&nbsp;&nbsp;
+                <button class="copy-p-button">Copy</button>
+              </div>
+                            
               <br><hr><br><br>
         </center>
       <div class="spacer"></div>
