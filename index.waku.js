@@ -331,7 +331,7 @@ buttons.forEach(function(button) {
 });
 
 // 為每個文字節點綁定 click 事件
-var textNodes = document.querySelectorAll(".copy-p span");
+var textNodes = document.querySelectorAll("span-copy");
 
 textNodes.forEach(function(textNode) {
     textNode.addEventListener("click", function() {

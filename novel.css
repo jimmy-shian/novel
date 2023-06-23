@@ -187,7 +187,27 @@ body {
       color: rgb(169, 165, 165);
       max-width: 500px;
     }
+    /* 按鈕樣式 */
+    .copy-p-button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      background-color: #4073a9;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px; /* 添加圓角 */
+      transition: background-color 0.3s ease; /* 添加過渡效果 */
+    }
 
+    /* 按鈕 hover 樣式 */
+    .span-copy:hover .copy-p-button {
+      background-color: #81a8d2;
+    }
+
+    /* 調整按鈕位置 */
+    .copy-p-button {
+      margin-left: auto; /* 將按鈕置於右側 */
+    }
     /* ======================================================================== */
     
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
