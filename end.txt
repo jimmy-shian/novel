@@ -3,7 +3,7 @@
               版權沒有 歡迎使用<br><br>
               網站架設者聯絡方式 : 
 
-            <span class="copy-p">jimmy9108234@gmail.com</span> &nbsp;
+            <span class="copy-p" id="text1">jimmy9108234@gmail.com</span> &nbsp;
             <button class="copy-p-button">Copy</button>
               
               <br><hr><br><br>
