@@ -1,43 +1,43 @@
-//(function() {
-window.onload = function() {
-  //=================================================== 複製gmail
-// 選取所有具有 class "myButton" 的按鈕
-var buttons = document.querySelectorAll(".copy-p-button");
-// var ytspeed = document.querySelectorAll(".ytspeed");
-console.log('email:');
-// 為每個文字節點綁定 click 事件
-var textNodes = document.querySelectorAll(".span-copy");
+// //(function() {
+// window.onload = function() {
+//   //=================================================== 複製gmail
+// // 選取所有具有 class "myButton" 的按鈕
+// var buttons = document.querySelectorAll(".copy-p-button");
+// // var ytspeed = document.querySelectorAll(".ytspeed");
+// console.log('email:');
+// // 為每個文字節點綁定 click 事件
+// var textNodes = document.querySelectorAll(".span-copy");
 
-textNodes.forEach(function(textNode) {
-  textNode.addEventListener("click", function() {
-    var text = this.textContent.trim(); // 取得文字節點的文字內容
-    copyText(text, this.nextElementSibling);
-  });
-});
-// 為每個按鈕綁定 click 事件
-buttons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        var text = this.previousElementSibling.textContent.trim(); // 取得前一個節點的文字內容
-        copyText(text, this);
-    });
-});
+// textNodes.forEach(function(textNode) {
+//   textNode.addEventListener("click", function() {
+//     var text = this.textContent.trim(); // 取得文字節點的文字內容
+//     copyText(text, this.nextElementSibling);
+//   });
+// });
+// // 為每個按鈕綁定 click 事件
+// buttons.forEach(function(button) {
+//     button.addEventListener("click", function() {
+//         var text = this.previousElementSibling.textContent.trim(); // 取得前一個節點的文字內容
+//         copyText(text, this);
+//     });
+// });
 
-function copyText(text, button) {
-    navigator.clipboard.writeText(text).then(function() {
-        if (button) {
-            button.textContent = ' ✓ Copied !'; // 修改按鈕文字為 "複製成功"
-            setTimeout(function() {
-                button.textContent = 'Copy'; // 2秒後將按鈕文字改回 "Copy"
-            }, 800);      
-        }
-        console.log(text);
-    }).catch(function(err) {
-        // window.alert("複製失敗", err);
-        console.error('複製失敗', err);
-    });
-}
-//===================================================
-};
+// function copyText(text, button) {
+//     navigator.clipboard.writeText(text).then(function() {
+//         if (button) {
+//             button.textContent = ' ✓ Copied !'; // 修改按鈕文字為 "複製成功"
+//             setTimeout(function() {
+//                 button.textContent = 'Copy'; // 2秒後將按鈕文字改回 "Copy"
+//             }, 800);      
+//         }
+//         console.log(text);
+//     }).catch(function(err) {
+//         // window.alert("複製失敗", err);
+//         console.error('複製失敗', err);
+//     });
+// }
+// //===================================================
+// };
 
     function checkScrollbar() {
       var body = document.body;
@@ -352,7 +352,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     // 右键被按下，跳转到下一页
     function goRight() {
       const nextPageNum = currentPageNum + 1;
-      if (nextPageNum < 2) {
+      if (nextPageNum > 2) {
         const nextUrl = currentUrl.replace(currentPageNum, nextPageNum);
         window.location.href = nextUrl;
       } else {
@@ -369,6 +369,43 @@ console.log(`currentPageNum = ${currentPageNum}`);
       }
     };
 
+//=================================================== 複製gmail
+// 選取所有具有 class "myButton" 的按鈕
+var buttons = document.querySelectorAll(".copy-p-button");
+// var ytspeed = document.querySelectorAll(".ytspeed");
+console.log('email:');
+// 為每個文字節點綁定 click 事件
+var textNodes = document.querySelectorAll(".span-copy");
+
+textNodes.forEach(function(textNode) {
+  textNode.addEventListener("click", function() {
+    var text = this.textContent.trim(); // 取得文字節點的文字內容
+    copyText(text, this.nextElementSibling);
+  });
+});
+// 為每個按鈕綁定 click 事件
+buttons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        var text = this.previousElementSibling.textContent.trim(); // 取得前一個節點的文字內容
+        copyText(text, this);
+    });
+});
+
+function copyText(text, button) {
+    navigator.clipboard.writeText(text).then(function() {
+        if (button) {
+            button.textContent = ' ✓ Copied !'; // 修改按鈕文字為 "複製成功"
+            setTimeout(function() {
+                button.textContent = 'Copy'; // 2秒後將按鈕文字改回 "Copy"
+            }, 800);      
+        }
+        console.log(text);
+    }).catch(function(err) {
+        // window.alert("複製失敗", err);
+        console.error('複製失敗', err);
+    });
+}
+//===================================================
 
 // 取得所有的變數名稱和值
 const constVariables = Object.entries(window)
