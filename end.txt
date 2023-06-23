@@ -1,7 +1,11 @@
       <div class="spacer"></div>
       <center>
               版權沒有 歡迎使用<br><br>
-              網站架設者聯絡方式 : <p class="copy-p">jimmy910824@gmail.com</p><button class="copy-p-button">Copy</button>
+              網站架設者聯絡方式 : 
+              <div class="copy-p">
+                  <span id="text1"jimmy910824@gmail.com</span> &nbsp;
+                  <button class="copy-p-button">Copy</button>
+              </div>
               <br>
               <hr><br><br>
         </center>
