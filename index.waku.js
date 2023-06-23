@@ -332,12 +332,7 @@ const currentUrl = window.location.href;
 // const currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
 let currentPageNum;
 try {
-  const matchResult = currentUrl.match(/html+\d+/);
-  if (matchResult) {
-    currentPageNum = parseInt(matchResult[0].replace('html', ''));
-  } else {
-    throw new Error('No match found');
-  }
+  currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
 } catch (error) {
   currentPageNum = 0; // 或者使用其他預設值
   console.log('Error:', error.message);
@@ -357,7 +352,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     // 右键被按下，跳转到下一页
     function goRight() {
       const nextPageNum = currentPageNum + 1;
-      if (nextPageNum < 1) {
+      if (nextPageNum < 2) {
         const nextUrl = currentUrl.replace(currentPageNum, nextPageNum);
         window.location.href = nextUrl;
       } else {
