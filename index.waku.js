@@ -363,8 +363,8 @@ function copyText(text, button) {
         }
         
     }).catch(function(err) {
-        window.alert("複製失敗", err);
-        // console.error('複製失敗', err);
+        // window.alert("複製失敗", err);
+        console.error('複製失敗', err);
     });
 }
 //===================================================
