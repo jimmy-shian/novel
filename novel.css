@@ -191,7 +191,7 @@ body {
     .copy-p-button {
       margin-left: 10px;
       padding: 5px 10px;
-      background-color: #4073a9;
+      background-color: #82aad6;
       color: #ffffff;
       border: none;
       cursor: pointer;
@@ -200,8 +200,8 @@ body {
     }
 
     /* 按鈕 hover 樣式 */
-    .span-copy:hover .copy-p-button {
-      background-color: #81a8d2;
+    span-copy:hover .copy-p-button {
+      background-color: #aec2d8;
     }
 
     /* 調整按鈕位置 */
