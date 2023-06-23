@@ -202,6 +202,7 @@ body {
     /* 按鈕 hover 樣式 */
     span-copy:hover .copy-p-button {
       background-color: #aec2d8;
+      border: 1px solid white; /* 添加白色边框 */
     }
 
     /* 調整按鈕位置 */
