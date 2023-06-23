@@ -301,7 +301,7 @@ try {
     throw new Error('No match found');
   }
 } catch (error) {
-  currentPageNum = 0; // 或者使用其他預設值
+  currentPageNum = 'https://jimmy-shian.github.io/novel/index.html'; // 或者使用其他預設值
   console.log('Error:', error.message);
 }
 //==================================//
@@ -334,6 +334,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
 // 選取所有具有 class "myButton" 的按鈕
 var buttons = document.querySelectorAll(".copy-p-button");
 // var ytspeed = document.querySelectorAll(".ytspeed");
+console.log('email:');
 
 
 // 為每個文字節點綁定 click 事件
