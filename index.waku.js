@@ -291,7 +291,20 @@ if (contentElement) {
 
 const currentUrl = window.location.href;
     // 获取当前页面链接中的数字部分
-const currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
+// const currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
+let currentPageNum;
+try {
+  const matchResult = currentUrl.match(/html+\d+/);
+  if (matchResult) {
+    currentPageNum = parseInt(matchResult[0].replace('html', ''));
+  } else {
+    throw new Error('No match found');
+  }
+} catch (error) {
+  currentPageNum = 0; // 或者使用其他預設值
+  console.log('Error:', error.message);
+}
+//==================================//
     // 左键被按下，如果当前页面不是第一页，则跳转到前一页
 console.log(`currentPageNum = ${currentPageNum}`);
     function goLeft() {
