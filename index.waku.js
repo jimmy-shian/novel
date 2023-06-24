@@ -380,7 +380,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     function goLeft() {
       const prevPageNum = currentPageNum - 1;
       if (prevPageNum >= 1) {
-        const prevUrl = currentUrl.replace(currentPageNum, prevPageNum);
+        const prevUrl = currentUrl.replace(`html${currentPageNum}`, `html${prevPageNum}`);
         window.location.href = prevUrl;
       } else {
         window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
@@ -390,7 +390,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     function goRight() {
       const nextPageNum = currentPageNum + 1;
       if (nextPageNum > 2) {
-        const nextUrl = currentUrl.replace(currentPageNum, nextPageNum);
+        const nextUrl = currentUrl.replace(`html${currentPageNum}`, `html${nextPageNum}`);
         window.location.href = nextUrl;
       } else {
         window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
