@@ -168,24 +168,27 @@ xhr.onreadystatechange = function() {
         contentDiv.innerHTML = xhr.responseText;
 
         var novelPath = "novel";
+        var href_first = "https://jimmy-shian.github.io/";
+
         // 檢查是否在本地端執行
         if (window.location.hostname === "localhost" || window.location.protocol === "file:") {
             // 本地端執行時，將 novelPath 設置為空字串
             novelPath = "";
+            href_first = "";
         }
 
         // 更新網址
         const navLinks = contentDiv.querySelectorAll(".nav-link");
         navLinks.forEach(function(link) {
             var href = link.getAttribute("href");
-            href = "https://jimmy-shian.github.io/" + novelPath + href;
+            href = href_first + novelPath + href;
             link.setAttribute("href", href);
         });
 
         const dropdownItems = contentDiv.querySelectorAll(".dropdown-item");
         dropdownItems.forEach(function(item) {
             var href = item.getAttribute("href");
-            href = "https://jimmy-shian.github.io/" + novelPath + href;
+            href = href_first + novelPath + href;
             item.setAttribute("href", href);
         });
     }
