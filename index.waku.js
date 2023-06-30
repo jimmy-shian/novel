@@ -165,17 +165,33 @@ const xhr = new XMLHttpRequest();
 xhr.open("GET", "https://jimmy-shian.github.io/novel/nav.txt", true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
-    contentDiv.innerHTML = xhr.responseText;
+        contentDiv.innerHTML = xhr.responseText;
 
-    var novelPath = "novel/";
-    // 檢查是否在本地端執行
-    if (window.location.hostname === "localhost" || window.location.protocol === "file:") {
-      // 本地端執行時，將 novelPath 設置為空字串
-      novelPath = "";
-    }
+        var novelPath = "novel";
+        // 檢查是否在本地端執行
+        if (window.location.hostname === "localhost" || window.location.protocol === "file:") {
+            // 本地端執行時，將 novelPath 設置為空字串
+            novelPath = "";
+        }
+
+        // 更新網址
+        const navLinks = contentDiv.querySelectorAll(".nav-link");
+        navLinks.forEach(function(link) {
+            var href = link.getAttribute("href");
+            href = "https://jimmy-shian.github.io/" + novelPath + href;
+            link.setAttribute("href", href);
+        });
+
+        const dropdownItems = contentDiv.querySelectorAll(".dropdown-item");
+        dropdownItems.forEach(function(item) {
+            var href = item.getAttribute("href");
+            href = "https://jimmy-shian.github.io/" + novelPath + href;
+            item.setAttribute("href", href);
+        });
     }
 };
 xhr.send();
+
 
 const contentEnd = document.getElementById("content-end");
 
