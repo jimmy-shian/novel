@@ -167,11 +167,11 @@ xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
     contentDiv.innerHTML = xhr.responseText;
 
-    var novelPath = "/novel/";
+    var novelPath = "novel/";
     // 檢查是否在本地端執行
     if (window.location.hostname === "localhost" || window.location.protocol === "file:") {
       // 本地端執行時，將 novelPath 設置為空字串
-      novelPath = "/";
+      novelPath = "";
     }
     }
 };
