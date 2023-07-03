@@ -37,8 +37,16 @@
                         <li><a class="dropdown-item" href="/sancunrenjian-ergen/sancunrenjian-ergen.html">三寸人間</a></li>
                       </ul>
                     </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Else其他
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="/404.html">404</a></li>
+                      </ul>
+                    </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="/404.html">Pricing</a>
+                      <a class="nav-link" href="https://jimmy-shian.github.io/novel/index.html">Pricing</a>
                     </li>
                   </ul>
                 </div>
