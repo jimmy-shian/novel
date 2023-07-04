@@ -181,14 +181,19 @@ xhr.onreadystatechange = function() {
         const navLinks = contentDiv.querySelectorAll(".nav-link");
         navLinks.forEach(function(link) {
             var href = link.getAttribute("href");
-            href = href_first + novelPath + href;
+            if (href !== "https://jimmy-shian.github.io/novel/index.html") {
+                  href = href_first + novelPath + href;
+              }
             link.setAttribute("href", href);
         });
 
         const dropdownItems = contentDiv.querySelectorAll(".dropdown-item");
         dropdownItems.forEach(function(item) {
             var href = item.getAttribute("href");
-            href = href_first + novelPath + href;
+            if (href !== "https://github.com/jimmy-shian/novel") {
+                  href = href_first + novelPath + href;
+              }
+            // href = href_first + novelPath + href;
             item.setAttribute("href", href);
         });
     }
