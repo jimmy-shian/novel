@@ -199,6 +199,11 @@ body {
       transition: background-color 0.3s ease; /* 添加過渡效果 */
     }
 
+    .span-copy{
+      color: black;
+      font-weight: bold;
+      border-bottom: 2px solid lightgrey;
+    } 
     /* 按鈕 hover 樣式 */
     .copy-container:hover .copy-p-button {
       background-color: #2c3f54;
@@ -305,6 +310,10 @@ body {
         display: block;
       }
       
+      .span-copy{
+        color: rgb(255, 255, 255);
+        border-bottom: 2px solid rgb(172, 172, 172);
+      } 
       .copy-p-button {
         margin-top: 1em;
       }
@@ -312,19 +321,22 @@ body {
       .h-404 {
         font-size: 80%;
         padding: 0 10px;
-        color: rgb(172, 172, 172);
+        /* color: rgb(172, 172, 172); */
+        color: rgb(67, 67, 67);
         /* margin-top: 20%; */
       }
       .p-404 {
         padding: 0 10px;
         font-size: 50%;
-        color: rgb(110, 110, 110);
+        color: rgb(56, 56, 56);
+        /* color: rgb(110, 110, 110); */
         margin-top: 50px;
       }
       .pre-404 {
         white-space: pre-wrap;
         overflow-wrap: break-word;
-        color: rgb(169, 165, 165);
+        color: rgb(35, 35, 35);
+        /* color: rgb(169, 165, 165); */
         max-width: 500px;
       }
     }
