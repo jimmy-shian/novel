@@ -462,7 +462,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
         // 在最底時，只顯示回到最頂按鍵，隱藏滾動到最底按鍵
         backToTop.style.display = 'block';
         scrollToBottom.style.display = 'none';
-      } else if (scrollPosition > 500) {
+      } else if (scrollPosition > 50) {
         // 在中間時，兩個按鍵都顯示
         backToTop.style.display = 'block';
         scrollToBottom.style.display = 'block';

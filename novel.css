@@ -236,21 +236,30 @@ body {
         background-color: #fff4f44f; /* 淺白色背景 */
         border: none;
         border-radius: 50%; /* 圓形按鍵 */
-        width: 20px;
-        height: 20px;
+        width: 25px;
+        height: 25px;
       }
 
       /* 向上箭頭 */
-      #back-to-top:before {
-        content: "\25B2"; /* Unicode 箭頭字符 */
-        font-size: 12px;
-      }
-
+      #back-to-top:before,
       /* 向下箭頭 */
       #scroll-to-bottom:before {
-        content: "\25BC"; /* Unicode 箭頭字符 */
-        font-size: 12px;
+        content: ""; /* 清空內容，不添加文字 */
+        position: absolute;
+        top: 50%; /* 將箭頭的上邊緣定位在父元素的中間 */
+        left: 50%; /* 將箭頭的左邊緣定位在父元素的中間 */
+        transform: translate(-50%, -50%); /* 將箭頭水平和垂直都置中 */
+        font-size: 18px;
       }
+        /* 向上箭頭 */
+        #back-to-top:before {
+          content: "\25B2"; /* Unicode 箭頭字符 */
+        }
+
+        /* 向下箭頭 */
+        #scroll-to-bottom:before {
+          content: "\25BC"; /* Unicode 箭頭字符 */
+        }
 
     /* ======================================================================== */
     /* ======================================================================== */
