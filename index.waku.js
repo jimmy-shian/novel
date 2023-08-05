@@ -473,8 +473,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
       }
     });
 
-      
-
+    
 
 // 取得所有的變數名稱和值
 const constVariables = Object.entries(window)
