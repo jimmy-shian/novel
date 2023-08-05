@@ -1,3 +1,12 @@
+       
+       <div id="back-to-top">
+        <button onclick="scrollToTop()">回到最頂</button>
+       </div>
+          <br>
+       <div id="scroll-to-bottom">
+        <button onclick="scrollToBottom()">滾動到最底</button>
+      </div>
+      
       <div class="spacer"></div>
       <center>
               版權沒有 歡迎使用<br><br>

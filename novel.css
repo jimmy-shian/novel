@@ -215,7 +215,27 @@ body {
     .copy-p-button {
       margin-left: auto; /* 將按鈕置於右側 */
     }
+
+    /*回到 最頂or底 按鍵*/
+    #back-to-top {
+      position: fixed;
+      bottom: 20vh;
+      right: 20px;
+      display: none; /* 初始隱藏按鍵 */
+    }
+    #scroll-to-bottom {
+      position: fixed;
+      bottom: 10vh;
+      right: 20px;
+      display: none; /* 初始隱藏按鍵 */
+    }
+
+
     /* ======================================================================== */
+    /* ======================================================================== */
+    /* ======================================================================== */
+    /* ======================================================================== */
+
     
 @media only screen and (max-width: 768px) { /* 如果屏幕宽度小于等于768px */
   input[type="number"]::-webkit-outer-spin-button,
@@ -339,6 +359,9 @@ body {
         /* color: rgb(169, 165, 165); */
         max-width: 500px;
       }
+      #back-to-top {
+        display: none;
+    }
     }
 
     
