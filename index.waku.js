@@ -451,23 +451,25 @@ console.log(`currentPageNum = ${currentPageNum}`);
             behavior: 'smooth' // 平滑滾動
         });
     }
-    
+
     // 監聽視窗滾動事件
     window.addEventListener('scroll', function() {
       var backToTop = document.getElementById('back-to-top');
       var scrollToBottom = document.getElementById('scroll-to-bottom');
       var scrollPosition = window.pageYOffset;
 
-      // 當垂直滾動位置大於 500 時，顯示回到最頂按鍵，否則隱藏
-      if (scrollPosition > 500) {
-          backToTop.style.display = 'block';
-          scrollToBottom.style.display = 'none';
-      } else if (scrollPosition < 500 && scrollPosition > 0) {
-          backToTop.style.display = 'block';
-          scrollToBottom.style.display = 'block';
+      if (scrollPosition >= document.body.scrollHeight - window.innerHeight) {
+        // 在最底時，只顯示回到最頂按鍵，隱藏滾動到最底按鍵
+        backToTop.style.display = 'block';
+        scrollToBottom.style.display = 'none';
+      } else if (scrollPosition > 500) {
+        // 在中間時，兩個按鍵都顯示
+        backToTop.style.display = 'block';
+        scrollToBottom.style.display = 'block';
       } else {
-          backToTop.style.display = 'none';
-          scrollToBottom.style.display = 'block';
+        // 在最頂時，只顯示滾動到最底按鍵，隱藏回到最頂按鍵
+        backToTop.style.display = 'none';
+        scrollToBottom.style.display = 'block';
       }
     });
 
