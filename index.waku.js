@@ -420,7 +420,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
     // 右键被按下，跳转到下一页
     function goRight() {
       const nextPageNum = currentPageNum + 1;
-      if (nextPageNum > 2) {
+      if (nextPageNum >= 2) {
         const nextUrl = currentUrl.replace(`html${currentPageNum}`, `html${nextPageNum}`);
         window.location.href = nextUrl;
       } else {
