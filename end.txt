@@ -13,9 +13,22 @@
                 <span-copy class="span-copy" >jimmy910824@gmail.com</span-copy>&nbsp;&nbsp;
                 <button class="copy-p-button">Copy</button>
               </div>
-                            
-              <br><hr><br><br>
+
+              <br><hr>
         </center>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // 使用jQuery綁定點擊事件
+  $(document).ready(function() {
+    $('.dropdown-toggle').click(function() {
+      // 隱藏所有其他下拉選單
+      $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+      
+      // 切換下拉選單的展開狀態
+      $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+    });
+  });
+</script>
       <div class="spacer"></div>
 	<br>
 

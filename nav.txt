@@ -16,20 +16,20 @@
                       <a class="nav-link" href="/quanzhifashi-luan/quanzhifashi-luan.html">全職法師</a>
                     </li>
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         忘語
                       </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/fanrenxiuxianchuan-wangyu/fanrenxiuxianchuan-wangyu.html">凡人修仙傳</a></li>
                         <li><a class="dropdown-item" href="/fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html">
                           凡人修仙之仙界篇</a></li>
                       </ul>
                     </li>
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         耳根
                       </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/xianni-ergen/xianni-ergen.html">仙逆</a></li>
                         <li><a class="dropdown-item" href="/qiumo-ergen/qiumo-ergen.html">求魔</a></li>
                         <li><a class="dropdown-item" href="/woyufengtian-ergen/woyufengtian-ergen.html">我欲封天</a></li>
@@ -50,10 +50,10 @@
                       <a class="nav-link" href="/dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html">大符篆師</a>
                     </li>
                     <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link dropdown-toggle dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Else其他
                       </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/404.html">404</a></li>
                         <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
                       </ul>
