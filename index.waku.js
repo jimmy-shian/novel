@@ -200,7 +200,7 @@ xhr.onreadystatechange = function() {
         // 選擇 <span> 元素並更新其內容為 currentPageNum
         const currentPageNumElement = document.getElementById('currentPageNum');
 
-        if (currentPageNumElement) {
+        if (currentPageNumElement !== null ) {
           currentPageNumElement.textContent = currentPageNum;
         } else {
           console.log('currentPageNum not show');
