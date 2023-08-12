@@ -65,5 +65,6 @@
                 </div>
               </div>
             </nav>   
+<br><p style="font-size: 35%;">當前頁數：<span id="currentPageNum"></span></p>
 
 <!--https://jimmy-shian.github.io/novel -->

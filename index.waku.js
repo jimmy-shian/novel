@@ -405,6 +405,11 @@ try {
   currentPageNum = 0; // 或者使用其他預設值
   console.log('Error:', error.message);
 }
+
+// 選擇 <span> 元素並更新其內容為 currentPageNum
+const currentPageNumElement = document.getElementById('currentPageNum');
+currentPageNumElement.textContent = currentPageNum;
+
 //==================================//
     // 左键被按下，如果当前页面不是第一页，则跳转到前一页
 console.log(`currentPageNum = ${currentPageNum}`);

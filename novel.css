@@ -223,13 +223,13 @@ body {
       position: fixed;
       bottom: 20vh;
       right: 15px;
-      display: none; /* 初始隱藏按鍵 */
+      display: block; /* 初始顯示按鍵 */
     }
     #scroll-to-bottom {
       position: fixed;
       bottom: 10vh;
       right: 15px;
-      display: none; /* 初始隱藏按鍵 */
+      display: block; /* 初始顯示按鍵 */
     }
       #back-to-top,
       #scroll-to-bottom {
