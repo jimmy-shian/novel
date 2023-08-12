@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://jimmy-shian.github.io/novel/novel.css">
+    
+  <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">My novel site</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/diba-yanbixiaosheng/diba-yanbixiaosheng.html">帝霸</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/quanzhifashi-luan/quanzhifashi-luan.html">全職法師</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-mine" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              忘語
+            </a>
+            <ul class="dropdown-menu dropdown-menu-mine" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/fanrenxiuxianchuan-wangyu/fanrenxiuxianchuan-wangyu.html">凡人修仙傳</a></li>
+              <li><a class="dropdown-item" href="/fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html">
+                凡人修仙之仙界篇</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-mine" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              耳根
+            </a>
+            <ul class="dropdown-menu dropdown-menu-mine" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/xianni-ergen/xianni-ergen.html">仙逆</a></li>
+              <li><a class="dropdown-item" href="/qiumo-ergen/qiumo-ergen.html">求魔</a></li>
+              <li><a class="dropdown-item" href="/woyufengtian-ergen/woyufengtian-ergen.html">我欲封天</a></li>
+              <li><a class="dropdown-item" href="/yinianyongheng-ergen/yinianyongheng-ergen.html">一念永恆</a></li>
+              <li><a class="dropdown-item" href="/sancunrenjian-ergen/sancunrenjian-ergen.html">三寸人間</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/woshixiongshizaitaiwenjianle-yanguizhengzhuan/woshixiongshizaitaiwenjianle-yanguizhengzhuan.html">我師兄實在太穩健了</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo.html">修真聊天羣</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dafengdagengren-maibaoxiaolangjun/dafengdagengren-maibaoxiaolangjun.html">大奉打更人</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html">大符篆師</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle dropdown-toggle-mine" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Else其他
+            </a>
+            <ul class="dropdown-menu dropdown-menu-mine" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/404.html">404</a></li>
+              <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://jimmy-shian.github.io/novel/index.html" target="_blank">Pricing</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>   
+<center><p style="font-size: 145%; margin: 0;">當前頁數：<span id="currentPageNum"></span></p></center>
+
+<!--https://jimmy-shian.github.io/novel -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+<script>
+  // 使用jQuery綁定點擊事件
+  $(document).ready(function() {
+    $('.dropdown-toggle').click(function() {
+      // 隱藏所有其他下拉選單
+      $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+      
+      // 切換下拉選單的展開狀態
+      $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+    });
+  });
+</script>
+
+</body>
+</html>
