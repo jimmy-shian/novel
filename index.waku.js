@@ -482,7 +482,7 @@ console.log(`currentPageNum = ${currentPageNum}`);
       }
     });
 
-      // 使用jQuery綁定點擊事件
+      // 使用jQuery綁定點擊事件==========================================================
   $(document).ready(function() {
     $('.dropdown-toggle').click(function() {
       // 隱藏所有其他下拉選單
