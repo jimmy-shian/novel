@@ -493,15 +493,19 @@ console.log(`currentPageNum = ${currentPageNum}`);
     });
 
       // 使用jQuery綁定點擊事件==========================================================
-$(document).ready(function() {
-  $('.dropdown-toggle').click(function() {
-    // 隱藏所有其他下拉選單
-    $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
-    
-    // 切換下拉選單的展開狀態
-    $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+window.onload = function() {
+  // 使用jQuery綁定點擊事件
+  $(document).ready(function() {
+    $('.dropdown-toggle').click(function() {
+      // 隱藏所有其他下拉選單
+      $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+      
+      // 切換下拉選單的展開狀態
+      $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+    });
   });
-});
+};
+      
 
 // 取得所有的變數名稱和值
 const constVariables = Object.entries(window)
