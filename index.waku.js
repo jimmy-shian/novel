@@ -494,17 +494,23 @@ console.log(`currentPageNum = ${currentPageNum}`);
 
       // 使用jQuery綁定點擊事件==========================================================
 window.onload = function() {
+  $(document).click(function(event) {
+    // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
+    if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
+      $('.dropdown-menu').slideUp(250);
+    }
+  });
+
   // 使用jQuery綁定點擊事件
-  $(document).ready(function() {
-    $('.dropdown-toggle').click(function() {
-      // 隱藏所有其他下拉選單
-      $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
-      
-      // 切換下拉選單的展開狀態
-      $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
-    });
+  $('.dropdown-toggle').click(function() {
+    // 隱藏所有其他下拉選單
+    $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+    
+    // 切換下拉選單的展開狀態
+    $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
   });
 };
+      
       
 
 // 取得所有的變數名稱和值
