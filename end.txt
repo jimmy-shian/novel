@@ -4,7 +4,8 @@
 
     <!-- 滾動到最底按鍵 -->
     <div id="scroll-to-bottom" onclick="scrollToBottom()"></div>
-          
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2415998114933157"
+     crossorigin="anonymous"></script>
       <div class="spacer"></div>
       <center>
               版權沒有 歡迎使用<br><br>
