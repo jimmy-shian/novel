@@ -374,7 +374,7 @@ body {
         width: 100%;
       }
       .title-td {
-        max-width: 150px;
+        max-width: 80%;
         height: 45px;
         overflow: hidden;
         margin-left: 20%;
