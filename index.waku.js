@@ -332,7 +332,7 @@ if (titleElement !== null) {
           }
         })
         .catch(error => {
-          console.error('發生錯誤:', error);
+          // console.error('發生錯誤:', error);
           alert('輸入章節錯誤，請重新輸入');
           // 重新整理頁面
           window.location.reload();
@@ -525,54 +525,27 @@ console.log(`currentPageNum = ${currentPageNum}`);
     });
 
       // 使用jQuery綁定點擊事件==========================================================
-// window.onload = function() {
+window.onload = function() {
 
-// // document.addEventListener('DOMContentLoaded', function() {
-//   $(document).click(function(event) {
-//     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
-//     if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
-//       $('.dropdown-menu').slideUp(250);
-//     }
-//   });
-
-//   // 使用jQuery綁定點擊事件
-//   $('.dropdown-toggle').click(function() {
-//     // 隱藏所有其他下拉選單
-//     $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
-    
-//     // 切換下拉選單的展開狀態
-//     $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
-//   });
-// // });
-// };
-window.addEventListener('DOMContentLoaded', function() {
-  document.addEventListener('click', function(event) {
+// document.addEventListener('DOMContentLoaded', function() {
+  $(document).click(function(event) {
     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
-    if (!event.target.classList.contains('dropdown-toggle') && !event.target.classList.contains('dropdown-menu')) {
-      var dropdownMenus = document.getElementsByClassName('dropdown-menu');
-      for (var i = 0; i < dropdownMenus.length; i++) {
-        dropdownMenus[i].style.display = 'none';
-      }
+    if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
+      $('.dropdown-menu').slideUp(250);
     }
   });
 
-  // 綁定點擊事件
-  var dropdownToggles = document.getElementsByClassName('dropdown-toggle');
-  for (var i = 0; i < dropdownToggles.length; i++) {
-    dropdownToggles[i].addEventListener('click', function() {
-      // 隱藏所有其他下拉選單
-      var dropdownMenus = document.getElementsByClassName('dropdown-menu');
-      for (var j = 0; j < dropdownMenus.length; j++) {
-        if (dropdownMenus[j] !== this.nextElementSibling) {
-          dropdownMenus[j].style.display = 'none';
-        }
-      }
+  // 使用jQuery綁定點擊事件
+  $('.dropdown-toggle').click(function() {
+    // 隱藏所有其他下拉選單
+    $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+    
+    // 切換下拉選單的展開狀態
+    $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+  });
+// });
+};
 
-      // 切換下拉選單的展開狀態
-      this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';
-    });
-  }
-}); 
       
 
 // 取得所有的變數名稱和值
