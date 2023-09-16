@@ -318,8 +318,25 @@ if (titleElement !== null) {
       const inputNumber = numberInput.value.trim();
       if (/^\d+$/.test(inputNumber)) {
         // 構造新的URL並重新定向網頁
-        window.location.href = `${bookTitle}_html${inputNumber}.html`;
-        // const newUrl = `${bookTitle}_html${inputNumber}.html`;
+        // window.location.href = `${bookTitle}_html${inputNumber}.html`;
+        const newUrl = `${bookTitle}_html${inputNumber}.html`;
+        // 檢查新的 URL 是否存在
+        fetch(newUrl)
+        .then(response => {
+          if (response.ok) {
+            // URL 存在，重新定向網頁到該 URL
+            window.location.href = newUrl;
+          } else {
+            // URL 不存在，重新整理頁面
+            window.location.reload();
+          }
+        })
+        .catch(error => {
+          console.error('發生錯誤:', error);
+          alert('輸入章節錯誤，請重新輸入');
+          // 重新整理頁面
+          window.location.reload();
+        });
         // window.location.href = newUrl;
       } else {
         // 彈出提示框
@@ -508,27 +525,54 @@ console.log(`currentPageNum = ${currentPageNum}`);
     });
 
       // 使用jQuery綁定點擊事件==========================================================
-window.onload = function() {
+// window.onload = function() {
 
-// document.addEventListener('DOMContentLoaded', function() {
-  $(document).click(function(event) {
+// // document.addEventListener('DOMContentLoaded', function() {
+//   $(document).click(function(event) {
+//     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
+//     if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
+//       $('.dropdown-menu').slideUp(250);
+//     }
+//   });
+
+//   // 使用jQuery綁定點擊事件
+//   $('.dropdown-toggle').click(function() {
+//     // 隱藏所有其他下拉選單
+//     $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
+    
+//     // 切換下拉選單的展開狀態
+//     $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
+//   });
+// // });
+// };
+window.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(event) {
     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
-    if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
-      $('.dropdown-menu').slideUp(250);
+    if (!event.target.classList.contains('dropdown-toggle') && !event.target.classList.contains('dropdown-menu')) {
+      var dropdownMenus = document.getElementsByClassName('dropdown-menu');
+      for (var i = 0; i < dropdownMenus.length; i++) {
+        dropdownMenus[i].style.display = 'none';
+      }
     }
   });
 
-  // 使用jQuery綁定點擊事件
-  $('.dropdown-toggle').click(function() {
-    // 隱藏所有其他下拉選單
-    $('.dropdown-menu').not($(this).next('.dropdown-menu')).slideUp(250);
-    
-    // 切換下拉選單的展開狀態
-    $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
-  });
-// });
-};
-      
+  // 綁定點擊事件
+  var dropdownToggles = document.getElementsByClassName('dropdown-toggle');
+  for (var i = 0; i < dropdownToggles.length; i++) {
+    dropdownToggles[i].addEventListener('click', function() {
+      // 隱藏所有其他下拉選單
+      var dropdownMenus = document.getElementsByClassName('dropdown-menu');
+      for (var j = 0; j < dropdownMenus.length; j++) {
+        if (dropdownMenus[j] !== this.nextElementSibling) {
+          dropdownMenus[j].style.display = 'none';
+        }
+      }
+
+      // 切換下拉選單的展開狀態
+      this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+}); 
       
 
 // 取得所有的變數名稱和值
