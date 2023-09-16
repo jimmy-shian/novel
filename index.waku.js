@@ -327,13 +327,14 @@ if (titleElement !== null) {
             // URL 存在，重新定向網頁到該 URL
             window.location.href = newUrl;
           } else {
+            alert('輸入章節錯誤，請重新輸入');
             // URL 不存在，重新整理頁面
             window.location.reload();
           }
         })
         .catch(error => {
-          // console.error('發生錯誤:', error);
-          alert('輸入章節錯誤，請重新輸入');
+          console.error('發生錯誤:', error);
+          // alert('輸入章節錯誤，請重新輸入');
           // 重新整理頁面
           window.location.reload();
         });
