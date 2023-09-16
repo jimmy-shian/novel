@@ -297,6 +297,15 @@ if (titleElement !== null) {
   //     formElement.submit();
   //   }
   // });
+
+  // 添加事件監聽器，當按下 "/" 鍵時將焦點設定在輸入框上
+  document.addEventListener('keydown', function(event) {
+    if (event.key === '/') {
+      event.preventDefault(); // 防止斜線字符出現在輸入框中
+      numberInput.focus(); // 將焦點設定在輸入框上
+    }
+  });
+
   window.addEventListener('popstate', function(event) {
     formElement.submit();
   });
@@ -493,7 +502,9 @@ console.log(`currentPageNum = ${currentPageNum}`);
     });
 
       // 使用jQuery綁定點擊事件==========================================================
-window.onload = function() {
+// window.onload = function() {
+
+document.addEventListener('DOMContentLoaded', function() {
   $(document).click(function(event) {
     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
     if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
@@ -509,7 +520,8 @@ window.onload = function() {
     // 切換下拉選單的展開狀態
     $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
   });
-};
+});
+// };
       
       
 
