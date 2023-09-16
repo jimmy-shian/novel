@@ -303,6 +303,7 @@ if (titleElement !== null) {
     if (event.key === '/') {
       event.preventDefault(); // 防止斜線字符出現在輸入框中
       numberInput.focus(); // 將焦點設定在輸入框上
+      numberInput.value = ''; // 清除輸入框中的值
     }
   });
 
@@ -480,15 +481,30 @@ console.log(`currentPageNum = ${currentPageNum}`);
       }
       
     }
+    // // 监听键盘事件，按下左右键时执行相应的函数
+    // document.onkeydown = function (event) {
+    //   if (event.key === 'ArrowLeft') { // 左键
+    //     goLeft();
+    //   } else if (event.key === 'ArrowRight') { // 右键
+    //     goRight();
+    //   }
+    // };
+
     // 监听键盘事件，按下左右键时执行相应的函数
     document.onkeydown = function (event) {
-      if (event.key === 'ArrowLeft') { // 左键
-        goLeft();
-      } else if (event.key === 'ArrowRight') { // 右键
-        goRight();
+      const searchInput = document.getElementById('numberInput');
+      const isSearchInputActive = document.activeElement === searchInput;
+
+      if (!isSearchInputActive) {
+        if (event.key === 'ArrowLeft') { // 左键
+          goLeft();
+          event.preventDefault(); // 阻止默认的左键行为
+        } else if (event.key === 'ArrowRight') { // 右键
+          goRight();
+          event.preventDefault(); // 阻止默认的右键行为
+        }
       }
     };
-
 
     function scrollToTop() {
       window.scrollTo({
