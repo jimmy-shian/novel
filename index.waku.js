@@ -322,7 +322,11 @@ if (titleElement !== null) {
         // const newUrl = `${bookTitle}_html${inputNumber}.html`;
         // window.location.href = newUrl;
       } else {
-        window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
+        // 彈出提示框
+        alert('輸入章節錯誤，請重新輸入');
+        // 在當前頁面重新整理
+        window.location.reload();
+        // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
       }
     });
   }
@@ -442,7 +446,8 @@ console.log(`currentPageNum = ${currentPageNum}`);
         const prevUrl = currentUrl.replace(`html${currentPageNum}`, `html${prevPageNum}`);
         window.location.href = prevUrl;
       } else {
-        window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
+        window.location.reload();
+        // window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
       }
     }
     // 右键被按下，跳转到下一页
@@ -452,7 +457,8 @@ console.log(`currentPageNum = ${currentPageNum}`);
         const nextUrl = currentUrl.replace(`html${currentPageNum}`, `html${nextPageNum}`);
         window.location.href = nextUrl;
       } else {
-        window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
+        window.location.reload();
+        // window.location.href = 'https://jimmy-shian.github.io/novel/index.html';
       }
       
     }
@@ -502,9 +508,9 @@ console.log(`currentPageNum = ${currentPageNum}`);
     });
 
       // 使用jQuery綁定點擊事件==========================================================
-// window.onload = function() {
+window.onload = function() {
 
-document.addEventListener('DOMContentLoaded', function() {
+// document.addEventListener('DOMContentLoaded', function() {
   $(document).click(function(event) {
     // 如果點擊事件的目標不在下拉選單或下拉選單的觸發元素上，則關閉所有下拉選單
     if (!$(event.target).hasClass('dropdown-toggle') && !$(event.target).hasClass('dropdown-menu')) {
@@ -520,8 +526,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 切換下拉選單的展開狀態
     $(this).next('.dropdown-menu').slideToggle(350); // 500毫秒的動畫時間
   });
-});
-// };
+// });
+};
       
       
 
