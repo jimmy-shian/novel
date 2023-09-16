@@ -493,15 +493,15 @@ console.log(`currentPageNum = ${currentPageNum}`);
     // 监听键盘事件，按下左右键时执行相应的函数
     document.onkeydown = function (event) {
       const searchInput = document.getElementById('numberInput');
-      const isSearchInputActive = document.activeElement === searchInput;
+      const isSearchInputActive = document.activeElement == searchInput;
 
       if (!isSearchInputActive) {
         if (event.key === 'ArrowLeft') { // 左键
           goLeft();
-          event.preventDefault(); // 阻止默认的左键行为
+          // event.preventDefault(); // 阻止默认的左键行为
         } else if (event.key === 'ArrowRight') { // 右键
           goRight();
-          event.preventDefault(); // 阻止默认的右键行为
+          // event.preventDefault(); // 阻止默认的右键行为
         }
       }
     };
