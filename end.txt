@@ -9,9 +9,9 @@
      
       <div class="spacer"></div>
       <center>
-              版權沒有 歡迎使用<br><br>
+              版權沒有 有問題請告知<br><br>
               <div class="copy-container">
-              網站架設者聯絡方式 : 
+              聯絡方式 : 
                 <span-copy class="span-copy" >jimmy910824@gmail.com</span-copy>&nbsp;&nbsp;
                 <button class="copy-p-button">Copy</button>
               </div>
