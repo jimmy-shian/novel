@@ -69,7 +69,7 @@
 
       <div class="spacer"></div>
       <center>
-              版權沒有 歡迎使用<br><br>
+              版權沒有 有問題請告知<br><br>
               網站架設者 : jimmy<br>
               <hr><br><br>
         </center>

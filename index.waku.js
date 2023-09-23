@@ -68,7 +68,7 @@
            
        changeBtn?.addEventListener('click', function changeindextex() {
            if (isChanged === '0') {
-           changeBtn.innerHTML = `Translate to Chinese
+           changeBtn.innerHTML = `Translate to English
            `;
            cardText.innerHTML = `
            <h4 class="card-title">進入網絡小說世界~</h4>
@@ -96,7 +96,7 @@
            isChanged = '1';
    
            } else {
-           changeBtn.innerHTML = `翻譯成英文
+           changeBtn.innerHTML = `翻譯成中文
            `;
            cardText.innerHTML = `
                <h5 class="card-title">Enter the World of Web Novels</h5>
