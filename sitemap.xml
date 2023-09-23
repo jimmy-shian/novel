@@ -1,16 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
-<url>
-  <loc>https://jimmy-shian.github.io/novel/</loc>
-  <lastmod>2023-09-23T06:31:28+00:00</lastmod>
-</url>
-
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://jimmy-shian.github.io/novel</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/index.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/diba-yanbixiaosheng/diba-yanbixiaosheng.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/quanzhifashi-luan/quanzhifashi-luan.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/fanrenxiuxianchuan-wangyu/fanrenxiuxianchuan-wangyu.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/xianni-ergen/xianni-ergen.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/qiumo-ergen/qiumo-ergen.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/woyufengtian-ergen/woyufengtian-ergen.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/yinianyongheng-ergen/yinianyongheng-ergen.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/sancunrenjian-ergen/sancunrenjian-ergen.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/woshixiongshizaitaiwenjianle-yanguizhengzhuan/woshixiongshizaitaiwenjianle-yanguizhengzhuan.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/dafengdagengren-maibaoxiaolangjun/dafengdagengren-maibaoxiaolangjun.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/404.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jimmy-shian.github.io/novel/key.html</loc>
+    <lastmod>2023-09-23T18:00:29+00:00</lastmod>
+    <priority>0.4</priority>
+  </url>
 </urlset>
