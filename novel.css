@@ -374,10 +374,10 @@ body {
         width: 100%;
       }
       .title-td {
-        max-width: 80%;
+        max-width: 65%;
         height: 45px;
         overflow: hidden;
-        margin-left: 20%;
+        margin-left: 10%;
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;

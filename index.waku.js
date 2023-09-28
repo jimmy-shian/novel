@@ -53,7 +53,13 @@
       }
     }
     checkScrollbar();
-  
+    // function scrollDown() {
+    //   const currentPosition = window.pageYOffset;
+    //   const targetPosition = currentPosition + 200;
+    //   window.scrollTo(0, targetPosition);
+    // }
+    
+    // setInterval(scrollDown, 4500);
   // 在這裡編寫你的全部程式碼
 
    // 翻譯index
