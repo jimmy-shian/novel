@@ -312,6 +312,12 @@ if (titleElement !== null) {
       numberInput.value = ''; // 清除輸入框中的值
     }
   });
+  // const numberInput = document.querySelector('#numberInput');
+  document.addEventListener('click', function(event) {
+    if (numberInput === document.activeElement) {
+      numberInput.value = ''; // 清除輸入框中的值
+    }
+  });
 
   window.addEventListener('popstate', function(event) {
     formElement.submit();
