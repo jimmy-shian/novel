@@ -314,7 +314,7 @@ if (titleElement !== null) {
   });
   // const numberInput = document.querySelector('#numberInput');
   document.addEventListener('click', function(event) {
-    if (numberInput === document.activeElement) {
+    if (numberInput.focus() === true) {
       numberInput.value = ''; // 清除輸入框中的值
     }
   });
