@@ -313,10 +313,17 @@ if (titleElement !== null) {
     }
   });
   // const numberInput = document.querySelector('#numberInput');
+  let shouldClearInput = true;  
   document.addEventListener('click', function(event) {
-    if (numberInput.focus() === true) {
+    if (shouldClearInput && numberInput === document.activeElement) {
       numberInput.value = ''; // 清除輸入框中的值
     }
+  });
+  numberInput.addEventListener('input', function(event) {
+    shouldClearInput = false; // 禁止清除輸入框中的值
+  });
+  numberInput.addEventListener('blur', function(event) {
+    shouldClearInput = true; // 允許清除輸入框中的值
   });
 
   window.addEventListener('popstate', function(event) {
