@@ -322,9 +322,9 @@ if (titleElement !== null) {
   numberInput.addEventListener('input', function(event) {
     shouldClearInput = false; // 禁止清除輸入框中的值
   });
-  numberInput.addEventListener('blur', function(event) {
-    shouldClearInput = true; // 允許清除輸入框中的值
-  });
+  // numberInput.addEventListener('blur', function(event) {
+  //   shouldClearInput = true; // 允許清除輸入框中的值
+  // });
 
   window.addEventListener('popstate', function(event) {
     formElement.submit();
