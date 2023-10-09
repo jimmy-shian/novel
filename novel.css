@@ -376,6 +376,7 @@ body {
       .title-td {
         max-width: 75vh;
         height: 45px;
+        padding: 14px;
         overflow: hidden;
         margin-left: 10%;
         text-overflow: ellipsis;
