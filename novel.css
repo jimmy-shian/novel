@@ -157,7 +157,7 @@ body {
       margin: auto;
     }
     .title-td {
-      width: 100px;
+      max-width: 100px;
       height: 40px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -374,7 +374,7 @@ body {
         width: 100%;
       }
       .title-td {
-        width: 30vh;
+        max-width: 75vh;
         height: 45px;
         overflow: hidden;
         margin-left: 10%;
