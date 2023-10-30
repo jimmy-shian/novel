@@ -57,7 +57,7 @@
                         Else其他
                       </a>
                       <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="http://localhost:1111/">keywords search</a></li>
+                        <li><a class="dropdown-item" href="/search.html">keywords search</a></li>
                         <li><a class="dropdown-item" href="/404.html">404</a></li>
                         <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
                       </ul>
