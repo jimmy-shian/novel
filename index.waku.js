@@ -212,6 +212,21 @@ xhr.onreadystatechange = function() {
           console.log('currentPageNum not show');
         }
 
+        var currentPageNumElementplace = document.getElementsByClassName("currentPageNumplace")[0];
+
+        if (currentPageNum === 0) {
+          // 隐藏元素
+          if (currentPageNumElementplace) {
+            currentPageNumElement.style.display = "none";
+          }
+        } else {
+          // 设置文本内容
+          if (currentPageNumElement) {
+            currentPageNumElement.textContent = currentPageNum;
+          } else {
+            console.log('currentPageNum not show');
+          }
+        }
         // $(document).ready(function() {
         //   $('.dropdown-toggle').click(function() {
         //     // 隱藏所有其他下拉選單
