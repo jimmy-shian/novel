@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<style>
+  body {
+    background-color: #dfdfdf;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffecec;
+    box-shadow: 0 2px 4px rgba(120, 120, 120, 0.1);
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#loading-spinner {
+    /* border: 4px solid #21628e; */
+    border-top: 3.5px solid #21628e;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    animation: spin 0.8s linear infinite;
+    margin: 0 25px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .result-place-first {
+    margin: 18px 0 0 8vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    line-height: 1.7;
+  }
+
+  .result-place {
+    margin: 18px 0 20vh 10vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    line-height: 1.7;
+  }
+
+  .result-place a {
+    white-space: nowrap; /* 防止文字换行 */
+    margin-right: 10px; /* 调整链接之间的间距 */
+  }
+
+  #result > div:first-child {
+    flex-basis: 100%; /* 佔據整行寬度 */
+    white-space: pre-line;
+    padding-bottom: 10px;
+  }
+  .result-place div {
+  /* white-space: pre-line;
+  display: flex; */
+  width: 40vh;
+}
+</style>
+<body>
+    <div class="search-container">
+        <input type="text" id="searchInput" value="滄元圖 雲青萍大周王" placeholder="輸入文字">
+        <button onclick="search()">搜索</button>
+        <!-- <div id="loadingSpinner" class="spinner"></div> -->
+        <div id="loading-spinner"></div>
+    </div>
+    <div id="result-time" class="result-place-first"></div>
+    <div id="result" class="result-place"></div>
+
+
+<script>
+window.onload = function() {
+  // 在頁面載入時執行搜尋
+  search();
+}
+let cc;
+function search() {
+  document.getElementById("loading-spinner").style.display = "block";
+
+  const startTime = new Date(); // 記錄開始時間
+  const result_time = document.getElementById('result-time');
+  result_time.innerHTML =  "----";
+
+    const searchInput = document.getElementById('searchInput');
+    const keyword = searchInput.value.toLowerCase().replace(/[^\w\s\u4e00-\u9fa5]/g, '').split(' ');
+    console.log(keyword);
+    let maxMatches = 0;
+    let matchedTitles = [];
+    let matchedTitles2 = [];
+    let flag = '0';
+
+    for (let i = 0; i < data.length; i++) {
+        const content = data[i]['content'].toLowerCase().replace(/\s/g, '').replace(/[^\w\s\u4e00-\u9fa5]/g, '');
+        // console.log(content);
+        // if (content.includes(keyword)) {
+            if (keyword.every(char => content.includes(char))) {
+        //   const matches = keyword.some(char => content.includes(char)).length;
+        //   const matches = keyword.filter(char => content.includes(char)).length;
+        // if ((mergedSearchKeyword.every(keyword => mergedmonster_word.includes(keyword)))){
+        //   console.log(matches);
+        //   if (keyword.every(char => content.includes(char))) {
+                // if (matches >= maxMatches) {
+                // maxMatches = matches;
+        matchedTitles.push(data[i]['title']);
+        // matchedTitles.sort();
+
+          // console.log('matchedTitles=',matchedTitles);
+                // }
+            // }
+        }
+    }
+
+// // 按名称和数字排序章节
+// matchedTitles.sort(function(a, b) {
+//     var nameA = a.match(/^(.*?)_html/)[0];
+//     var nameB = b.match(/^(.*?)_html/)[0];
+//     var numA = parseInt(a.match(/html(\d+)/)[1]);
+//     var numB = parseInt(b.match(/html(\d+)/)[1]);
+    
+//     if (nameA < nameB) return -1;
+//     if (nameA > nameB) return 1;
+//     return numA - numB;
+// });
+
+// // 打印排序后的章节列表
+// console.log(matchedTitles);
+
+// 打印排序后的章节列表
+// 使用自定义排序函数进行排序
+// matchedTitles.sort(customSort);
+
+// 打印排序后的章节列表
+// console.log(matchedTitles);
+
+//     // // 對 matchedTitles 進行排序
+// const sortedTitles =
+//  matchedTitles.sort((a, b) => {
+//   const regex = /(\d+)/;
+//   const [, prefixA, numA] = a.match(regex);
+//   const [, prefixB, numB] = b.match(regex);
+
+//   if (numA < numB) {
+//     return -1;
+//   } else if (numA > numB) {
+//     return 1;
+//   } else {
+//     return parseInt(numA) - parseInt(numB);
+//   }
+// });
+// console.log(sortedTitles);
+// matchedTitles.sort();
+    // matchedTitles.sort((a, b) => {
+    //     const regex = /_html(\d+)\.txt/;
+    //     const numA = parseInt(a.match(regex)[1]);
+    //     const numB = parseInt(b.match(regex)[1]);
+    //     const prefixA = a.split('_html')[0];
+    //     const prefixB = b.split('_html')[0];
+    //     if( prefixA !== prefixB){
+    //       if (numA < numB) {
+    //         return -1;
+    //       } else if (numA > numB) {
+    //         return 1;
+    //       }
+    //       return numA - numB;
+    //     }
+    //     else{
+    //     // return 0;
+    //     }
+    //     // return -1;
+    // }); 
+          // console.log('matchedTitles@2222=',matchedTitles);
+
+
+    setTimeout(console.log('in-for'),10);
+    // for (var cc = 0; cc < matchedTitles.length; cc++) {
+    //     // 其他程式碼...
+    //     const prefix = matchedTitles[cc].split('.txt')[0];
+    //     console.log('cc=', cc,prefix);
+    //     const htmlFileName = `${prefix}.html`;
+    //     let findurl = '';
+    //     redirectToURL(htmlFileName, function(result) {
+    //     findurl = result;
+    //       console.log('findurl=', typeof findurl, findurl);
+    //     const link = `<a href="${findurl}">${prefix.replace('_html','_第')+'章'}</a>`;
+    //     // setTimeout(10);
+    //     matchedTitles2.push(link);
+    //       // console.log('matchedTitles2-1=', matchedTitles2);
+    //       console.log('lengh=',matchedTitles2.length,matchedTitles.length)
+    //   if (matchedTitles2.length == matchedTitles.length) {
+    //       flag = '1';
+    //       console.log('flag=1');
+    //       console.log('matchedTitles2=',matchedTitles2);
+    //       console.log('inmmmmmm');
+    //       const result = document.getElementById('result');
+    //       result.innerHTML = `匹配最多的標題為：<br>${matchedTitles2.join('<br>')}`;
+    //       // result.innerHTML = `匹配最多的標題為：<br>${matchedTitles.join('<br>')}`;
+    //       console.log('matchedTitles2=',matchedTitles2);
+    //       // const result = document.getElementById('result');
+    //       // setTimeout(console.log('matchedTitles2=',matchedTitles2),0);
+    //       // setTimeout(result.innerHTML = `匹配最多的標題為：<br>${matchedTitles2.join('<br>')}`,10);
+    //     }
+    //   });
+
+    //   }
+    // 建立一個 Promise 函式，用於處理非同步操作
+function processTitle(prefix) {
+  return new Promise((resolve, reject) => {
+    const htmlFileName = `${prefix}.html`;
+    redirectToURL(htmlFileName, function(callback) {
+      // const url = result.result; // 獲取網址
+      // console.log("calllll",callback)
+      // const link = `<a href="${url}">${prefix.replace('_html','_第')+'章'}</a>`;
+      const link = `<div><a href="${callback}" target="_blank">${prefix.replace('_html','_第')+'章'}</a></div>`;
+      resolve(link);
+    });
+  });
+}
+
+// // 定義 async 函式，用於處理非同步操作
+// async function processTitles() {
+//   for (var cc = 0; cc < matchedTitles.length; cc++) {
+//     const prefix = matchedTitles[cc].split('.txt')[0];
+//     // console.log('cc=', cc, prefix);
+//     const link = await processTitle(prefix);
+//     matchedTitles2.push(link);
+//     // console.log('lengh=', matchedTitles2.length, matchedTitles.length);
+//   }
+  
+//   // console.log('matchedTitles2=', matchedTitles2);
+//   console.log('print results');
+//   document.getElementById("loading-spinner").style.display = "none";
+//   const result = document.getElementById('result');
+//   result.innerHTML = `<div>匹配最多的標題為：</div><br>${matchedTitles2.join(' ')}`;
+//   // result.innerHTML = `匹配最多的標題為：<br>${matchedTitles2.join('<br>')}`;
+// }
+// 定義 async 函式，用於處理非同步操作
+async function processTitles() {
+  for (var cc = 0; cc < matchedTitles.length; cc++) {
+    const prefix = matchedTitles[cc].split('.txt')[0];
+    const link = await processTitle(prefix);
+    matchedTitles2.push(link);
+    // console.log('lengh=', matchedTitles2.length, matchedTitles.length);
+    await delay(1); // 延遲 500 毫秒
+    printResult(matchedTitles2.join(' '), matchedTitles2.length); // 顯示當前結果
+  }
+  
+  console.log('print results');
+  document.getElementById("loading-spinner").style.display = "none";
+  const result = document.getElementById('result');
+  result.innerHTML = `<div> 共有${matchedTitles2.length}筆 匹配的章節：</div><br>${matchedTitles2.join(' ')}`;
+  // result.innerHTML = `匹配最多的標題為：<br>${matchedTitles2.join('<br>')}`;
+}
+
+// 延遲函式，用於等待一段時間
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 顯示結果函式
+function printResult(text, count) {
+  const result = document.getElementById('result');
+  result.innerHTML = `<div> 共有${count}筆 匹配的章節：</div><br>${text}`;
+}
+
+// processTitles();
+// 呼叫 async 函式開始處理
+processTitles()
+.then(() => {
+  const endTime = new Date(); // 記錄結束時間
+  const duration = endTime - startTime; // 計算經過的時間（毫秒）
+
+  const minutes = Math.floor(duration / 60000); // 計算分鐘數
+  const seconds = (duration % 60000) / 1000; // 計算秒數，保留小數部分
+
+  let displayTime = '';
+  if (minutes > 0) {
+    displayTime += `${minutes} 分 `;
+  }
+  displayTime += `${seconds.toFixed(3)} 秒`;
+  const result_time = document.getElementById('result-time');
+  result_time.innerHTML = `搜尋完成，總共花費時間: ${displayTime} `;
+  // setTimeout(() => {    console.log(`搜尋完成，總共花費時間: ${displayTime} `);}, 10);
+})
+.catch(error => {
+  console.error('搜尋發生錯誤', error);
+});
+}
+// function redirectToURL(fileName, callback) {
+//   const sitemapUrl = 'https://jimmy-shian.github.io/novel/sitemap.xml';
+//   let finalurl = '';
+//   fetch(sitemapUrl)
+//     .then(response => {
+//       if (response.status === 200) {
+//         return response.text();
+//       } else {
+//         throw new Error('無法取得網站地圖');
+//       }
+//     })
+//     .then(xml => {
+//       const parser = new DOMParser();
+//       const doc = parser.parseFromString(xml, 'text/xml');
+//       const urlElements = doc.querySelectorAll('url');
+//       for (let i = 0; i < urlElements.length; i++) {
+//         const locElement = urlElements[i].querySelector('loc');
+//         const url = locElement.textContent;
+//         const baseUrl = url.substring(0, url.lastIndexOf('/'));
+//         const promise = searchHTMLInFolder(baseUrl, fileName);
+//         promise.then(result => {
+//           if (result !== undefined) {
+//             // console.log('result=', typeof result, result);
+//             callback(result);
+//           }
+//         });
+//       }
+//     });
+// }
+function redirectToURL(fileName, callback) {
+  const sitemapUrl = 'https://jimmy-shian.github.io/novel/sitemap.xml';
+  let finalurl = '';
+  fetch(sitemapUrl)
+    .then(response => {
+      if (response.status === 200) {
+        return response.text();
+      } else {
+      }
+    })
+    .then(xml => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xml, 'text/xml');
+      const urlElements = doc.querySelectorAll('url');
+      for (let i = 0; i < urlElements.length; i++) {
+        const locElement = urlElements[i].querySelector('loc');
+        const url = locElement.textContent;
+        const baseUrl = url.substring(0, url.lastIndexOf('/'));
+        // console.log('result=', baseUrl);
+        const promise = searchHTMLInFolder(baseUrl, fileName);
+        promise.then(result => {
+          if (result.result !== undefined) {
+            // cc += result.result;
+            // console.log('result=', typeof result, result);
+            callback(result.result);
+            // const url = result.result; // 獲取網址
+            // callback(url);
+          }
+        });
+      }
+    })
+    .catch(error => {
+      return null;
+      // 在catch塊中處理錯誤
+      // 例如記錄錯誤、顯示自定義錯誤訊息等
+      // console.error('錯誤處理:', error.message);
+    });
+}
+// function searchHTMLInFolder(baseUrl, fileName) {
+//   return fetch(baseUrl + '/' + fileName)
+//     .then(response => {
+//       if (response.status === 200) {
+//         setTimeout(console.log('wait'), 10)
+//         return baseUrl + '/' + fileName;
+//       } else {
+//         return undefined;
+//       }
+//     })
+//     .catch(error => {
+//       return undefined;
+//     });
+// }
+function searchHTMLInFolder(baseUrl, fileName) {
+  const url = new URL(baseUrl + '/' + fileName);
+  const errors = [];
+  
+  return fetch(url)
+    .then(response => {
+      if (response.ok) {
+        return baseUrl + '/' + fileName;
+      } else {
+        errors.push('Request failed with status: ' + response.status);
+        return undefined;
+      }
+    })
+    .catch(error => {
+      errors.push('Request failed with error: ' + error.message);
+      return undefined;
+    })
+    .then(result => {
+      return { result, errors };
+    });
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- <script src="data.js" defer></script> -->
+<script src="data1.js" defer></script>
+<script src="data2.js" defer></script>
+<script>
+    var data = data1.concat(data2);
+    // 接下來可以使用合併後的 data 進行操作
+    console.log(data);
+</script>
+</body>
+</html>
