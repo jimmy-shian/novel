@@ -119,30 +119,33 @@ button {
 
 <script src="data1.js" ></script>
 <script src="data2.js" ></script>
+<script src="data3.js" ></script>
+<script src="data4.js" ></script>
 <script>
-  async function loadData() {
-    // 使用 fetch 或其他方法載入 data1
-    const response1 = await fetch('data1.js');
-    let data1 = await response1.json();
+  var data = data1.concat(data2, data3, data4);
+  // async function loadData() {
+  //   // 使用 fetch 或其他方法載入 data1
+  //   const response1 = await fetch('data1.js');
+  //   let data1 = await response1.json();
 
-    // 使用 fetch 或其他方法載入 data2
-    const response2 = await fetch('data2.js');
-    let data2 = await response2.json();
-    // 合併數據
-    const data = data1.concat(data2);
+  //   // 使用 fetch 或其他方法載入 data2
+  //   const response2 = await fetch('data2.js');
+  //   let data2 = await response2.json();
+  //   // 合併數據
+  //   const data = data1.concat(data2);
 
-    // 載入完成後進行其他操作
-    console.log('data 1+2 load');
-  }
-  // 調用異步函數
-  loadData();
+  //   // 載入完成後進行其他操作
+  //   console.log('data 1+2 load');
+  // }
+  // // 調用異步函數
+  // loadData();
 </script>
 
 <script>
 // var data = data1.concat(data2);
 let cc;
 function search() {
-  var data = data1.concat(data2);
+  // var data = data1.concat(data2);
   document.getElementById("loading-spinner").style.display = "block";
 
   const startTime = new Date(); // 記錄開始時間
