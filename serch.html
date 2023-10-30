@@ -123,12 +123,11 @@ button {
   async function loadData() {
     // 使用 fetch 或其他方法載入 data1
     const response1 = await fetch('data1.js');
-    const data1 = await response1.json();
+    let data1 = await response1.json();
 
     // 使用 fetch 或其他方法載入 data2
     const response2 = await fetch('data2.js');
-    const data2 = await response2.json();
-
+    let data2 = await response2.json();
     // 合併數據
     const data = data1.concat(data2);
 
