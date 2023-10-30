@@ -217,7 +217,7 @@ xhr.onreadystatechange = function() {
         if (currentPageNum === 0) {
           // 隐藏元素
           if (currentPageNumElementplace) {
-            currentPageNumElement.style.display = "none";
+            currentPageNumElementplace.style.display = "none";
           }
         } else {
           // 设置文本内容
