@@ -2,39 +2,45 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>title</title>
+    <title>Line Notify</title>
 </head>
 <body>
-    <form id="notifyForm">
-  <input type="text" id="messageInput" placeholder="输入消息">
-  <button type="submit">发送</button>
-</form>
-</body>
-<script>
-    // 监听表单提交事件
-    document.getElementById('notifyForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // 阻止表单的默认提交行为
+    <button id="notifyButton">发送 Line 通知</button>
 
-    var message = document.getElementById('messageInput').value;
-
-    // 发送请求到服务器
-    fetch('https://shianbotsz.pythonanywhere.com/', { // http://127.0.0.1:5000
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: message })
-    })
-        .then(function(response) {
-        if (response.ok) {
-            console.log('Line 通知发送成功');
-        } else {
-            console.log('Line 通知发送失败');
-        }
-        })
-        .catch(function(error) {
-        console.log('发生错误：', error);
+    <script>
+        document.getElementById('notifyButton').addEventListener('click', function() {
+            var token = 'RzCD0B32mLnTQ6I6lgzW5jWPhTHEFuH6SkSmSKHKybI';  // 填入你的 token
+            var url = 'https://notify-api.line.me/api/notify';
+            
+            var message = '快來看看結果！';
+            var stickerPackageId = 8525;
+            var stickerId = 16581290;
+            
+            var data = {
+                message: message,
+                stickerPackageId: stickerPackageId,
+                stickerId: stickerId
+            };
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data)
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    console.log('Line 通知发送成功');
+                } else {
+                    console.log('Line 通知发送失败');
+                }
+            })
+            .catch(function(error) {
+                console.log('发生错误：', error);
+            });
         });
-    });
-</script>
+    </script>
+</body>
 </html>
