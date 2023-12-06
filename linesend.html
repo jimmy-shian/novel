@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+</head>
+<body>
+    <form id="notifyForm">
+  <input type="text" id="messageInput" placeholder="输入消息">
+  <button type="submit">发送</button>
+</form>
+</body>
+<script>
+    // 监听表单提交事件
+    document.getElementById('notifyForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // 阻止表单的默认提交行为
+
+    var message = document.getElementById('messageInput').value;
+
+    // 发送请求到服务器
+    fetch('https://shianbotsz.pythonanywhere.com/', { // http://127.0.0.1:5000
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: message })
+    })
+        .then(function(response) {
+        if (response.ok) {
+            console.log('Line 通知发送成功');
+        } else {
+            console.log('Line 通知发送失败');
+        }
+        })
+        .catch(function(error) {
+        console.log('发生错误：', error);
+        });
+    });
+</script>
+</html>
