@@ -1,46 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Line Notify</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 <body>
-    <button id="notifyButton">发送 Line 通知</button>
-
-    <script>
-        document.getElementById('notifyButton').addEventListener('click', function() {
-            var token = 'RzCD0B32mLnTQ6I6lgzW5jWPhTHEFuH6SkSmSKHKybI';  // 填入你的 token
-            var url = 'https://notify-api.line.me/api/notify';
-            
-            var message = '快來看看結果！';
-            var stickerPackageId = 8525;
-            var stickerId = 16581290;
-            
-            var data = {
-                message: message,
-                stickerPackageId: stickerPackageId,
-                stickerId: stickerId
-            };
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(data)
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    console.log('Line 通知发送成功');
-                } else {
-                    console.log('Line 通知发送失败');
-                }
-            })
-            .catch(function(error) {
-                console.log('发生错误：', error);
-            });
-        });
-    </script>
+    <h1>傳送訊息</h1>
+    <br>
+    <span>我的訊息</span><input type="text" id="myLine">
+    <br>
+    <br>
+    <button onclick="mySubmit()">傳送訊息</button>
 </body>
+<script>
+    function mySubmit(){
+        var myMessage = document.getElementById('myLine').value;
+        console.log(myMessage);
+        let url = 'https://script.google.com/macros/s/AKfycbyqYApWH63c4q_ZX1E7IHsnSNb7qWxxOpUF3AFhzJ0JrgkEOnZWzf_IcP8iX77oOAt1/exec'  //johnny
+        $.post(url,
+            {msg:myMessage}
+        )
+        
+    }
+    
+</script>
 </html>
