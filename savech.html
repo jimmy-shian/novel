@@ -17,7 +17,7 @@
         <br>
         <button type="submit">Save</button>
     </form>
-
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
         function submitMessage(event) {
             event.preventDefault();
@@ -34,19 +34,21 @@
                     'Content-Type': 'application/json'
                 }
             };
-
-            fetch(url, payload)
-                .then(function(response) {
-                    if (response.ok) {
-                        console.log('Message saved successfully.');
-                        // 可以根据需要执行其他操作，如显示成功消息或重置表单
-                    } else {
-                        console.error('Failed to save message.');
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
+            $.post(url,
+                {user: user, chapter: chapter, msg: message}
+            )
+            // fetch(url, payload)
+            //     .then(function(response) {
+            //         if (response.ok) {
+            //             console.log('Message saved successfully.');
+            //             // 可以根据需要执行其他操作，如显示成功消息或重置表单
+            //         } else {
+            //             console.error('Failed to save message.');
+            //         }
+            //     })
+            //     .catch(function(error) {
+            //         console.error('Error:', error);
+            //     });
         }
     </script>
 </body>
