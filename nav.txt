@@ -60,6 +60,7 @@
                         <li><a class="dropdown-item" href="/serch.html">keywords search</a></li>
                         <li><a class="dropdown-item" href="/404.html">404</a></li>
                         <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
+                        <li><a class="dropdown-item" href="/linesend" target="_blank">傳送line</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
