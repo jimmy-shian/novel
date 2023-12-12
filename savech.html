@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Save Message to Excel</title>
+</head>
+<body>
+    <h1>Save Message to Excel</h1>
+    <form onsubmit="submitMessage(event)">
+        <label for="user">User:</label>
+        <input type="text" id="user" required value="jimmy">
+        <br>
+        <label for="chapter">Chapter:</label>
+        <input type="text" id="chapter" required value="122333">
+        <br>
+        <label for="message">Message:</label>
+        <input id="message" required value="save test"></input>
+        <br>
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        function submitMessage(event) {
+            event.preventDefault();
+
+            var user = document.getElementById('user').value;
+            var chapter = document.getElementById('chapter').value;
+            var message = document.getElementById('message').value;
+
+            var url = 'https://script.google.com/macros/s/AKfycbyqYApWH63c4q_ZX1E7IHsnSNb7qWxxOpUF3AFhzJ0JrgkEOnZWzf_IcP8iX77oOAt1/exec';
+            var payload = {
+                method: 'POST',
+                body: JSON.stringify({ user: user, chapter: chapter, msg: message }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            fetch(url, payload)
+                .then(function(response) {
+                    if (response.ok) {
+                        console.log('Message saved successfully.');
+                        // 可以根据需要执行其他操作，如显示成功消息或重置表单
+                    } else {
+                        console.error('Failed to save message.');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
