@@ -36,11 +36,8 @@
             };
             $.post(url,
                 {user: user, chapter: chapter, msg: message},
-                function(response) {
-                console.log(response);
-                saveMessageToDatabase(user, chapter, message);
-                // 在这里处理响应或执行其他操作
-            });
+                saveMessageToDatabase
+            );
             // fetch(url, payload)
             //     .then(function(response) {
             //         if (response.ok) {
