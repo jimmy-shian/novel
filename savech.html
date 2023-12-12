@@ -26,7 +26,7 @@
             var chapter = document.getElementById('chapter').value;
             var message = document.getElementById('message').value;
 
-            var url = 'https://script.google.com/macros/s/AKfycbzgiQvvFv7TD8oLzDg8uNlm7x_7CpuMyYNDnQpcl8rulHDNt-DoUI0iA9nr1PMienJD/exec';
+            var url = 'https://script.google.com/macros/s/AKfycby6kBHwgSd0WtgPcPmJLk2eCG9mD07OVdYZY-gMpDNeYIZuLt4Wkmb0mWk6GDATEM6K/exec';
             var payload = {
                 method: 'POST',
                 body: JSON.stringify({ user: user, chapter: chapter, msg: message }),
@@ -35,8 +35,12 @@
                 }
             };
             $.post(url,
-                {user: user, chapter: chapter, msg: message}
-            )
+                {user: user, chapter: chapter, msg: message},
+                function(response) {
+                console.log(response);
+                saveMessageToDatabase(user, chapter, message);
+                // 在这里处理响应或执行其他操作
+            });
             // fetch(url, payload)
             //     .then(function(response) {
             //         if (response.ok) {
