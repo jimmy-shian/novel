@@ -26,10 +26,9 @@
             var chapter = document.getElementById('chapter').value;
             var message = document.getElementById('message').value;
 
-            var url = 'https://script.google.com/macros/s/AKfycby6kBHwgSd0WtgPcPmJLk2eCG9mD07OVdYZY-gMpDNeYIZuLt4Wkmb0mWk6GDATEM6K/exec';
+            var url = 'https://script.google.com/macros/s/AKfycby6kBHwgSd0WtgPcPmJLk2eCG9mD07OVdYZY-gMpDNeYIZuLt4Wkmb0mWk6GDATEM6K/exec?function=saveMessageToDatabase';
             $.post(url,
-                {user: user, chapter: chapter, msg: message},
-                google.script.run.saveMessageToDatabase(user, chapter, message)
+                {user: user, chapter: chapter, msg: message}
             );
         }
     </script>

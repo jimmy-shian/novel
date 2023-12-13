@@ -20,7 +20,7 @@
     function mySubmit(){
         var myMessage = document.getElementById('myLine').value;
         console.log(myMessage);
-        let url = 'https://script.google.com/macros/s/AKfycby6kBHwgSd0WtgPcPmJLk2eCG9mD07OVdYZY-gMpDNeYIZuLt4Wkmb0mWk6GDATEM6K/exec'
+        let url = 'https://script.google.com/macros/s/AKfycby6kBHwgSd0WtgPcPmJLk2eCG9mD07OVdYZY-gMpDNeYIZuLt4Wkmb0mWk6GDATEM6K/exec?function=doGet'
         $.post(url,
             {msg:myMessage}
         )
