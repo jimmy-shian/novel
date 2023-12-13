@@ -16,16 +16,15 @@
     <br>
     <button onclick="mySubmit()">傳送訊息</button>
 </body>
-<script>
-    function mySubmit(){
-        var myMessage = document.getElementById('myLine').value;
-        console.log(myMessage);
-        let url = 'https://script.google.com/macros/s/AKfycbxMdoKpUlQ_LCGLYI4ju6VwbVLtoqvjykWZQOEhwR7_LO6FeYFMiIL_uMePrU7CNZrB/exec'
-        $.post(url,
-            {msg:myMessage}
-        )
+    <script>
+        function mySubmit(){
+            var myMessage = document.getElementById('myLine').value;
+            console.log(myMessage);
+            let url = 'https://script.google.com/macros/s/AKfycbxMdoKpUlQ_LCGLYI4ju6VwbVLtoqvjykWZQOEhwR7_LO6FeYFMiIL_uMePrU7CNZrB/exec?function=doPost'
+            $.post(url,
+                {msg:myMessage}
+            );
+        }
         
-    }
-    
-</script>
+    </script>
 </html>
