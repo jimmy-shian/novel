@@ -20,7 +20,7 @@
     <ul id="messages"></ul>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        function updatepage(event) {
+        function updatepage() {
             var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
 
             $.get(url, function(data) {
@@ -48,7 +48,7 @@
             $.post(url,
                 {user: user, chapter: chapter, msg: message}
             );
-            updatepage(events);
+            updatepage();
         }
     </script>
 </body>
