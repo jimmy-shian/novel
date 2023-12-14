@@ -9,33 +9,54 @@
         <label for="user">User:</label>
         <input type="text" id="user" required value="jimmy">
         <br>
+        <br>
         <label for="chapter">Chapter:</label>
         <input type="text" id="chapter" required value="122333">
         <br>
+        <br>
         <label for="message">Message:</label>
         <input id="message" required value="save test"></input>
+        <br>
         <br>
         <button type="submit">Save</button>
     </form>
     <ul id="messages"></ul>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        function updatepage() {
-            var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
 
-            $.get(url, function(data) {
-                // Iterate through the rows and display messages
-                data.values.forEach(function(row) {
-                    var user = row[0];
-                    var chapter = row[1];
-                    var message = row[2];
-                    $('#messages').append('<li>User: ' + user + ', Chapter: ' + chapter + ', Message: ' + message + '</li>');
-                });
-            })
-            .fail(function(error) {
-                console.error('Failed to retrieve data:', error);
+    function updatepage() {
+        var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
+
+        $.get(url, function(data) {
+            // Clear previous data
+            $('#messages').empty();
+
+            // Create a table with headers
+            var table = $('<table>').append('<tr><th>#</th><th>User</th><th>Chapter</th><th>Message</th></tr>');
+
+            // Iterate through the rows and add to the table
+            data.values.forEach(function(row, index) {
+                var user = row[0];
+                var chapter = row[1];
+                var message = row[2];
+
+                // Create a row with index, user, chapter, and message
+                var tableRow = $('<tr>').append('<td>' + (index + 1) + '</td><td>' + user + '</td><td>' + chapter + '</td><td>' + message + '</td>');
+
+                // Add the row to the table
+                table.append(tableRow);
             });
-        };
+
+            // Append the table to the messages element
+            $('#messages').append(table);
+        })
+        .fail(function(error) {
+            console.error('Failed to retrieve data:', error);
+        });
+    };
+
+
+
 
         function submitMessage(event) {
             event.preventDefault();

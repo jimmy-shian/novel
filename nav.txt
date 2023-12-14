@@ -61,6 +61,7 @@
                         <li><a class="dropdown-item" href="/404.html">404</a></li>
                         <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
                         <li><a class="dropdown-item" href="/linesend" target="_blank">傳送line</a></li>
+                        <li><a class="dropdown-item" href="/savech" target="_blank">儲存章節_excel</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
