@@ -3,73 +3,106 @@
 <head>
     <title>Save Message to Excel</title>
 </head>
+<style>
+    .my-table {
+        text-align: left; /* 將文字靠左對齊 */
+        width: 100%; /* 設定表格寬度為100% */
+    }
+
+    .my-table th, .my-table td {
+        padding: 5px; /* 設定單元格的內邊距 */
+    }
+
+</style>
 <body>
     <h1>Save Message to Excel</h1>
-    <form onsubmit="submitMessage(event)">
+    <form>
         <label for="user">User:</label>
         <input type="text" id="user" required value="jimmy">
         <br>
         <br>
         <label for="chapter">Chapter:</label>
-        <input type="text" id="chapter" required value="122333">
+        <input type="text" id="chapter" required value="ch1">
         <br>
         <br>
         <label for="message">Message:</label>
         <input id="message" required value="save test"></input>
         <br>
         <br>
-        <button type="submit">Save</button>
+        <div style="display: flex;">
+            <button type="button" onclick="submitMessage(event)">Save</button>
+            <button type="button" onclick="updatepage()" style="margin-left: 30px; margin-right: 20px;">update</button>
+            <p id="loading" style="display:none; width: fit-content; margin: 0;">Loading...</p>
+            <p id="last-updated" style="display:none; width: fit-content; margin: 0;"></p>
+        </div>
     </form>
+    
     <ul id="messages"></ul>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
+        function updatepage() {
+            var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
+            $('#last-updated').hide();
+            $('#loading').show();
+            $.get(url, function(data) {
+                // Clear previous data
+                $('#messages').empty();
+                // Create a table with headers
+                var table = $('<table>').addClass('my-table').append('<tr><th>#</th><th>User</th><th>Chapter</th><th>Message</th></tr>');
 
-    function updatepage() {
-        var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
+                // Iterate through the rows and add to the table
+                data.values.forEach(function(row, index) {
+                    var user = row[0];
+                    var chapter = row[1];
+                    var message = row[2];
 
-        $.get(url, function(data) {
-            // Clear previous data
-            $('#messages').empty();
+                    // Create a row with index, user, chapter, and message
+                    var tableRow = $('<tr>').append('<td>' + (index + 1) + '</td><td>' + user + '</td><td>' + chapter + '</td><td>' + message + '</td>');
 
-            // Create a table with headers
-            var table = $('<table>').append('<tr><th>#</th><th>User</th><th>Chapter</th><th>Message</th></tr>');
+                    // Add the row to the table
+                    table.append(tableRow);
+                });
 
-            // Iterate through the rows and add to the table
-            data.values.forEach(function(row, index) {
-                var user = row[0];
-                var chapter = row[1];
-                var message = row[2];
+                // Append the table to the messages element
+                $('#messages').append(table);
+            })
+            .fail(function(error) {
+                console.error('Failed to retrieve data:', error);
+            })
+            .always(function() {
+                // 隱藏轉圈圈
+                // 取得當前時間
+                var currentTime = new Date();
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var seconds = currentTime.getSeconds();
+                var formattedTime = hours + ':' + minutes + ':' + seconds;
 
-                // Create a row with index, user, chapter, and message
-                var tableRow = $('<tr>').append('<td>' + (index + 1) + '</td><td>' + user + '</td><td>' + chapter + '</td><td>' + message + '</td>');
-
-                // Add the row to the table
-                table.append(tableRow);
+                // 顯示更新時間
+                $('#last-updated').show().text('Last Updated: ' + formattedTime);
+                $('#loading').hide();
             });
-
-            // Append the table to the messages element
-            $('#messages').append(table);
-        })
-        .fail(function(error) {
-            console.error('Failed to retrieve data:', error);
-        });
-    };
-
-
-
+        };
 
         function submitMessage(event) {
             event.preventDefault();
-
+            $('#last-updated').hide();
+            $('#loading').show();
             var user = document.getElementById('user').value;
             var chapter = document.getElementById('chapter').value;
             var message = document.getElementById('message').value;
 
             var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
             $.post(url,
-                {user: user, chapter: chapter, msg: message}
+                {user: user, chapter: chapter, msg: message},
+                function(data) {
+            // 如果成功回傳，再執行 updatepage()
+                if (data.status == 'success') {
+                    alert(`${user} save " ${message} " successfully`)
+                    updatepage();
+                }}
             );
-            updatepage();
+            // setTimeout(updatepage, 1500);
         }
     </script>
 </body>
