@@ -17,8 +17,26 @@
         <br>
         <button type="submit">Save</button>
     </form>
+    <ul id="messages"></ul>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
+        function updatepage(event) {
+            var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
+
+            $.get(url, function(data) {
+                // Iterate through the rows and display messages
+                data.values.forEach(function(row) {
+                    var user = row[0];
+                    var chapter = row[1];
+                    var message = row[2];
+                    $('#messages').append('<li>User: ' + user + ', Chapter: ' + chapter + ', Message: ' + message + '</li>');
+                });
+            })
+            .fail(function(error) {
+                console.error('Failed to retrieve data:', error);
+            });
+        };
+
         function submitMessage(event) {
             event.preventDefault();
 
