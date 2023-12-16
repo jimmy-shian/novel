@@ -14,16 +14,23 @@
     <span>我的訊息</span><input type="text" id="myLine">
     <br>
     <br>
-    <button onclick="mySubmit()">傳送訊息</button>
+    <div style="display: flex;">
+        <button onclick="mySubmit()">傳送訊息</button>
+        <p id="loading" style="display:block; width: fit-content; margin: 5px 0 0 30px;">Save successfully !!</p>
+    </div>
 </body>
     <script>
         function mySubmit(){
             var myMessage = document.getElementById('myLine').value;
+            $('#loading').hide();
             console.log(myMessage);
             let url = 'https://script.google.com/macros/s/AKfycbxMdoKpUlQ_LCGLYI4ju6VwbVLtoqvjykWZQOEhwR7_LO6FeYFMiIL_uMePrU7CNZrB/exec'
             $.post(url,
                 {msg:myMessage}
-            );
+            )
+            .always(function() {
+                $('#loading').show();
+            });
         }
         
     </script>
