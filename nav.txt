@@ -37,20 +37,32 @@
                         <li><a class="dropdown-item" href="/sancunrenjian-ergen/sancunrenjian-ergen.html">三寸人間</a></li>
                       </ul>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/woshixiongshizaitaiwenjianle-yanguizhengzhuan/woshixiongshizaitaiwenjianle-yanguizhengzhuan.html">我師兄實在太穩健了</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo.html">修真聊天羣</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/dafengdagengren-maibaoxiaolangjun/dafengdagengren-maibaoxiaolangjun.html">大奉打更人</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html">大符篆師</a>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        已看完清單
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="/woshixiongshizaitaiwenjianle-yanguizhengzhuan/woshixiongshizaitaiwenjianle-yanguizhengzhuan.html">我師兄實在太穩健了</a></li>
+                        <li><a class="dropdown-item" href="/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo.html">修真聊天羣</a></li>
+                        <li><a class="dropdown-item" href="/dafengdagengren-maibaoxiaolangjun/dafengdagengren-maibaoxiaolangjun.html">大奉打更人</a></li>
+                        <li><a class="dropdown-item" href="/dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html">大符篆師</a></li>
+                        <li><a class="dropdown-item" href="/cangyuantu-wochixihongshi/cangyuantu-wochixihongshi.html">滄元圖</a></li>
+                      </ul>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="/cangyuantu-wochixihongshi/cangyuantu-wochixihongshi.html">滄元圖</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/bailianchengxian-huanyu/bailianchengxian-huanyu.html">百鍊成仙</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/xingmen-laoyingchixiaoji/xingmen-laoyingchixiaoji.html">星門</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/doupocangqiong-tiancantudou/doupocangqiong-tiancantudou.html">鬥破蒼穹</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/shengxu-chendong/shengxu-chendong.html">聖墟</a>
                     </li>
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
