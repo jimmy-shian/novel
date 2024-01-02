@@ -62,6 +62,9 @@
                       <a class="nav-link" href="/doupocangqiong-tiancantudou/doupocangqiong-tiancantudou.html">鬥破蒼穹</a>
                     </li>
                     <li class="nav-item">
+                      <a class="nav-link" href="/mulongshi-luan/mulongshi-luan.html">牧龍師</a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link" href="/shengxu-chendong/shengxu-chendong.html">聖墟</a>
                     </li>
                     <li class="nav-item dropdown">
