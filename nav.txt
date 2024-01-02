@@ -21,8 +21,9 @@
                       </a>
                       <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/fanrenxiuxianchuan-wangyu/fanrenxiuxianchuan-wangyu.html">凡人修仙傳</a></li>
-                        <li><a class="dropdown-item" href="/fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html">
-                          凡人修仙之仙界篇</a></li>
+                        <li><a class="dropdown-item" href="/fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html">凡人修仙之仙界篇</a></li>
+                        <li><a class="dropdown-item" href="/motianji-wangyu/motianji-wangyu.html">魔天記</a></li>
+                        <li><a class="dropdown-item" href="/xuanjiezhimen-wangyu/xuanjiezhimen-wangyu.html">玄界之門</a></li>
                       </ul>
                     </li>
                     <li class="nav-item dropdown">
