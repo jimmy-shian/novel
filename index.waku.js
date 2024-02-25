@@ -77,7 +77,7 @@
            changeBtn.innerHTML = `Translate to English
            `;
            cardText.innerHTML = `
-           <h4 class="card-title">進入網絡小說世界~</h4>
+           <h4 class="card-title">進入網路小說世界~</h4>
            
            看啊，一個新的平台到來了，<br>
            虛構的故事正在努力，<br>
@@ -92,7 +92,7 @@
            親愛的讀者，來吧，坐下來，<br>
            喝一杯你最喜歡的飲料，<br>
            讓自己沉浸在這個如此甜蜜的世界<br>
-           裡，冒險和愛情的故事在這里相遇。<br>
+           裡，冒險和愛情的故事在這裡相遇。<br>
            <br>
            享受你的閱讀吧，在這個明亮的地方，讓<br>
            自己沉浸在無盡黑夜的故事中。
