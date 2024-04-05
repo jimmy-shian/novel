@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <h1>傳送訊息</h1>
+    <br>
+    <span>我的訊息</span><input type="text" id="myLine">
+    <br>
+    <br>
+    <div style="display: flex;">
+        <button onclick="mySubmit()">傳送訊息</button>
+        <p id="loading" style="display:none; width: fit-content; margin: 5px 0 0 30px;">Send successfully !!</p>
+    </div>
+</body>
+<script>
+        // 請求剪貼簿許可權
+    navigator.permissions.query({ name: 'clipboard-read' }).then(function(permissionStatus) {
+        // 如果許可權被拒絕，無法自動設置剪貼簿內容
+        if (permissionStatus.state !== 'granted') {
+            console.warn('剪貼簿許可權被拒絕');
+            return;
+        }
+    });
+    // 當網頁載入完成後執行
+    $(document).ready(function(event) {
+        // 當用戶將內容從剪貼簿粘貼到input欄位時，自動填入
+// 當用戶將內容從剪貼簿粘貼到input欄位時，自動填入
+        navigator.clipboard.readText().then(function(text) {
+            $('#myLine').val('');
+            $('#myLine').val(text);
+        }).catch(function(err) {
+            console.error('Failed to read clipboard contents: ', err);
+        });
+        // $('#myLine').on('focus', function(event) {
+        //     // 獲取剪貼簿中的內容
+        //     navigator.clipboard.readText()
+        //         .then(text => {
+        //             // 將剪貼簿中的內容填入input欄位
+        //             $('#myLine').val('');
+        //             $('#myLine').val(text);
+        //             // alert(text);
+        //         })
+        //         .catch(err => {
+        //             console.error('Failed to read clipboard contents: ', err);
+        //         });
+        // });
+    });
+
+    function mySubmit(){
+        var myMessage = document.getElementById('myLine').value;
+        $('#loading').hide();
+        console.log(myMessage);
+        let url = 'https://script.google.com/macros/s/AKfycbxMdoKpUlQ_LCGLYI4ju6VwbVLtoqvjykWZQOEhwR7_LO6FeYFMiIL_uMePrU7CNZrB/exec'
+        $.post(url,
+            {msg:myMessage}
+        )
+        .always(function() {
+            $('#loading').show();
+        });
+    }
+</script>
+</html>
