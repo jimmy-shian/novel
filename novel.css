@@ -34,7 +34,7 @@ body {
     }
 
 .responsive-div {
-    /*overflow-y:scroll;*/
+    overflow-y: hidden;
     justify-content: flex-end;
     padding: 0 25px;
     font-size: 200%;
