@@ -546,9 +546,10 @@ console.log(`currentPageNum = ${currentPageNum}`);
       // 阻止浏览器的默认行为
       event.preventDefault();
       if (!isSearchInputActive) {
-          if (event.button === 3) { // x1
-              goLeft();
-          } else if (event.button === 4) { // x2
+          // if (event.button === 3) { // x1
+          //     goLeft();
+          // } else 
+          if (event.button === 4) { // x2
               goRight();
           }
       }
