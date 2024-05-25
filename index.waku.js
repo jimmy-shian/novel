@@ -543,7 +543,8 @@ console.log(`currentPageNum = ${currentPageNum}`);
     document.addEventListener('mousedown', function (event) {
       const searchInput = document.getElementById('numberInput');
       const isSearchInputActive = document.activeElement == searchInput;
-
+      // 阻止浏览器的默认行为
+      event.preventDefault();
       if (!isSearchInputActive) {
           if (event.button === 3) { // x1
               goLeft();
