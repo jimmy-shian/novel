@@ -539,6 +539,19 @@ console.log(`currentPageNum = ${currentPageNum}`);
         }
       }
     };
+    // 监听鼠标点击事件，左键前进，右键后退
+    document.addEventListener('mousedown', function (event) {
+      const searchInput = document.getElementById('numberInput');
+      const isSearchInputActive = document.activeElement == searchInput;
+
+      if (!isSearchInputActive) {
+          if (event.button === 3) { // x1
+              goLeft();
+          } else if (event.button === 4) { // x2
+              goRight();
+          }
+      }
+    });
 
     function scrollToTop() {
       window.scrollTo({
