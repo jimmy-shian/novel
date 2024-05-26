@@ -1,6 +1,6 @@
 // //(function() {
 // window.onload = function() {
-//   //=================================================== 複製gmail
+  //   //=================================================== 複製gmail
 // // 選取所有具有 class "myButton" 的按鈕
 // var buttons = document.querySelectorAll(".copy-p-button");
 // // var ytspeed = document.querySelectorAll(".ytspeed");
@@ -544,12 +544,12 @@ console.log(`currentPageNum = ${currentPageNum}`);
       const searchInput = document.getElementById('numberInput');
       const isSearchInputActive = document.activeElement == searchInput;
       // 阻止浏览器的默认行为
-      event.preventDefault();
       if (!isSearchInputActive) {
-          // if (event.button === 3) { // x1
-          //     goLeft();
-          // } else 
-          if (event.button === 4) { // x2
+        // if (event.button === 3) { // x1
+        //     goLeft();
+        // } else 
+        if (event.button === 4) { // x2
+              event.preventDefault();
               goRight();
           }
       }
