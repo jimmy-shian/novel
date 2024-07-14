@@ -374,12 +374,12 @@ body {
         width: 100%;
       }
       .title-td {
-        max-width: 50vh;
+        max-width: 90vh;
         height: 45px;
         padding: 14px;
         overflow: hidden;
         margin-left: 10%;
-        text-overflow: ellipsis;
+        /* text-overflow: ellipsis; */
         white-space: nowrap;
         display: block;
       }
