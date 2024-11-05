@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidden Side Panel</title>
+    <style>
+/* 主體樣式 */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.out_side_panel_container {
+    height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+/* 側邊欄 */
+.side_panel_container {
+    width: 30vw; /* 設置為視窗寬度的 30% */
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: -30vw; /* 隱藏在左邊 */
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+    z-index: 2;
+}
+
+/* 展開狀態 */
+.side_panel_container.open {
+    transform: translateX(30vw);
+    min-width: 90px;
+}
+        
+/* 箭頭按鈕 */
+.side_panel_toggle {
+    position: absolute;
+    right: -30px; /* 位於側邊欄右邊 */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 0 4px 4px 0;
+    z-index: 3;
+}
+
+/* 表單樣式 */
+.side_panel_form input[type="text"], input[type="password"] {
+    width: 100%; /* 隨著側邊欄寬度自動縮放 */
+    padding: 8px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.side_panel_form {
+    overflow-y: auto;
+    padding: 5px;
+    height: 100%;
+}
+        
+.change_save_quert_place {
+    display: flex;
+    gap: 5px;
+    font-size: 10px;
+}
+        
+.change_save_quert_place button {
+    width: 100%;
+    padding: 8px 5px;
+    background-color: #99caff;
+    border: none;
+    border-radius: 4px;
+    color: black;
+    margin: 10px 0 3px 0;
+    font-size: inherit;
+}
+        
+.mima_place {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#password_field {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 25px;
+}
+
+#toggle_password {
+    position: absolute;
+    right: 3%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: fit-content;
+}
+
+        #password_icon {
+            width: 20px; 
+            height: 20px;
+            background-color: white;
+        }
+        
+.side_panel_submit {
+    width: 100%;
+    padding: 3px 5px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    margin: 10px 0;
+}
+
+/* 當背景被點擊時縮回側邊 */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.overlay.active {
+    display: block;
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="out_side_panel_container">
+        <div id="side_panel_container" class="side_panel_container">
+            <div id="side_panel_toggle" class="side_panel_toggle">&#9654;</div>
+            <form class="side_panel_form">
+
+                <!-- 新增的查詢和儲存按鈕 -->
+                <div class="change_save_quert_place">
+                    <button type="button" id="query_button" onclick="toggleFormMode('query')">查詢章節</button>
+                    <button type="button" id="save_button" onclick="toggleFormMode('save')">儲存章節</button>
+                </div>
+
+                <input type="text" placeholder="帳號" class="side_panel_input">
+               
+                <div class="mima_place">
+                    <input type="password" placeholder="密碼" class="side_panel_input" id="password_field">
+                    <button type="button" id="toggle_password" onclick="togglePasswordVisibility()">
+                        <img src="img/show_password.png" alt="顯示密碼" id="password_icon">
+                    </button>
+                </div>
+
+                <input type="text" placeholder="書名" class="side_panel_input">
+                <input type="text" placeholder="章節" class="side_panel_input">
+
+                <button type="submit" class="side_panel_submit">送出</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        const sidePanelContainer = document.getElementById('side_panel_container');
+        const sidePanelToggle = document.getElementById('side_panel_toggle');
+        const overlay = document.getElementById('overlay');
+
+        // 切換側邊欄顯示狀態
+        function toggleSidePanel() {
+            const isOpen = sidePanelContainer.classList.contains('open');
+            if (isOpen) {
+                sidePanelContainer.classList.remove('open');
+                overlay.classList.remove('active');
+                sidePanelToggle.innerHTML = '&#9654;'; // 展開箭頭
+            } else {
+                sidePanelContainer.classList.add('open');
+                overlay.classList.add('active');
+                sidePanelToggle.innerHTML = '&#9664;'; // 收回箭頭
+            }
+        }
+
+        // 點擊箭頭按鈕切換側邊欄
+        sidePanelToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSidePanel();
+        });
+
+        // 點擊空白處縮回側邊欄
+        overlay.addEventListener('click', toggleSidePanel);
+        
+function togglePasswordVisibility() {
+    const passwordField = document.getElementById('password_field');
+    const passwordIcon = document.getElementById('password_icon');
+
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        passwordIcon.src = 'img/hide_password.png'; // 切換為「隱藏密碼」圖片
+        passwordIcon.alt = '隱藏密碼';
+    } else {
+        passwordField.type = 'password';
+        passwordIcon.src = 'img/show_password.png'; // 切換為「顯示密碼」圖片
+        passwordIcon.alt = '顯示密碼';
+    }
+}
+
+const queryButton = document.getElementById('query_button');
+const saveButton = document.getElementById('save_button');
+const submitButton = document.querySelector('.side_panel_submit');
+        
+const chapterInput = document.querySelector('input.side_panel_input[placeholder="章節"]');
+
+       function toggleFormMode(mode) {
+            if (mode === 'query') {
+                submitButton.textContent = '送出';
+                chapterInput.disabled = true; // 禁止輸入
+                
+                // 模擬查詢後的結果
+                setTimeout(() => {
+                    chapterInput.value = '第8章';
+                    chapterInput.disabled = false; // 查詢成功後解禁
+                    submitButton.textContent = '前往';
+                }, 1000);
+                
+            } else if (mode === 'save') {
+                submitButton.textContent = '送出';
+                chapterInput.disabled = false; // 儲存模式允許輸入
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>
