@@ -367,7 +367,139 @@ $(document).ready(function () {
 
 });
 */
+  // 創建外層容器
+  const outSidePanelContainer = $('<div>', {
+    class: 'out_side_panel_container'
+});
 
+// 創建側邊面板容器
+const sidePanelContainer = $('<div>', {
+    id: 'side_panel_container',
+    class: 'side_panel_container'
+});
+
+// 創建側邊面板切換按鈕
+const sidePanelToggle = $('<div>', {
+    id: 'side_panel_toggle',
+    class: 'side_panel_toggle',
+    html: String.fromCodePoint(0x1F87A) // 向右的三角形符號
+});
+
+// 創建表單
+const sidePanelForm = $('<form>', {
+    class: 'side_panel_form'
+});
+
+// 創建查詢和儲存按鈕容器
+const changeSaveQueryPlace = $('<div>', {
+    class: 'change_save_quert_place'
+});
+
+// 創建查詢按鈕
+const queryButton = $('<button>', {
+    type: 'button',
+    id: 'query_button',
+    text: '查詢章節'
+});
+
+// 創建儲存按鈕
+const saveButton = $('<button>', {
+    type: 'button',
+    id: 'save_button',
+    text: '儲存章節'
+});
+
+// 將查詢和儲存按鈕添加到容器
+changeSaveQueryPlace.append(queryButton, saveButton);
+
+// 創建帳號輸入框
+const userInput = $('<input>', {
+    type: 'text',
+    id: 'user',
+    placeholder: '帳號',
+    class: 'side_panel_input',
+    //value: 'jimmy'
+});
+
+// 創建密碼輸入框和顯示密碼按鈕容器
+const mimaPlace = $('<div>', {
+    class: 'mima_place'
+});
+
+// 創建密碼輸入框
+const passwordInput = $('<input>', {
+    type: 'password',
+    id: 'password',
+    placeholder: '密碼',
+    class: 'side_panel_input',
+    //value: '123'
+});
+
+// 創建顯示密碼按鈕
+const togglePasswordButton = $('<button>', {
+    type: 'button',
+    id: 'toggle_password',
+    autocomplete: "current-password",
+    click: function () {
+        togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
+    }
+}).append($('<img>', {
+    src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
+    alt: '顯示密碼',
+    id: 'password_icon'
+}));
+
+// 將密碼輸入框和顯示按鈕添加到密碼容器
+mimaPlace.append(passwordInput, togglePasswordButton);
+
+// 創建章節和訊息輸入框
+const chapterInput = $('<input>', {
+    type: 'text',
+    id: 'chapter',
+    placeholder: '書名',
+    class: 'side_panel_input',
+    //value: 'ch1'
+});
+
+const messageInput = $('<input>', {
+    type: 'text',
+    id: 'message',
+    placeholder: '章節',
+    class: 'side_panel_input'
+});
+
+// 創建提交按鈕
+const submitButton = $('<button>', {
+    type: 'submit',
+    class: 'side_panel_submit',
+    id: 'submit_button',
+    text: '儲存'
+});
+
+// 將所有元素添加到表單中
+sidePanelForm.append(
+    changeSaveQueryPlace,
+    userInput,
+    mimaPlace,
+    chapterInput,
+    messageInput,
+    submitButton
+);
+
+// 將側邊面板切換按鈕和表單添加到側邊面板容器中
+sidePanelContainer.append(sidePanelToggle, sidePanelForm);
+
+// 將側邊面板容器添加到外層容器
+outSidePanelContainer.append(sidePanelContainer);
+
+// 創建覆蓋層
+const overlay = $('<div>', {
+    id: 'overlay',
+    class: 'overlay'
+});
+
+// 將外層容器和覆蓋層添加到 body
+$('body').append(outSidePanelContainer, overlay);
 
     function checkScrollbar() {
       var body = document.body;
@@ -953,138 +1085,7 @@ window.onload = function() {
 // 側邊攔 Start
 
 //$(document).ready(function () {
-  // 創建外層容器
-  const outSidePanelContainer = $('<div>', {
-      class: 'out_side_panel_container'
-  });
 
-  // 創建側邊面板容器
-  const sidePanelContainer = $('<div>', {
-      id: 'side_panel_container',
-      class: 'side_panel_container'
-  });
-
-  // 創建側邊面板切換按鈕
-  const sidePanelToggle = $('<div>', {
-      id: 'side_panel_toggle',
-      class: 'side_panel_toggle',
-      html: '\1F87A' // 向右的三角形符號
-  });
-
-  // 創建表單
-  const sidePanelForm = $('<form>', {
-      class: 'side_panel_form'
-  });
-
-  // 創建查詢和儲存按鈕容器
-  const changeSaveQueryPlace = $('<div>', {
-      class: 'change_save_quert_place'
-  });
-
-  // 創建查詢按鈕
-  const queryButton = $('<button>', {
-      type: 'button',
-      id: 'query_button',
-      text: '查詢章節'
-  });
-
-  // 創建儲存按鈕
-  const saveButton = $('<button>', {
-      type: 'button',
-      id: 'save_button',
-      text: '儲存章節'
-  });
-
-  // 將查詢和儲存按鈕添加到容器
-  changeSaveQueryPlace.append(queryButton, saveButton);
-
-  // 創建帳號輸入框
-  const userInput = $('<input>', {
-      type: 'text',
-      id: 'user',
-      placeholder: '帳號',
-      class: 'side_panel_input',
-      //value: 'jimmy'
-  });
-
-  // 創建密碼輸入框和顯示密碼按鈕容器
-  const mimaPlace = $('<div>', {
-      class: 'mima_place'
-  });
-
-  // 創建密碼輸入框
-  const passwordInput = $('<input>', {
-      type: 'password',
-      id: 'password',
-      placeholder: '密碼',
-      class: 'side_panel_input',
-      //value: '123'
-  });
-
-  // 創建顯示密碼按鈕
-  const togglePasswordButton = $('<button>', {
-      type: 'button',
-      id: 'toggle_password',
-      click: function () {
-          togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
-      }
-  }).append($('<img>', {
-      src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
-      alt: '顯示密碼',
-      id: 'password_icon'
-  }));
-
-  // 將密碼輸入框和顯示按鈕添加到密碼容器
-  mimaPlace.append(passwordInput, togglePasswordButton);
-
-  // 創建章節和訊息輸入框
-  const chapterInput = $('<input>', {
-      type: 'text',
-      id: 'chapter',
-      placeholder: '書名',
-      class: 'side_panel_input',
-      //value: 'ch1'
-  });
-
-  const messageInput = $('<input>', {
-      type: 'text',
-      id: 'message',
-      placeholder: '章節',
-      class: 'side_panel_input'
-  });
-
-  // 創建提交按鈕
-  const submitButton = $('<button>', {
-      type: 'submit',
-      class: 'side_panel_submit',
-      id: 'submit_button',
-      text: '儲存'
-  });
-
-  // 將所有元素添加到表單中
-  sidePanelForm.append(
-      changeSaveQueryPlace,
-      userInput,
-      mimaPlace,
-      chapterInput,
-      messageInput,
-      submitButton
-  );
-
-  // 將側邊面板切換按鈕和表單添加到側邊面板容器中
-  sidePanelContainer.append(sidePanelToggle, sidePanelForm);
-
-  // 將側邊面板容器添加到外層容器
-  outSidePanelContainer.append(sidePanelContainer);
-
-  // 創建覆蓋層
-  const overlay = $('<div>', {
-      id: 'overlay',
-      class: 'overlay'
-  });
-
-  // 將外層容器和覆蓋層添加到 body
-  $('body').append(outSidePanelContainer, overlay);
   const sidePanelContainer_js = document.getElementById('side_panel_container');
   const sidePanelToggle_js = document.getElementById('side_panel_toggle');
   const overlay_js = document.getElementById('overlay');
@@ -1095,11 +1096,11 @@ window.onload = function() {
       if (isOpen_js) {
           sidePanelContainer_js.classList.remove('open');
           overlay_js.classList.remove('active');
-          sidePanelToggle_js.innerHTML = "\1F87A"; // 展開箭頭
+          sidePanelToggle_js.innerHTML = String.fromCodePoint(0x1F87A); // 展開箭頭
       } else {
           sidePanelContainer_js.classList.add('open');
           overlay_js.classList.add('active');
-          sidePanelToggle_js.innerHTML = '\1F878'; // 收回箭頭
+          sidePanelToggle_js.innerHTML = String.fromCodePoint(0x1F878); // 收回箭頭
       }
   }
 
