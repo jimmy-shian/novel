@@ -367,6 +367,41 @@ $(document).ready(function () {
 
 });
 */
+// 書名和拼音的字典
+const bookDictionary = {
+  "百鍊成仙": "bailianchengxian-huanyu",
+  "滄元圖": "cangyuantu-wochixihongshi",
+  "大奉打更人": "dafengdagengren-maibaoxiaolangjun",
+  "大符篆師": "dafuzhuanshi-xiaodaofengli",
+  "帝霸": "diba-yanbixiaosheng",
+  "鬥破蒼穹": "doupocangqiong-tiancantudou",
+  "凡人修仙傳": "fanrenxiuxianchuan-wangyu",
+  "凡人修仙之仙界篇": "fanrenxiuxianzhixianjiepian-wangyu",
+  "飛劍問道": "feijianwendao-wochixihongshi",
+  "魔天記": "motianji-wangyu",
+  "牧龍師": "mulongshi-luan",
+  "求魔": "qiumo-ergen",
+  "全職法師": "quanzhifashi-luan",
+  //"關於轉世到史萊姆": "regarding-reincarnated-to-slime",
+  "三寸人間": "sancunrenjian-ergen",
+  "聖墟": "shengxu-chendong",
+  "吞噬星空": "tunshixingkong-wochixihongshi",
+  "我師兄實在太穩健了": "woshixiongshizaitaiwenjianle-yanguizhengzhuan",
+  "我欲封天": "woyufengtian-ergen",
+  "仙逆": "xianni-ergen",
+  "星門": "xingmen-laoyingchixiaoji",
+  "修真聊天群日常生活": "xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo",
+  "玄界之門": "xuanjiezhimen-wangyu",
+  "一念永恆": "yinianyongheng-ergen"
+};
+
+// 函數：隨機選擇 5 到 7 個書名
+function getRandomBookTitles(dictionary, count) {
+  const keys = Object.keys(dictionary);
+  const shuffled = keys.sort(() => 0.5 - Math.random()); // 隨機排序
+  return shuffled.slice(0, count); // 返回前 count 個元素
+}
+
   // 創建外層容器
   const outSidePanelContainer = $('<div>', {
     class: 'out_side_panel_container'
@@ -418,6 +453,7 @@ const userInput = $('<input>', {
     id: 'user',
     placeholder: '帳號',
     class: 'side_panel_input',
+    autocomplete: "username"
     //value: 'jimmy'
 });
 
@@ -830,24 +866,34 @@ if (titleElement !== null) {
             // URL 存在，重新定向網頁到該 URL
             window.location.href = newUrl;
           } else {
-            alert('輸入章節錯誤，請重新輸入');
-            // URL 不存在，重新整理頁面
-            window.location.reload();
-          }
+            // 將資料夾名稱加到當前 URL
+              const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
+              if (folderName) {
+                  const alternateUrl = `${window.location.origin}/${folderName}/${newUrl}`;
+                  return fetch(alternateUrl); // 嘗試使用新的 URL
+              } else {
+                  throw new Error('資料夾名稱未找到');
+              }
+            }
+        })
+        .then(response => {
+            if (response && response.ok) {
+                // 如果新 URL 存在，則重新定向
+                window.location.href = `${window.location.origin}/${folderName}/${newUrl}`;
+            } else {
+                alert('輸入章節錯誤，請重新輸入');
+                // URL 不存在，重新整理頁面
+                window.location.reload();
+            }
         })
         .catch(error => {
-          console.error('發生錯誤:', error);
-          // alert('輸入章節錯誤，請重新輸入');
-          // 重新整理頁面
-          window.location.reload();
+            console.error('發生錯誤:', error);
+            // 重新整理頁面
+            window.location.reload();
         });
-        // window.location.href = newUrl;
       } else {
-        // 彈出提示框
-        alert('輸入章節錯誤，請重新輸入');
-        // 在當前頁面重新整理
-        window.location.reload();
-        // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
+          alert('請輸入有效的章節號碼');
+          window.location.reload();
       }
     });
   }
@@ -1137,6 +1183,13 @@ window.onload = function() {
 
   const submitButton_js = document.getElementById('submit_button');
   const chapterInput_js = document.getElementById('message');
+  const chapternameInput_js = document.getElementById('chapter');
+
+  // 在輸入框獲得焦點時生成隨機書名
+  chapternameInput_js.on('focus', function() {
+    const randomTitles = getRandomBookTitles(bookDictionary, Math.floor(Math.random() * 3) + 5); // 隨機 5 到 7 個書名
+    chapterchapternameInput_jsInput.val(randomTitles.join(', ')); // 更新輸入框的值
+  });
 
   // 記錄當前模式
   let currentMode_js = 'save';
