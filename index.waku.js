@@ -432,6 +432,7 @@ const passwordInput = $('<input>', {
     id: 'password',
     placeholder: '密碼',
     class: 'side_panel_input',
+    autocomplete: "current-password"
     //value: '123'
 });
 
@@ -439,7 +440,6 @@ const passwordInput = $('<input>', {
 const togglePasswordButton = $('<button>', {
     type: 'button',
     id: 'toggle_password',
-    autocomplete: "current-password",
     click: function () {
         togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
     }
@@ -927,7 +927,14 @@ if (contentElement) {
   // 將文件名中的HTML後綴替換為TXT後綴
   const txtname = filename.replace(".html", ".txt");
   console.log(`txtname = ${txtname}`);
+  if (txtname){
+    // 解碼 URL 編碼
+    const decodedString = decodeURIComponent(txtname);
 
+    // 分割字符串，只取中文部分
+    const chinesePart = decodedString.split('_')[0]; // 取第一部分，即中文
+    $('#chapter').val( chinesePart );
+  }
   // 發送請求並匯入文件內容
   fetch(txtname)
     .then(response => {
