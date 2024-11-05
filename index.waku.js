@@ -395,11 +395,18 @@ const bookDictionary = {
   "一念永恆": "yinianyongheng-ergen"
 };
 
-// 函數：隨機選擇 5 到 7 個書名
+// 隨機選取書名函數
 function getRandomBookTitles(dictionary, count) {
   const keys = Object.keys(dictionary);
-  const shuffled = keys.sort(() => 0.5 - Math.random()); // 隨機排序
-  return shuffled.slice(0, count); // 返回前 count 個元素
+  const randomTitles = [];
+  while (randomTitles.length < count) {
+    const randomIndex = Math.floor(Math.random() * keys.length);
+    const title = dictionary[keys[randomIndex]];
+    if (!randomTitles.includes(title)) {
+      randomTitles.push(title);
+    }
+  }
+  return randomTitles;
 }
 
   // 創建外層容器
@@ -488,14 +495,15 @@ const togglePasswordButton = $('<button>', {
 // 將密碼輸入框和顯示按鈕添加到密碼容器
 mimaPlace.append(passwordInput, togglePasswordButton);
 
-// 創建章節和訊息輸入框
+// 建立輸入框和 datalist
 const chapterInput = $('<input>', {
-    type: 'text',
-    id: 'chapter',
-    placeholder: '書名',
-    class: 'side_panel_input',
-    //value: 'ch1'
+  type: 'text',
+  id: 'chapter',
+  placeholder: '書名',
+  class: 'side_panel_input',
+  list: 'suggestions'
 });
+const suggestionsList = $('<datalist>', { id: 'suggestions' });
 
 const messageInput = $('<input>', {
     type: 'text',
@@ -518,6 +526,7 @@ sidePanelForm.append(
     userInput,
     mimaPlace,
     chapterInput,
+    suggestionsList,
     messageInput,
     submitButton
 );
@@ -865,26 +874,7 @@ if (titleElement !== null) {
           if (response.ok) {
             // URL 存在，重新定向網頁到該 URL
             window.location.href = newUrl;
-          } else {
-            // 將資料夾名稱加到當前 URL
-              const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
-              if (folderName) {
-                  const alternateUrl = `${window.location.origin}/${folderName}/${newUrl}`;
-                  return fetch(alternateUrl); // 嘗試使用新的 URL
-              } else {
-                  throw new Error('資料夾名稱未找到');
-              }
-            }
-        })
-        .then(response => {
-            if (response && response.ok) {
-                // 如果新 URL 存在，則重新定向
-                window.location.href = `${window.location.origin}/${folderName}/${newUrl}`;
-            } else {
-                alert('輸入章節錯誤，請重新輸入');
-                // URL 不存在，重新整理頁面
-                window.location.reload();
-            }
+          } 
         })
         .catch(error => {
             console.error('發生錯誤:', error);
@@ -1184,21 +1174,19 @@ window.onload = function() {
   const submitButton_js = document.getElementById('submit_button');
   const chapterInput_js = document.getElementById('message');
   const chapternameInput_js = document.getElementById('chapter');
+  const suggestionsList_js = document.getElementById('suggestions');
 
-  // 在輸入框獲得焦點時更新提示選單
-  chapternameInput_js.addEventListener('focus', function() {
+  // 當輸入框獲得焦點時更新 datalist
+  chapterInput.on('focus', function() {
     const randomTitles = getRandomBookTitles(bookDictionary, Math.floor(Math.random() * 3) + 5); // 隨機 5 到 7 個書名
+    suggestionsList_js.empty(); // 清空 datalist 中的選項
 
-    // 清空 datalist 中的選項
-    suggestionsList.innerHTML = '';
-
-    // 添加新選項到 datalist
+    // 將新選項添加到 datalist
     randomTitles.forEach(title => {
-        const option = document.createElement('option');
-        option.value = title;
-        suggestionsList.appendChild(option);
+      $('<option>', { value: title }).appendTo(suggestionsList_js);
     });
   });
+
 
   // 記錄當前模式
   let currentMode_js = 'save';
@@ -1239,7 +1227,7 @@ window.onload = function() {
                 // 將資料夾名稱加到當前 URL
                   const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
                   if (folderName) {
-                      const alternateUrl = `${window.location.origin}/${folderName}/${newUrl}`;
+                      const alternateUrl = `${window.location.href}/${folderName}/${newUrl}`;
                       return fetch(alternateUrl); // 嘗試使用新的 URL
                   } else {
                       throw new Error('資料夾名稱未找到');
@@ -1249,7 +1237,7 @@ window.onload = function() {
             .then(response => {
                 if (response && response.ok) {
                     // 如果新 URL 存在，則重新定向
-                    window.location.href = `${window.location.origin}/${folderName}/${newUrl}`;
+                    window.location.href = `${window.location.href}/${folderName}/${newUrl}`;
                 } else {
                     alert('輸入章節錯誤，請重新輸入');
                     // URL 不存在，重新整理頁面
