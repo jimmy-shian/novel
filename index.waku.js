@@ -1185,11 +1185,19 @@ window.onload = function() {
   const chapterInput_js = document.getElementById('message');
   const chapternameInput_js = document.getElementById('chapter');
 
-  // 在輸入框獲得焦點時生成隨機書名
-
+  // 在輸入框獲得焦點時更新提示選單
   chapternameInput_js.addEventListener('focus', function() {
     const randomTitles = getRandomBookTitles(bookDictionary, Math.floor(Math.random() * 3) + 5); // 隨機 5 到 7 個書名
-    chapternameInput_js.value = randomTitles.join(', '); // 更新輸入框的值
+
+    // 清空 datalist 中的選項
+    suggestionsList.innerHTML = '';
+
+    // 添加新選項到 datalist
+    randomTitles.forEach(title => {
+        const option = document.createElement('option');
+        option.value = title;
+        suggestionsList.appendChild(option);
+    });
   });
 
   // 記錄當前模式
@@ -1278,6 +1286,7 @@ window.onload = function() {
       }
 
       if (mode === 'query') {
+          $('#submit_button').prop('disabled', true);
           let dotCount_js = 0; // 點點計數器
           chapterInput_js.value = "查詢中";
 
@@ -1306,8 +1315,10 @@ window.onload = function() {
           ).fail(function (error) {
               alert(`${error.message}`);
           });
+          $('#submit_button').prop('disabled', false);
 
       } else if (mode === 'save') {
+        $('#submit_button').prop('disabled', true);
           // 禁用按鈕，並添加抖動效果
           submitButton_js.disabled = true;
           submitButton_js.classList.add('shake');
@@ -1337,6 +1348,7 @@ window.onload = function() {
               submitButton_js.classList.remove('shake');
               submitButton_js.disabled = false;
           });
+          $('#submit_button').prop('disabled', false);
       }
   }
 
