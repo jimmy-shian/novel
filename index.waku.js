@@ -38,6 +38,7 @@
 // }
 // //===================================================
 // };
+/*
 $(document).ready(function () {
   // 創建外層容器
   const outSidePanelContainer = $('<div>', {
@@ -365,7 +366,7 @@ $(document).ready(function () {
   }
 
 });
-
+*/
 
 
     function checkScrollbar() {
