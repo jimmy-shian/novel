@@ -399,9 +399,15 @@ const bookDictionary = {
 function getRandomBookTitles(dictionary, count) {
   const keys = Object.keys(dictionary);
   const randomTitles = [];
-  while (randomTitles.length < count) {
+  
+  // 檢查要選擇的數量是否大於可用的鍵數
+  const maxCount = Math.min(count, keys.length);
+
+  while (randomTitles.length < maxCount) {
     const randomIndex = Math.floor(Math.random() * keys.length);
-    const title = dictionary[keys[randomIndex]];
+    const title = keys[randomIndex]; // 獲取隨機鍵
+
+    // 確保不重複
     if (!randomTitles.includes(title)) {
       randomTitles.push(title);
     }
@@ -1226,27 +1232,36 @@ window.onload = function() {
           if (/^\d+$/.test(inputNumber_js)) {
             // 構造新的URL並重新定向網頁
             const newUrl = `${bookTitle_js}_html${inputNumber_js}.html`;
+            var finalUrl = "";
             // 檢查新的 URL 是否存在
             fetch(newUrl)
             .then(response => {
               if (response.ok) {
                 // URL 存在，重新定向網頁到該 URL
                 window.location.href = newUrl;
+                return;
               } else {
                 // 將資料夾名稱加到當前 URL
                   const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
                   if (folderName) {
                       const alternateUrl = `${window.location.href}/${folderName}/${newUrl}`;
-                      return fetch(alternateUrl); // 嘗試使用新的 URL
+                      finalUrl = alternateUrl;
+                      return ; // 嘗試使用新的 URL
                   } else {
-                      throw new Error('資料夾名稱未找到');
+                      throw new Error('未找到網址');
                   }
                 }
             })
+            .catch(error => {
+              console.error('發生錯誤:', error);
+              // 重新整理頁面
+              window.location.reload();
+            });
+            fetch(finalUrl)
             .then(response => {
-                if (response && response.ok) {
+                if (response.ok) {
                     // 如果新 URL 存在，則重新定向
-                    const finalUrl = `${window.location.origin}/novel/${folderName}/${newUrl}`;
+                    console.log("拼接跳轉網址: " + finalUrl);
                     window.location.href = finalUrl;
                 } else {
                     alert('輸入章節錯誤，請重新輸入');
