@@ -1186,9 +1186,10 @@ window.onload = function() {
   const chapternameInput_js = document.getElementById('chapter');
 
   // 在輸入框獲得焦點時生成隨機書名
-  chapternameInput_js.on('focus', function() {
+
+  chapternameInput_js.addEventListener('focus', function() {
     const randomTitles = getRandomBookTitles(bookDictionary, Math.floor(Math.random() * 3) + 5); // 隨機 5 到 7 個書名
-    chapterchapternameInput_jsInput.val(randomTitles.join(', ')); // 更新輸入框的值
+    chapternameInput_js.value = randomTitles.join(', '); // 更新輸入框的值
   });
 
   // 記錄當前模式
