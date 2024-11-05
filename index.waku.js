@@ -1236,24 +1236,34 @@ window.onload = function() {
                 // URL 存在，重新定向網頁到該 URL
                 window.location.href = newUrl;
               } else {
-                alert('輸入章節錯誤，請重新輸入');
-                // URL 不存在，重新整理頁面
-                window.location.reload();
-              }
+                // 將資料夾名稱加到當前 URL
+                  const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
+                  if (folderName) {
+                      const alternateUrl = `${window.location.origin}/${folderName}/${newUrl}`;
+                      return fetch(alternateUrl); // 嘗試使用新的 URL
+                  } else {
+                      throw new Error('資料夾名稱未找到');
+                  }
+                }
+            })
+            .then(response => {
+                if (response && response.ok) {
+                    // 如果新 URL 存在，則重新定向
+                    window.location.href = `${window.location.origin}/${folderName}/${newUrl}`;
+                } else {
+                    alert('輸入章節錯誤，請重新輸入');
+                    // URL 不存在，重新整理頁面
+                    window.location.reload();
+                }
             })
             .catch(error => {
-              console.error('發生錯誤:', error);
-              // alert('輸入章節錯誤，請重新輸入');
-              // 重新整理頁面
-              window.location.reload();
+                console.error('發生錯誤:', error);
+                // 重新整理頁面
+                window.location.reload();
             });
-            // window.location.href = newUrl;
           } else {
-            // 彈出提示框
-            alert('輸入章節錯誤，請重新輸入');
-            // 在當前頁面重新整理
-            window.location.reload();
-            // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
+              alert('請輸入有效的章節號碼');
+              window.location.reload();
           }
 
       } else {
