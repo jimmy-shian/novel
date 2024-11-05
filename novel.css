@@ -320,17 +320,17 @@ min-width: 90px;
     
 /* 箭頭按鈕 */
 .side_panel_toggle {
-position: absolute;
-right: -13px; /* 位於側邊欄右邊 */
-top: 80%;
-transform: translateY(-50%);
-background-color: #333;
-color: white;
-padding: 5px 2px;
-cursor: pointer;
-font-size: 12px;
-border-radius: 0 4px 4px 0;
-z-index: 3;
+  position: absolute;
+  right: -25px;
+  top: 80%;
+  transform: translateY(-50%);
+  background-color: #333;
+  color: white;
+  padding: 3% 2%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 0 4px 4px 0;
+  z-index: 3;
 }
 
 /* 表單樣式 */
