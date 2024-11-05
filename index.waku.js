@@ -1239,14 +1239,12 @@ window.onload = function() {
               if (response.ok) {
                 // URL 存在，重新定向網頁到該 URL
                 window.location.href = newUrl;
-                return;
               } else {
                 // 將資料夾名稱加到當前 URL
                   const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
                   if (folderName) {
                       const alternateUrl = `${window.location.href}/${folderName}/${newUrl}`;
-                      finalUrl = alternateUrl;
-                      return ; // 嘗試使用新的 URL
+                      window.location.href = alternateUrl;
                   } else {
                       throw new Error('未找到網址');
                   }
@@ -1256,23 +1254,6 @@ window.onload = function() {
               console.error('發生錯誤:', error);
               // 重新整理頁面
               window.location.reload();
-            });
-            fetch(finalUrl)
-            .then(response => {
-                if (response.ok) {
-                    // 如果新 URL 存在，則重新定向
-                    console.log("拼接跳轉網址: " + finalUrl);
-                    window.location.href = finalUrl;
-                } else {
-                    alert('輸入章節錯誤，請重新輸入');
-                    // URL 不存在，重新整理頁面
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('發生錯誤:', error);
-                // 重新整理頁面
-                window.location.reload();
             });
           } else {
               alert('請輸入有效的章節號碼');
