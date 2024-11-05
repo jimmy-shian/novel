@@ -38,6 +38,335 @@
 // }
 // //===================================================
 // };
+$(document).ready(function () {
+  // 創建外層容器
+  const outSidePanelContainer = $('<div>', {
+      class: 'out_side_panel_container'
+  });
+
+  // 創建側邊面板容器
+  const sidePanelContainer = $('<div>', {
+      id: 'side_panel_container',
+      class: 'side_panel_container'
+  });
+
+  // 創建側邊面板切換按鈕
+  const sidePanelToggle = $('<div>', {
+      id: 'side_panel_toggle',
+      class: 'side_panel_toggle',
+      html: '&#9654;' // 向右的三角形符號
+  });
+
+  // 創建表單
+  const sidePanelForm = $('<form>', {
+      class: 'side_panel_form'
+  });
+
+  // 創建查詢和儲存按鈕容器
+  const changeSaveQueryPlace = $('<div>', {
+      class: 'change_save_quert_place'
+  });
+
+  // 創建查詢按鈕
+  const queryButton = $('<button>', {
+      type: 'button',
+      id: 'query_button',
+      text: '查詢章節'
+  });
+
+  // 創建儲存按鈕
+  const saveButton = $('<button>', {
+      type: 'button',
+      id: 'save_button',
+      text: '儲存章節'
+  });
+
+  // 將查詢和儲存按鈕添加到容器
+  changeSaveQueryPlace.append(queryButton, saveButton);
+
+  // 創建帳號輸入框
+  const userInput = $('<input>', {
+      type: 'text',
+      id: 'user',
+      placeholder: '帳號',
+      class: 'side_panel_input',
+      //value: 'jimmy'
+  });
+
+  // 創建密碼輸入框和顯示密碼按鈕容器
+  const mimaPlace = $('<div>', {
+      class: 'mima_place'
+  });
+
+  // 創建密碼輸入框
+  const passwordInput = $('<input>', {
+      type: 'password',
+      id: 'password',
+      placeholder: '密碼',
+      class: 'side_panel_input',
+      //value: '123'
+  });
+
+  // 創建顯示密碼按鈕
+  const togglePasswordButton = $('<button>', {
+      type: 'button',
+      id: 'toggle_password',
+      click: function () {
+          togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
+      }
+  }).append($('<img>', {
+      src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
+      alt: '顯示密碼',
+      id: 'password_icon'
+  }));
+
+  // 將密碼輸入框和顯示按鈕添加到密碼容器
+  mimaPlace.append(passwordInput, togglePasswordButton);
+
+  // 創建章節和訊息輸入框
+  const chapterInput = $('<input>', {
+      type: 'text',
+      id: 'chapter',
+      placeholder: '書名',
+      class: 'side_panel_input',
+      value: 'ch1'
+  });
+
+  const messageInput = $('<input>', {
+      type: 'text',
+      id: 'message',
+      placeholder: '章節',
+      class: 'side_panel_input'
+  });
+
+  // 創建提交按鈕
+  const submitButton = $('<button>', {
+      type: 'submit',
+      class: 'side_panel_submit',
+      id: 'submit_button',
+      text: '儲存'
+  });
+
+  // 將所有元素添加到表單中
+  sidePanelForm.append(
+      changeSaveQueryPlace,
+      userInput,
+      mimaPlace,
+      chapterInput,
+      messageInput,
+      submitButton
+  );
+
+  // 將側邊面板切換按鈕和表單添加到側邊面板容器中
+  sidePanelContainer.append(sidePanelToggle, sidePanelForm);
+
+  // 將側邊面板容器添加到外層容器
+  outSidePanelContainer.append(sidePanelContainer);
+
+  // 創建覆蓋層
+  const overlay = $('<div>', {
+      id: 'overlay',
+      class: 'overlay'
+  });
+
+  // 將外層容器和覆蓋層添加到 body
+  $('body').append(outSidePanelContainer, overlay);
+  const sidePanelContainer_js = document.getElementById('side_panel_container');
+  const sidePanelToggle_js = document.getElementById('side_panel_toggle');
+  const overlay_js = document.getElementById('overlay');
+
+  // 切換側邊欄顯示狀態
+  function toggleSidePanel() {
+      const isOpen_js = sidePanelContainer_js.classList.contains('open');
+      if (isOpen_js) {
+          sidePanelContainer_js.classList.remove('open');
+          overlay_js.classList.remove('active');
+          sidePanelToggle_js.innerHTML = '&#9654;'; // 展開箭頭
+      } else {
+          sidePanelContainer_js.classList.add('open');
+          overlay_js.classList.add('active');
+          sidePanelToggle_js.innerHTML = '&#9664;'; // 收回箭頭
+      }
+  }
+
+  // 點擊箭頭按鈕切換側邊欄
+  sidePanelToggle_js.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSidePanel();
+  });
+
+  // 點擊空白處縮回側邊欄
+  overlay_js.addEventListener('click', toggleSidePanel);
+
+  function togglePasswordVisibility() {
+      const passwordField_js = document.getElementById('password');
+      const passwordIcon_js = document.getElementById('password_icon');
+
+      if (passwordField_js.type === 'password') {
+          passwordField_js.type = 'text';
+          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/hide_password.png'; // 切換為「隱藏密碼」圖片
+          passwordIcon_js.alt = '隱藏密碼';
+      } else {
+          passwordField_js.type = 'password';
+          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/show_password.png'; // 切換為「顯示密碼」圖片
+          passwordIcon_js.alt = '顯示密碼';
+      }
+  }
+
+  const submitButton_js = document.getElementById('submit_button');
+  const chapterInput_js = document.getElementById('message');
+
+  // 記錄當前模式
+  let currentMode_js = 'save';
+
+  $('#query_button').on('click', function () {
+      submitButton_js.textContent = '查詢';
+      chapterInput_js.disabled = true; // 禁止輸入
+
+      currentMode_js = 'query';
+      //toggleFormMode(currentMode);
+  });
+
+  $('#save_button').on('click', function () {
+      submitButton_js.textContent = '儲存';
+      chapterInput_js.disabled = false; // 儲存模式允許輸入
+
+      currentMode_js = 'save';
+      //toggleFormMode(currentMode);
+  });
+
+  $('#submit_button').on('click', function (event) {
+      event.preventDefault(); // 阻止表單的預設提交行為
+      // 檢查按鈕的文字內容
+      if (submitButton_js.textContent === "前往") {
+          // 跳轉到 YouTube
+          const inputNumber_js = $('#message').val().trim();
+          const bookTitle_js = $('#chapter').val().trim();
+          if (/^\d+$/.test(inputNumber_js)) {
+            // 構造新的URL並重新定向網頁
+            const newUrl = `${bookTitle_js}_html${inputNumber_js}.html`;
+            // 檢查新的 URL 是否存在
+            fetch(newUrl)
+            .then(response => {
+              if (response.ok) {
+                // URL 存在，重新定向網頁到該 URL
+                window.location.href = newUrl;
+              } else {
+                alert('輸入章節錯誤，請重新輸入');
+                // URL 不存在，重新整理頁面
+                window.location.reload();
+              }
+            })
+            .catch(error => {
+              console.error('發生錯誤:', error);
+              // alert('輸入章節錯誤，請重新輸入');
+              // 重新整理頁面
+              window.location.reload();
+            });
+            // window.location.href = newUrl;
+          } else {
+            // 彈出提示框
+            alert('輸入章節錯誤，請重新輸入');
+            // 在當前頁面重新整理
+            window.location.reload();
+            // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
+          }
+
+      } else {
+          // 如果不是「前往」，則執行查詢或儲存操作
+          toggleFormMode(currentMode_js);
+      }
+  });
+
+  function toggleFormMode(mode) {
+      var url_js = 'https://script.google.com/macros/s/AKfycbwfajf6Lv4_r4wdcbswpxMFtLtxjp6ZxWZ9RI_FLvmf7oIAlY_rILxgmC5zQeRtDRJ6/exec';
+      var user_js = $('#user').val().trim();
+      var password_js = $('#password').val().trim();
+      var chapter_js = $('#chapter').val().trim();
+      var message_js = $('#message').val().trim();
+      if (message_js == '0' || message_js == '') {
+        // 如果 message_js 是 '0' 或空值，保持輸入框是空值
+        $('#message').val(''); // 可以選擇性地設置輸入框為空
+       }
+
+      // 檢查必填欄位
+      if (!user_js || !password_js || !chapter_js) {
+          alert('請填寫帳號、密碼和書名！'); // 提示用戶填寫必要的欄位
+          return; // 資料不完整，禁止執行後續操作
+      }
+
+      // 在儲存模式下，檢查 message 是否有數值
+      if (mode === 'save' && !message_js) {
+          alert('請填寫章節！'); // 提示用戶填寫章節
+          return; // 資料不完整，禁止執行後續操作
+      }
+
+      if (mode === 'query') {
+          let dotCount_js = 0; // 點點計數器
+          chapterInput_js.value = "查詢中";
+
+          // 啟動點點動畫，每500毫秒切換一次
+          const animationInterval_js = setInterval(() => {
+              dotCount_js = (dotCount_js + 1) % 4; // 計算點點數量(0,1,2,3循環)
+              chapterInput_js.value = "查詢中" + ".".repeat(dotCount_js); // 更新input內容
+          }, 500);
+
+          $.get(url_js, {
+                  user: user_js,
+                  password: password_js,
+                  chapter: chapter_js
+              },
+              function (data) {
+                  if (data.status == 'success') {
+                      clearInterval(animationInterval_js); // 停止動畫
+                      chapterInput_js.value = data.message; // 查詢成功後顯示訊息
+                      submitButton_js.textContent = '前往';
+                  } else if (data.status == 'error') {
+                      clearInterval(animationInterval_js); // 停止動畫
+                      chapterInput_js.value = data.message; // 清除查詢中的文字
+                      submitButton_js.textContent = '查詢';
+                  }
+              }
+          ).fail(function (error) {
+              alert(`${error.message}`);
+          });
+
+      } else if (mode === 'save') {
+          // 禁用按鈕，並添加抖動效果
+          submitButton_js.disabled = true;
+          submitButton_js.classList.add('shake');
+          submitButton_js.textContent = '儲存中';
+
+          $.post(url_js, {
+                  user: user_js,
+                  password: password_js,
+                  chapter: chapter_js,
+                  msg: message_js
+              },
+              function (data) {
+                  if (data.status == 'success') {
+                      alert(`${user_js} save "${message_js}" successfully`);
+                  } else if (data.status == 'error') {
+                      alert(`!!~ ${data.message}`);
+                  }
+                  submitButton_js.textContent = '儲存';
+                  // 移除抖動效果並重新啟用按鈕
+                  submitButton_js.classList.remove('shake');
+                  submitButton_js.disabled = false;
+              }
+          ).fail(function (error) {
+              // 當請求失敗時，移除抖動效果並重新啟用按鈕
+              submitButton_js.textContent = '儲存';
+              alert(`!!~ ${error.message}`);
+              submitButton_js.classList.remove('shake');
+              submitButton_js.disabled = false;
+          });
+      }
+  }
+
+});
+
+
 
     function checkScrollbar() {
       var body = document.body;
@@ -306,9 +635,9 @@ if (titleElement !== null) {
   const match = title.match(/《([^》]*)》/);
   const bookTitle = match ? match[1] : '';
   console.log(`bookTitle = ${bookTitle}`);
+  $('#chapter').val( bookTitle );
 
-
-  const formElement = document.querySelector('form');
+  const formElement = document.querySelector('form:not(.side_panel_form)');
 
   // 取得輸入框元素和提交按鈕元素
   const numberInput = document.querySelector('#numberInput');
@@ -348,6 +677,12 @@ if (titleElement !== null) {
   if (numberInput !== null) {
     // 在輸入框上設置keyup事件監聽器，如果按下enter則提交表單
     // 在表單上設置submit事件監聽器，防止表單提交並重新定向網頁
+    const num = new URLSearchParams(window.location.search).get('num');  // 取得 num 參數的值
+    // 僅當 num 有有效值時才填入 #numberInput
+    if (num) {
+        $('#numberInput').val(num);
+    }
+
     formElement?.addEventListener('submit', function(event) {
       event.preventDefault();
       const inputNumber = numberInput.value.trim();
@@ -485,6 +820,7 @@ const currentUrl = window.location.href;
 let currentPageNum;
 try {
   currentPageNum = parseInt(currentUrl.match(/html+\d+/)[0].replace('html', ''));
+  $('#message').val(currentPageNum);
 } catch (error) {
   currentPageNum = 0; // 或者使用其他預設值
   console.log('Error:', error.message);
@@ -612,7 +948,339 @@ window.onload = function() {
 // });
 };
 
-      
+     
+// 側邊攔 Start
+
+$(document).ready(function () {
+  // 創建外層容器
+  const outSidePanelContainer = $('<div>', {
+      class: 'out_side_panel_container'
+  });
+
+  // 創建側邊面板容器
+  const sidePanelContainer = $('<div>', {
+      id: 'side_panel_container',
+      class: 'side_panel_container'
+  });
+
+  // 創建側邊面板切換按鈕
+  const sidePanelToggle = $('<div>', {
+      id: 'side_panel_toggle',
+      class: 'side_panel_toggle',
+      html: '&#9654;' // 向右的三角形符號
+  });
+
+  // 創建表單
+  const sidePanelForm = $('<form>', {
+      class: 'side_panel_form'
+  });
+
+  // 創建查詢和儲存按鈕容器
+  const changeSaveQueryPlace = $('<div>', {
+      class: 'change_save_quert_place'
+  });
+
+  // 創建查詢按鈕
+  const queryButton = $('<button>', {
+      type: 'button',
+      id: 'query_button',
+      text: '查詢章節'
+  });
+
+  // 創建儲存按鈕
+  const saveButton = $('<button>', {
+      type: 'button',
+      id: 'save_button',
+      text: '儲存章節'
+  });
+
+  // 將查詢和儲存按鈕添加到容器
+  changeSaveQueryPlace.append(queryButton, saveButton);
+
+  // 創建帳號輸入框
+  const userInput = $('<input>', {
+      type: 'text',
+      id: 'user',
+      placeholder: '帳號',
+      class: 'side_panel_input',
+      //value: 'jimmy'
+  });
+
+  // 創建密碼輸入框和顯示密碼按鈕容器
+  const mimaPlace = $('<div>', {
+      class: 'mima_place'
+  });
+
+  // 創建密碼輸入框
+  const passwordInput = $('<input>', {
+      type: 'password',
+      id: 'password',
+      placeholder: '密碼',
+      class: 'side_panel_input',
+      //value: '123'
+  });
+
+  // 創建顯示密碼按鈕
+  const togglePasswordButton = $('<button>', {
+      type: 'button',
+      id: 'toggle_password',
+      click: function () {
+          togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
+      }
+  }).append($('<img>', {
+      src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
+      alt: '顯示密碼',
+      id: 'password_icon'
+  }));
+
+  // 將密碼輸入框和顯示按鈕添加到密碼容器
+  mimaPlace.append(passwordInput, togglePasswordButton);
+
+  // 創建章節和訊息輸入框
+  const chapterInput = $('<input>', {
+      type: 'text',
+      id: 'chapter',
+      placeholder: '書名',
+      class: 'side_panel_input',
+      value: 'ch1'
+  });
+
+  const messageInput = $('<input>', {
+      type: 'text',
+      id: 'message',
+      placeholder: '章節',
+      class: 'side_panel_input'
+  });
+
+  // 創建提交按鈕
+  const submitButton = $('<button>', {
+      type: 'submit',
+      class: 'side_panel_submit',
+      id: 'submit_button',
+      text: '儲存'
+  });
+
+  // 將所有元素添加到表單中
+  sidePanelForm.append(
+      changeSaveQueryPlace,
+      userInput,
+      mimaPlace,
+      chapterInput,
+      messageInput,
+      submitButton
+  );
+
+  // 將側邊面板切換按鈕和表單添加到側邊面板容器中
+  sidePanelContainer.append(sidePanelToggle, sidePanelForm);
+
+  // 將側邊面板容器添加到外層容器
+  outSidePanelContainer.append(sidePanelContainer);
+
+  // 創建覆蓋層
+  const overlay = $('<div>', {
+      id: 'overlay',
+      class: 'overlay'
+  });
+
+  // 將外層容器和覆蓋層添加到 body
+  $('body').append(outSidePanelContainer, overlay);
+  const sidePanelContainer_js = document.getElementById('side_panel_container');
+  const sidePanelToggle_js = document.getElementById('side_panel_toggle');
+  const overlay_js = document.getElementById('overlay');
+
+  // 切換側邊欄顯示狀態
+  function toggleSidePanel() {
+      const isOpen_js = sidePanelContainer_js.classList.contains('open');
+      if (isOpen_js) {
+          sidePanelContainer_js.classList.remove('open');
+          overlay_js.classList.remove('active');
+          sidePanelToggle_js.innerHTML = '&#9654;'; // 展開箭頭
+      } else {
+          sidePanelContainer_js.classList.add('open');
+          overlay_js.classList.add('active');
+          sidePanelToggle_js.innerHTML = '&#9664;'; // 收回箭頭
+      }
+  }
+
+  // 點擊箭頭按鈕切換側邊欄
+  sidePanelToggle_js.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSidePanel();
+  });
+
+  // 點擊空白處縮回側邊欄
+  overlay_js.addEventListener('click', toggleSidePanel);
+
+  function togglePasswordVisibility() {
+      const passwordField_js = document.getElementById('password');
+      const passwordIcon_js = document.getElementById('password_icon');
+
+      if (passwordField_js.type === 'password') {
+          passwordField_js.type = 'text';
+          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/hide_password.png'; // 切換為「隱藏密碼」圖片
+          passwordIcon_js.alt = '隱藏密碼';
+      } else {
+          passwordField_js.type = 'password';
+          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/show_password.png'; // 切換為「顯示密碼」圖片
+          passwordIcon_js.alt = '顯示密碼';
+      }
+  }
+
+  const submitButton_js = document.getElementById('submit_button');
+  const chapterInput_js = document.getElementById('message');
+
+  // 記錄當前模式
+  let currentMode_js = 'save';
+
+  $('#query_button').on('click', function () {
+      submitButton_js.textContent = '查詢';
+      chapterInput_js.disabled = true; // 禁止輸入
+
+      currentMode_js = 'query';
+      //toggleFormMode(currentMode);
+  });
+
+  $('#save_button').on('click', function () {
+      submitButton_js.textContent = '儲存';
+      chapterInput_js.disabled = false; // 儲存模式允許輸入
+
+      currentMode_js = 'save';
+      //toggleFormMode(currentMode);
+  });
+
+  $('#submit_button').on('click', function (event) {
+      event.preventDefault(); // 阻止表單的預設提交行為
+      // 檢查按鈕的文字內容
+      if (submitButton_js.textContent === "前往") {
+          // 跳轉到 YouTube
+          const inputNumber_js = $('#message').val().trim();
+          const bookTitle_js = $('#chapter').val().trim();
+          if (/^\d+$/.test(inputNumber_js)) {
+            // 構造新的URL並重新定向網頁
+            const newUrl = `${bookTitle_js}_html${inputNumber_js}.html`;
+            // 檢查新的 URL 是否存在
+            fetch(newUrl)
+            .then(response => {
+              if (response.ok) {
+                // URL 存在，重新定向網頁到該 URL
+                window.location.href = newUrl;
+              } else {
+                alert('輸入章節錯誤，請重新輸入');
+                // URL 不存在，重新整理頁面
+                window.location.reload();
+              }
+            })
+            .catch(error => {
+              console.error('發生錯誤:', error);
+              // alert('輸入章節錯誤，請重新輸入');
+              // 重新整理頁面
+              window.location.reload();
+            });
+            // window.location.href = newUrl;
+          } else {
+            // 彈出提示框
+            alert('輸入章節錯誤，請重新輸入');
+            // 在當前頁面重新整理
+            window.location.reload();
+            // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
+          }
+
+      } else {
+          // 如果不是「前往」，則執行查詢或儲存操作
+          toggleFormMode(currentMode_js);
+      }
+  });
+
+  function toggleFormMode(mode) {
+      var url_js = 'https://script.google.com/macros/s/AKfycbwfajf6Lv4_r4wdcbswpxMFtLtxjp6ZxWZ9RI_FLvmf7oIAlY_rILxgmC5zQeRtDRJ6/exec';
+      var user_js = $('#user').val().trim();
+      var password_js = $('#password').val().trim();
+      var chapter_js = $('#chapter').val().trim();
+      var message_js = $('#message').val().trim();
+      if (message_js == '0' || message_js == '') {
+        // 如果 message_js 是 '0' 或空值，保持輸入框是空值
+        $('#message').val(''); // 可以選擇性地設置輸入框為空
+       }
+       
+      // 檢查必填欄位
+      if (!user_js || !password_js || !chapter_js) {
+          alert('請填寫帳號、密碼和書名！'); // 提示用戶填寫必要的欄位
+          return; // 資料不完整，禁止執行後續操作
+      }
+
+      // 在儲存模式下，檢查 message 是否有數值
+      if (mode === 'save' && !message_js) {
+          alert('請填寫章節！'); // 提示用戶填寫章節
+          return; // 資料不完整，禁止執行後續操作
+      }
+
+      if (mode === 'query') {
+          let dotCount_js = 0; // 點點計數器
+          chapterInput_js.value = "查詢中";
+
+          // 啟動點點動畫，每500毫秒切換一次
+          const animationInterval_js = setInterval(() => {
+              dotCount_js = (dotCount_js + 1) % 4; // 計算點點數量(0,1,2,3循環)
+              chapterInput_js.value = "查詢中" + ".".repeat(dotCount_js); // 更新input內容
+          }, 500);
+
+          $.get(url_js, {
+                  user: user_js,
+                  password: password_js,
+                  chapter: chapter_js
+              },
+              function (data) {
+                  if (data.status == 'success') {
+                      clearInterval(animationInterval_js); // 停止動畫
+                      chapterInput_js.value = data.message; // 查詢成功後顯示訊息
+                      submitButton_js.textContent = '前往';
+                  } else if (data.status == 'error') {
+                      clearInterval(animationInterval_js); // 停止動畫
+                      chapterInput_js.value = data.message; // 清除查詢中的文字
+                      submitButton_js.textContent = '查詢';
+                  }
+              }
+          ).fail(function (error) {
+              alert(`${error.message}`);
+          });
+
+      } else if (mode === 'save') {
+          // 禁用按鈕，並添加抖動效果
+          submitButton_js.disabled = true;
+          submitButton_js.classList.add('shake');
+          submitButton_js.textContent = '儲存中';
+
+          $.post(url_js, {
+                  user: user_js,
+                  password: password_js,
+                  chapter: chapter_js,
+                  msg: message_js
+              },
+              function (data) {
+                  if (data.status == 'success') {
+                      alert(`${user_js} save "${message_js}" successfully`);
+                  } else if (data.status == 'error') {
+                      alert(`!!~ ${data.message}`);
+                  }
+                  submitButton_js.textContent = '儲存';
+                  // 移除抖動效果並重新啟用按鈕
+                  submitButton_js.classList.remove('shake');
+                  submitButton_js.disabled = false;
+              }
+          ).fail(function (error) {
+              // 當請求失敗時，移除抖動效果並重新啟用按鈕
+              submitButton_js.textContent = '儲存';
+              alert(`!!~ ${error.message}`);
+              submitButton_js.classList.remove('shake');
+              submitButton_js.disabled = false;
+          });
+      }
+  }
+
+});
+
+// 側邊攔 End
+
 
 // 取得所有的變數名稱和值
 const constVariables = Object.entries(window)
