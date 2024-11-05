@@ -952,7 +952,7 @@ window.onload = function() {
      
 // 側邊攔 Start
 
-$(document).ready(function () {
+//$(document).ready(function () {
   // 創建外層容器
   const outSidePanelContainer = $('<div>', {
       class: 'out_side_panel_container'
@@ -968,7 +968,7 @@ $(document).ready(function () {
   const sidePanelToggle = $('<div>', {
       id: 'side_panel_toggle',
       class: 'side_panel_toggle',
-      html: '&#9654;' // 向右的三角形符號
+      html: '\1F87A' // 向右的三角形符號
   });
 
   // 創建表單
@@ -1043,7 +1043,7 @@ $(document).ready(function () {
       id: 'chapter',
       placeholder: '書名',
       class: 'side_panel_input',
-      value: 'ch1'
+      //value: 'ch1'
   });
 
   const messageInput = $('<input>', {
@@ -1095,11 +1095,11 @@ $(document).ready(function () {
       if (isOpen_js) {
           sidePanelContainer_js.classList.remove('open');
           overlay_js.classList.remove('active');
-          sidePanelToggle_js.innerHTML = '&#9654;'; // 展開箭頭
+          sidePanelToggle_js.innerHTML = "\1F87A"; // 展開箭頭
       } else {
           sidePanelContainer_js.classList.add('open');
           overlay_js.classList.add('active');
-          sidePanelToggle_js.innerHTML = '&#9664;'; // 收回箭頭
+          sidePanelToggle_js.innerHTML = '\1F878'; // 收回箭頭
       }
   }
 
@@ -1278,7 +1278,7 @@ $(document).ready(function () {
       }
   }
 
-});
+//});
 
 // 側邊攔 End
 

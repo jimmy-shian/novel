@@ -518,7 +518,7 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
         overflow-y: hidden;
         justify-content: flex-end;
         padding: 0 25px;
-        font-size: 200%;
+        font-size: 150%;
         /* background-color: #393939;
         color: #bbbbbb; */
         }
