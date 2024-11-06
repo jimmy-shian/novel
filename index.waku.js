@@ -431,7 +431,7 @@ if (!window.location.pathname.endsWith('savech.html')) {
   const sidePanelToggle = $('<div>', {
       id: 'side_panel_toggle',
       class: 'side_panel_toggle',
-      html: String.fromCodePoint(0x1F87A) // 向右的三角形符號
+      html: "&#129146;" // 向右的三角形符號
   });
 
   // 創建表單
@@ -1156,11 +1156,11 @@ window.onload = function() {
       if (isOpen_js) {
           sidePanelContainer_js.classList.remove('open');
           overlay_js.classList.remove('active');
-          sidePanelToggle_js.innerHTML = String.fromCodePoint(0x1F87A); // 展開箭頭
+          sidePanelToggle_js.innerHTML = "&#129146;"; // 展開箭頭 String.fromCodePoint(0x1F87A);
       } else {
           sidePanelContainer_js.classList.add('open');
           overlay_js.classList.add('active');
-          sidePanelToggle_js.innerHTML = String.fromCodePoint(0x1F878); // 收回箭頭
+          sidePanelToggle_js.innerHTML = "&#129144;"; // 收回箭頭 String.fromCodePoint(0x1F878); 
       }
   }
 
