@@ -13,7 +13,7 @@
     <meta name="google-site-verification" content="yYD82Aavnj3Ey0ieJxHEPL61iH9767ncuevx9vPzSsI" />
   <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
 
-    <title>Save Message to Excel</title>
+    <title>Search Chapter</title>
 
     <style>
         .my-table {
@@ -25,6 +25,112 @@
             padding: 5px; /* 設定單元格的內邊距 */
         }
 
+
+/* Search Chapter Form */
+.searchChapter_form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10% 10%;
+}
+
+/* Field layout */
+.searchChapter_field {
+    display: flex;
+    align-items: center; /* 垂直對齊 label 和 input */
+    gap: 10px;
+}
+
+.searchChapter_label {
+    font-weight: bold;
+    min-width: 80px; /* 保持相同的寬度 */
+}
+
+.searchChapter_input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px; /* 設定一致的寬度 */
+    background-color: rgba(205, 205, 205, 0.7);
+}
+
+.searchChapter_actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.searchChapter_button {
+    padding: 6px 12px;
+    background-color: #555; /* 深灰色背景 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* 按鈕 hover 狀態 */
+.searchChapter_button:hover {
+    background-color: #777; /* 輕微亮灰色 */
+}
+
+/* 按鈕 active 狀態 */
+.searchChapter_button:active {
+    background-color: #333; /* 更深的灰色 */
+}
+
+/* Table */
+.searchChapter_messages table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 10% auto;
+    background-color: transparent; /* 取消背景色 */
+    border-radius: 10px; /* 使表格的角變圓 */
+    overflow: hidden; /* 確保圓角效果不會被切割 */
+}
+
+/* Table header and cell styling */
+.searchChapter_messages th, 
+.searchChapter_messages td {
+    padding: 10px;
+    border: 1px solid #444; /* 深色邊框 */
+    text-align: left;
+    color: #fff; /* 文字顏色 */
+    font-size: 14px; /* 文字大小 */
+}
+
+/* Header cell (th) styling */
+.searchChapter_messages th {
+    font-weight: bold;
+    background-color: #2f516d; /* 加深標題背景色 */
+    color: #f1f1f1; /* 標題文字顏色更亮 */
+}
+
+/* Optional: Add hover effect for rows */
+.searchChapter_messages tr:hover {
+    background-color: #555; /* 滑鼠懸停時改變行的背景色 */
+}
+
+/* Optional: Add striped effect for alternating rows */
+.searchChapter_messages tr:nth-child(odd) {
+    background-color: #676767; /* 奇數行背景顏色 */
+}
+.searchChapter_messages tr:nth-child(even) {
+    background-color: color(srgb 0.62 0.62 0.62); /* 偶數行背景顏色 */
+}
+
+
+.searchChapter_status {
+    margin: 0;
+    font-size: 14px;
+    color: #bbb; /* 灰色狀態文字 */
+}
+
+
     </style>
 
     </head>
@@ -32,76 +138,134 @@
 
         <div id="content-nav">  </div>
 
-    <h1>Save Message to Excel</h1>
-    <form>
-        <label for="user">User:</label>
-        <input type="text" id="user" required value="jimmy">
-        <br>
-        <br>
-        <label for="chapter">Chapter:</label>
-        <input type="text" id="chapter" required value="ch1">
-        <br>
-        <br>
-        <label for="message">Message:</label>
-        <input id="message" required value="save test"></input>
-        <br>
-        <br>
-        <div style="display: flex;">
-            <button type="button" onclick="submitMessage(event)">Save</button>
-            <button type="button" onclick="updatepage()" style="margin-left: 30px; margin-right: 20px;">update</button>
-            <p id="loading" style="display:none; width: fit-content; margin: 0;">Loading...</p>
-            <p id="last-updated" style="display:none; width: fit-content; margin: 0;"></p>
+    <h1>Search Chapter</h1>
+    <form class="searchChapter_form">
+        <div class="searchChapter_field">
+            <label for="user" class="searchChapter_label">User:</label>
+            <input type="text" id="user" class="searchChapter_input" required value="jimmy">
+        </div>
+    
+        <div class="searchChapter_field">
+            <label for="chapter" class="searchChapter_label">Chapter:</label>
+            <input type="text" id="chapter" class="searchChapter_input" required value="ch1">
+        </div>
+    
+        <div class="searchChapter_field">
+            <label for="message" class="searchChapter_label">Message:</label>
+            <input type="text" id="message" class="searchChapter_input" required value="save test">
+        </div>
+    
+        <div class="searchChapter_actions">
+            <!-- <button type="button" class="searchChapter_button" onclick="submitMessage(event)" disabled >Save</button> -->
+            <button type="button" class="searchChapter_button" onclick="updatepage()">查詢</button>
+            <p id="loading" class="searchChapter_status" style="display:none;">Loading...</p>
+            <p id="last-updated" class="searchChapter_status" style="display:none;"></p>
         </div>
     </form>
     
+    <div id="messages" class="searchChapter_messages"></div>
+    
+    
     <ul id="messages"></ul>
-<!-- </body>
-</html> -->
+
+    
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        function updatepage() {
-            var url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
-            $('#last-updated').hide();
-            $('#loading').show();
-            $.get(url, function(data) {
-                // Clear previous data
-                $('#messages').empty();
-                // Create a table with headers
-                var table = $('<table>').addClass('my-table').append('<tr><th>#</th><th>User</th><th>Chapter</th><th>Message</th></tr>');
+function updatepage() {
+    const url = 'https://script.google.com/macros/s/AKfycbwLfgFz5igxZdasYexq2XrRxt_NBbD6aGfSx6UKAmFbnnAmzO8KRPvJm-p6PVP934W_/exec';
+    
+    $('#last-updated').hide();
+    $('#loading').show();
+    
+    $.get(url, function(data) {
+        $('#messages').empty();
 
-                // Iterate through the rows and add to the table
-                data.values.forEach(function(row, index) {
-                    var user = row[0];
-                    var chapter = row[1];
-                    var message = row[2];
+        // 建立表格並添加表頭
+        const table = $('<table>').addClass('searchChapter_table').append(
+            '<tr><th>#</th><th>User</th><th>Chapter</th><th>Message</th><th>Action</th></tr>'
+        );
 
-                    // Create a row with index, user, chapter, and message
-                    var tableRow = $('<tr>').append('<td>' + (index + 1) + '</td><td>' + user + '</td><td>' + chapter + '</td><td>' + message + '</td>');
+        data.values.forEach(function(row, index) {
+            const [user, chapter, message] = row;
 
-                    // Add the row to the table
-                    table.append(tableRow);
+            // 創建表格行
+            const tableRow = $('<tr>').append(
+                `<td>${index + 1}</td>`,
+                `<td>${user}</td>`,
+                `<td>${chapter}</td>`,
+                `<td>${message}</td>`
+            );
+
+            // 添加「前往」按鈕並綁定事件
+            const goButton = $('<button>')
+                .addClass('searchChapter_goButton')
+                .text('前往')
+                .on('click', function() {
+                    // 呼叫自定義的導航函數
+                    navigateToChapter(chapter, message);
                 });
 
-                // Append the table to the messages element
-                $('#messages').append(table);
-            })
-            .fail(function(error) {
-                console.error('Failed to retrieve data:', error);
-            })
-            .always(function() {
-                // 隱藏轉圈圈
-                // 取得當前時間
-                var currentTime = new Date();
-                var hours = currentTime.getHours();
-                var minutes = currentTime.getMinutes();
-                var seconds = currentTime.getSeconds();
-                var formattedTime = hours + ':' + minutes + ':' + seconds;
+            // 將按鈕添加到行中
+            tableRow.append($('<td>').append(goButton));
+            table.append(tableRow);
+        });
 
-                // 顯示更新時間
-                $('#last-updated').show().text('Last Updated: ' + formattedTime);
-                $('#loading').hide();
+        $('#messages').append(table);
+    })
+    .fail(function(error) {
+        console.error('Failed to retrieve data:', error);
+    })
+    .always(function() {
+        const currentTime = new Date().toLocaleTimeString();
+        $('#last-updated').show().text(`Last Updated: ${currentTime}`);
+        $('#loading').hide();
+    });
+}
+
+// 在父級元素上綁定 click 事件，使用事件代理來處理動態生成的按鈕
+$('#messages').on('click', '.searchChapter_goButton', function() {
+    const row = $(this).closest('tr'); // 找到當前行
+    const bookTitle = row.find('td:nth-child(3)').text().trim(); // 獲取 chapter 欄位作為書名
+    const inputNumber = row.find('td:nth-child(4)').text().trim(); // 獲取 message 欄位作為章節號碼
+
+    // 調用導航函數進行跳轉
+    navigateToChapter(bookTitle, inputNumber);
+});
+
+// 定義導航功能，生成目標 URL 並重定向
+function navigateToChapter(bookTitle, inputNumber) {
+    console.log("bookTitle", bookTitle, inputNumber );
+    if (/^\d+$/.test(inputNumber)) {
+        const newUrl = `${bookTitle}_html${inputNumber}.html`;
+
+        fetch(newUrl)
+            .then(response => {
+                if (response.ok) {
+                    // URL 存在，於新分頁中重定向
+                    window.open(newUrl, '_blank');
+                } else {
+                    // 構造備用 URL，帶資料夾名稱
+                    const folderName = bookDictionary[bookTitle]; // 獲取對應的資料夾名稱
+                    if (folderName) {
+                        const alternateUrl = `${window.location.origin}/${folderName}/${newUrl}`;
+                        window.open(alternateUrl, '_blank'); // 新分頁打開備用 URL
+                    } else {
+                        alert('無法跳轉，請檢查資料夾名稱或章節號碼。');
+                        throw new Error('未找到對應的資料夾名稱');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('發生錯誤:', error);
+                //salert('無法跳轉，請檢查資料夾名稱或章節號碼。');
+                //window.location.reload();
             });
-        };
+    } else {
+        alert('無法跳轉，請檢查資料夾名稱或章節號碼');
+    }
+}
+
+
 
         function submitMessage(event) {
             event.preventDefault();

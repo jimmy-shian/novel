@@ -415,142 +415,144 @@ function getRandomBookTitles(dictionary, count) {
   return randomTitles;
 }
 
-  // 創建外層容器
-  const outSidePanelContainer = $('<div>', {
-    class: 'out_side_panel_container'
-});
+if (!window.location.pathname.endsWith('savech.html')) {
+    // 創建外層容器
+    const outSidePanelContainer = $('<div>', {
+      class: 'out_side_panel_container'
+  });
 
-// 創建側邊面板容器
-const sidePanelContainer = $('<div>', {
-    id: 'side_panel_container',
-    class: 'side_panel_container'
-});
+  // 創建側邊面板容器
+  const sidePanelContainer = $('<div>', {
+      id: 'side_panel_container',
+      class: 'side_panel_container'
+  });
 
-// 創建側邊面板切換按鈕
-const sidePanelToggle = $('<div>', {
-    id: 'side_panel_toggle',
-    class: 'side_panel_toggle',
-    html: String.fromCodePoint(0x1F87A) // 向右的三角形符號
-});
+  // 創建側邊面板切換按鈕
+  const sidePanelToggle = $('<div>', {
+      id: 'side_panel_toggle',
+      class: 'side_panel_toggle',
+      html: String.fromCodePoint(0x1F87A) // 向右的三角形符號
+  });
 
-// 創建表單
-const sidePanelForm = $('<form>', {
-    class: 'side_panel_form'
-});
+  // 創建表單
+  const sidePanelForm = $('<form>', {
+      class: 'side_panel_form'
+  });
 
-// 創建查詢和儲存按鈕容器
-const changeSaveQueryPlace = $('<div>', {
-    class: 'change_save_quert_place'
-});
+  // 創建查詢和儲存按鈕容器
+  const changeSaveQueryPlace = $('<div>', {
+      class: 'change_save_quert_place'
+  });
 
-// 創建查詢按鈕
-const queryButton = $('<button>', {
-    type: 'button',
-    id: 'query_button',
-    text: '查詢章節'
-});
+  // 創建查詢按鈕
+  const queryButton = $('<button>', {
+      type: 'button',
+      id: 'query_button',
+      text: '查詢章節'
+  });
 
-// 創建儲存按鈕
-const saveButton = $('<button>', {
-    type: 'button',
-    id: 'save_button',
-    text: '儲存章節'
-});
+  // 創建儲存按鈕
+  const saveButton = $('<button>', {
+      type: 'button',
+      id: 'save_button',
+      text: '儲存章節'
+  });
 
-// 將查詢和儲存按鈕添加到容器
-changeSaveQueryPlace.append(queryButton, saveButton);
+  // 將查詢和儲存按鈕添加到容器
+  changeSaveQueryPlace.append(queryButton, saveButton);
 
-// 創建帳號輸入框
-const userInput = $('<input>', {
+  // 創建帳號輸入框
+  const userInput = $('<input>', {
+      type: 'text',
+      id: 'user',
+      placeholder: '帳號',
+      class: 'side_panel_input',
+      autocomplete: "username"
+      //value: 'jimmy'
+  });
+
+  // 創建密碼輸入框和顯示密碼按鈕容器
+  const mimaPlace = $('<div>', {
+      class: 'mima_place'
+  });
+
+  // 創建密碼輸入框
+  const passwordInput = $('<input>', {
+      type: 'password',
+      id: 'password',
+      placeholder: '密碼',
+      class: 'side_panel_input',
+      autocomplete: "current-password"
+      //value: '123'
+  });
+
+  // 創建顯示密碼按鈕
+  const togglePasswordButton = $('<button>', {
+      type: 'button',
+      id: 'toggle_password',
+      click: function () {
+          togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
+      }
+  }).append($('<img>', {
+      src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
+      alt: '顯示密碼',
+      id: 'password_icon'
+  }));
+
+  // 將密碼輸入框和顯示按鈕添加到密碼容器
+  mimaPlace.append(passwordInput, togglePasswordButton);
+
+  // 建立輸入框和 datalist
+  const chapterInput = $('<input>', {
     type: 'text',
-    id: 'user',
-    placeholder: '帳號',
+    id: 'chapter',
+    placeholder: '書名',
     class: 'side_panel_input',
-    autocomplete: "username"
-    //value: 'jimmy'
-});
+    list: 'suggestions'
+  });
+  const suggestionsList = $('<datalist>', { id: 'suggestions' });
 
-// 創建密碼輸入框和顯示密碼按鈕容器
-const mimaPlace = $('<div>', {
-    class: 'mima_place'
-});
+  const messageInput = $('<input>', {
+      type: 'text',
+      id: 'message',
+      placeholder: '章節',
+      class: 'side_panel_input'
+  });
 
-// 創建密碼輸入框
-const passwordInput = $('<input>', {
-    type: 'password',
-    id: 'password',
-    placeholder: '密碼',
-    class: 'side_panel_input',
-    autocomplete: "current-password"
-    //value: '123'
-});
+  // 創建提交按鈕
+  const submitButton = $('<button>', {
+      type: 'submit',
+      class: 'side_panel_submit',
+      id: 'submit_button',
+      text: '儲存'
+  });
 
-// 創建顯示密碼按鈕
-const togglePasswordButton = $('<button>', {
-    type: 'button',
-    id: 'toggle_password',
-    click: function () {
-        togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
-    }
-}).append($('<img>', {
-    src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
-    alt: '顯示密碼',
-    id: 'password_icon'
-}));
+  // 將所有元素添加到表單中
+  sidePanelForm.append(
+      changeSaveQueryPlace,
+      userInput,
+      mimaPlace,
+      chapterInput,
+      suggestionsList,
+      messageInput,
+      submitButton
+  );
 
-// 將密碼輸入框和顯示按鈕添加到密碼容器
-mimaPlace.append(passwordInput, togglePasswordButton);
+  // 將側邊面板切換按鈕和表單添加到側邊面板容器中
+  sidePanelContainer.append(sidePanelToggle, sidePanelForm);
 
-// 建立輸入框和 datalist
-const chapterInput = $('<input>', {
-  type: 'text',
-  id: 'chapter',
-  placeholder: '書名',
-  class: 'side_panel_input',
-  list: 'suggestions'
-});
-const suggestionsList = $('<datalist>', { id: 'suggestions' });
+  // 將側邊面板容器添加到外層容器
+  outSidePanelContainer.append(sidePanelContainer);
 
-const messageInput = $('<input>', {
-    type: 'text',
-    id: 'message',
-    placeholder: '章節',
-    class: 'side_panel_input'
-});
+  // 創建覆蓋層
+  const overlay = $('<div>', {
+      id: 'overlay',
+      class: 'overlay'
+  });
 
-// 創建提交按鈕
-const submitButton = $('<button>', {
-    type: 'submit',
-    class: 'side_panel_submit',
-    id: 'submit_button',
-    text: '儲存'
-});
-
-// 將所有元素添加到表單中
-sidePanelForm.append(
-    changeSaveQueryPlace,
-    userInput,
-    mimaPlace,
-    chapterInput,
-    suggestionsList,
-    messageInput,
-    submitButton
-);
-
-// 將側邊面板切換按鈕和表單添加到側邊面板容器中
-sidePanelContainer.append(sidePanelToggle, sidePanelForm);
-
-// 將側邊面板容器添加到外層容器
-outSidePanelContainer.append(sidePanelContainer);
-
-// 創建覆蓋層
-const overlay = $('<div>', {
-    id: 'overlay',
-    class: 'overlay'
-});
-
-// 將外層容器和覆蓋層添加到 body
-$('body').append(outSidePanelContainer, overlay);
+  // 將外層容器和覆蓋層添加到 body
+  $('body').append(outSidePanelContainer, overlay);
+}
 
     function checkScrollbar() {
       var body = document.body;
@@ -883,21 +885,21 @@ if (titleElement !== null) {
           } else {
             alert('輸入章節錯誤，請重新輸入');
             // URL 不存在，重新整理頁面
-            window.location.reload();
+            //window.location.reload();
           }
         })
         .catch(error => {
           console.error('發生錯誤:', error);
           // alert('輸入章節錯誤，請重新輸入');
           // 重新整理頁面
-          window.location.reload();
+          //window.location.reload();
         });
         // window.location.href = newUrl;
       } else {
         // 彈出提示框
         alert('輸入章節錯誤，請重新輸入');
         // 在當前頁面重新整理
-        window.location.reload();
+        //window.location.reload();
         // window.location.href = 'https://jimmy-shian.github.io/novel/404.html';
       }
     });
@@ -1243,9 +1245,10 @@ window.onload = function() {
                 // 將資料夾名稱加到當前 URL
                   const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
                   if (folderName) {
-                      const alternateUrl = `${window.location.href}/${folderName}/${newUrl}`;
+                      const alternateUrl = `${window.location.origin}/novel/${folderName}/${newUrl}`;
                       window.location.href = alternateUrl;
                   } else {
+                      alert('請輸入有效的章節號碼');
                       throw new Error('未找到網址');
                   }
                 }
@@ -1253,11 +1256,11 @@ window.onload = function() {
             .catch(error => {
               console.error('發生錯誤:', error);
               // 重新整理頁面
-              window.location.reload();
+              //window.location.reload();
             });
           } else {
               alert('請輸入有效的章節號碼');
-              window.location.reload();
+              //window.location.reload();
           }
 
       } else {
@@ -1357,7 +1360,9 @@ window.onload = function() {
   }
 
 //});
-
+if (window.location.pathname.endsWith('savech.html')) {
+  $('.side_panel_toggle').hide();  // 使用 jQuery 隱藏元素
+}
 // 側邊攔 End
 
 
