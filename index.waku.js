@@ -415,7 +415,7 @@ function getRandomBookTitles(dictionary, count) {
   return randomTitles;
 }
 
-if (!window.location.pathname.endsWith('savech.html')) {
+if (!/savech(\.html)?$/.test(window.location.pathname)) {
     // 創建外層容器
     const outSidePanelContainer = $('<div>', {
       class: 'out_side_panel_container'
@@ -1194,7 +1194,10 @@ window.onload = function() {
   const suggestionsList_js = document.getElementById('suggestions');
 
   // 當輸入框獲得焦點時更新 datalist
-  chapterInput.on('focus', function() {
+  chapternameInput_js.on('click', function() {
+    // 清空輸入框的內容
+    chapternameInput_js.value = "";
+    
     const randomTitles = getRandomBookTitles(bookDictionary, Math.floor(Math.random() * 3) + 5); // 隨機 5 到 7 個書名
     $('#suggestions').empty(); // 清空 datalist 中的選項
 
@@ -1360,7 +1363,7 @@ window.onload = function() {
   }
 
 //});
-if (window.location.pathname.endsWith('savech.html')) {
+if (!/savech(\.html)?$/.test(window.location.pathname)) {
   $('.side_panel_toggle').hide();  // 使用 jQuery 隱藏元素
 }
 // 側邊攔 End
