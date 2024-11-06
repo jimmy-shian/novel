@@ -1194,7 +1194,7 @@ window.onload = function() {
   const suggestionsList_js = document.getElementById('suggestions');
 
   // 當輸入框獲得焦點時更新 datalist
-  chapternameInput_js.on('click', function() {
+  chapternameInput_js.addEventListener('click', function() {
     // 清空輸入框的內容
     chapternameInput_js.value = "";
     
