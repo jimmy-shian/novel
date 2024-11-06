@@ -1363,7 +1363,7 @@ window.onload = function() {
   }
 
 //});
-if (!/savech(\.html)?$/.test(window.location.pathname)) {
+if (/savech(\.html)?$/.test(window.location.pathname)) {
   $('.side_panel_toggle').hide();  // 使用 jQuery 隱藏元素
 }
 // 側邊攔 End
