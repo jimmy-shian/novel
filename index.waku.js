@@ -436,7 +436,7 @@ if (!/savech(\.html)?$/.test(window.location.pathname)) {
 
   // 創建表單
   const sidePanelForm = $('<form>', {
-      class: 'side_panel_form'
+      class: 'side_panel_form',
   });
 
   // 創建查詢和儲存按鈕容器
@@ -467,7 +467,7 @@ if (!/savech(\.html)?$/.test(window.location.pathname)) {
       id: 'user',
       placeholder: '帳號',
       class: 'side_panel_input',
-      autocomplete: "username"
+      autocomplete: "nickname"
       //value: 'jimmy'
   });
 
@@ -494,7 +494,7 @@ if (!/savech(\.html)?$/.test(window.location.pathname)) {
           togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
       }
   }).append($('<img>', {
-      src: 'https://jimmy-shian.github.io/novel/picture/show_password.png',
+      src: 'picture/show_password.png',
       alt: '顯示密碼',
       id: 'password_icon'
   }));
@@ -1179,11 +1179,11 @@ window.onload = function() {
 
       if (passwordField_js.type === 'password') {
           passwordField_js.type = 'text';
-          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/hide_password.png'; // 切換為「隱藏密碼」圖片
+          passwordIcon_js.src = 'picture/hide_password.png'; // 切換為「隱藏密碼」圖片
           passwordIcon_js.alt = '隱藏密碼';
       } else {
           passwordField_js.type = 'password';
-          passwordIcon_js.src = 'https://jimmy-shian.github.io/novel/picture/show_password.png'; // 切換為「顯示密碼」圖片
+          passwordIcon_js.src = 'picture/show_password.png'; // 切換為「顯示密碼」圖片
           passwordIcon_js.alt = '顯示密碼';
       }
   }
@@ -1194,7 +1194,7 @@ window.onload = function() {
   const suggestionsList_js = document.getElementById('suggestions');
 
   // 當輸入框獲得焦點時更新 datalist
-  chapternameInput_js.addEventListener('click', function() {
+  chapternameInput_js.addEventListener('focus', function() {
     // 清空輸入框的內容
     chapternameInput_js.value = "";
     
