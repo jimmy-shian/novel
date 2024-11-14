@@ -494,7 +494,7 @@ if (!/savech(\.html)?$/.test(window.location.pathname)) {
           togglePasswordVisibility(); // 呼叫顯示/隱藏密碼的函數
       }
   }).append($('<img>', {
-      src: 'picture/show_password.png',
+      src: '/novel/picture/show_password.png',
       alt: '顯示密碼',
       id: 'password_icon'
   }));
@@ -1179,11 +1179,11 @@ window.onload = function() {
 
       if (passwordField_js.type === 'password') {
           passwordField_js.type = 'text';
-          passwordIcon_js.src = 'picture/hide_password.png'; // 切換為「隱藏密碼」圖片
+          passwordIcon_js.src = '/novel/picture/hide_password.png'; // 切換為「隱藏密碼」圖片
           passwordIcon_js.alt = '隱藏密碼';
       } else {
           passwordField_js.type = 'password';
-          passwordIcon_js.src = 'picture/show_password.png'; // 切換為「顯示密碼」圖片
+          passwordIcon_js.src = '/novel/picture/show_password.png'; // 切換為「顯示密碼」圖片
           passwordIcon_js.alt = '顯示密碼';
       }
   }
