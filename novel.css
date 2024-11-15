@@ -418,9 +418,9 @@ transform: scale(0.95);
 }
 
     #password_icon {
-        width: 20px; 
-        height: 20px;
-        background-color: white;
+      width: 20px;
+      padding: 0px;
+      height: 20px;
     }
     
 /* 送出按鈕 */
@@ -622,7 +622,7 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
       
     }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 400px) {
       #back-to-top,
       #scroll-to-bottom {
         display: none !important; /* 強制隱藏按鈕 */
@@ -630,5 +630,6 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
 
       .container {
           gap: 0px;
+          flex-wrap: nowrap;
       }
     }
