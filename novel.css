@@ -631,7 +631,4 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
       .container {
           gap: 0px;
       }
-      img {
-          width: 100%;
-      }
     }
