@@ -525,22 +525,27 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
         /* background-color: #393939;
         color: #bbbbbb; */
         }
-    .container {
-        flex-direction: row; /* 改变布局方向为水平布局 /
-        align-items: flex-start; /* 元素靠左对齐 */
-        display: flex;
-        }
+        .container {
+          flex-direction: row;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 30px;
+      }
         img {
-        justify-content: flex-start; /* 靠右對齊 */
-        margin-left: 3px; /* 距離右邊邊界23px */
-        width: 10vh; /* 图像的宽度 */
-        height: auto; /* 自动计算图像的高度 */
+          margin-left: 3px;
+          padding: 10px;
+          width: 30%;
+          height: auto;
         }
         .text {
         font-size: 50%; /* 文字的大小 */
         margin-left: 3px; /* 文字与左边界的距离 */
         text-align: start ; /* 文字水平居中 */
         margin-top: 5px; /* 文字与上边界的距离 */
+        }
+        .copy-container {
+          overflow-wrap: anywhere;
         }
     .spacer {
         height: 25px;
@@ -621,5 +626,12 @@ background-color: light-dark(rgb(172, 172, 172), rgb(221, 221, 221));
       #back-to-top,
       #scroll-to-bottom {
         display: none !important; /* 強制隱藏按鈕 */
+      }
+
+      .container {
+          gap: 0px;
+      }
+      img {
+          width: 100%;
       }
     }
