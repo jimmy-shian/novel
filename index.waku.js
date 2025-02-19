@@ -1316,6 +1316,40 @@ window.onload = function() {
                       clearInterval(animationInterval_js); // 停止動畫
                       chapterInput_js.value = data.message; // 查詢成功後顯示訊息
                       submitButton_js.textContent = '前往';
+                      // 跳轉到 YouTube
+                      const inputNumber_js = $('#message').val().trim();
+                      const bookTitle_js = $('#chapter').val().trim();
+                      if (/^\d+$/.test(inputNumber_js)) {
+                        // 構造新的URL並重新定向網頁
+                        const newUrl = `${bookTitle_js}_html${inputNumber_js}.html`;
+                        var finalUrl = "";
+                        // 檢查新的 URL 是否存在
+                        fetch(newUrl)
+                        .then(response => {
+                          if (response.ok) {
+                            // URL 存在，重新定向網頁到該 URL
+                            window.location.href = newUrl;
+                          } else {
+                            // 將資料夾名稱加到當前 URL
+                              const folderName = bookDictionary[bookTitle_js]; // 獲取對應的資料夾名稱
+                              if (folderName) {
+                                  const alternateUrl = `${window.location.origin}/novel/${folderName}/${newUrl}`;
+                                  window.location.href = alternateUrl;
+                              } else {
+                                  alert('請輸入有效的章節號碼');
+                                  throw new Error('未找到網址');
+                              }
+                            }
+                        })
+                        .catch(error => {
+                          console.error('發生錯誤:', error);
+                          // 重新整理頁面
+                          //window.location.reload();
+                        });
+                      } else {
+                          alert('請輸入有效的章節號碼');
+                          //window.location.reload();
+                      }
                   } else if (data.status == 'error') {
                       clearInterval(animationInterval_js); // 停止動畫
                       chapterInput_js.value = data.message; // 清除查詢中的文字
