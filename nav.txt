@@ -77,6 +77,13 @@
                     <li class="nav-item">
                       <a class="nav-link" href="/yipindaomen-dijiutianming/yipindaomen-dijiutianming.html">一品道門</a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/zerifeisheng-zhaizhu/zerifeisheng-zhaizhu.html">擇日飛昇</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/bukexueyushou-qingquanliuxiang/bukexueyushou-qingquanliuxiang.html">不科學御獸</a>
+                    </li>
+
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Else其他

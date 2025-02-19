@@ -1,0 +1,2143 @@
+﻿
+        <div class="spacer"></div>
+                <table class="title-table">
+            
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html1.html">第1章 御獸時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html2.html">第2章 技能圖鑑</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html3.html">第3章 初始寵獸規劃</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html4.html">第4章 尋找目標</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html5.html">第5章 三個技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html6.html">第6章 鐵竹飼養基地</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html7.html">第7章 食鐵獸永不爲奴</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html8.html">第8章 契約</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html9.html">第9章 首次戰鬥</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html10.html">第10章 奪筍</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html11.html">第11章 賺錢方法</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html12.html">第12章 捕蟲少年</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html13.html">第13章 從入門到入土</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html14.html">第14章 訓練與成長</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html15.html">第15章 職業分支</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html16.html">第16章 精通級</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html17.html">第17章 實戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html18.html">第18章 食鐵獸與人和善</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html19.html">第19章 VS冰甲獸</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html20.html">第20章 御獸師協會</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html21.html">第21章 清除土行鼠</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html22.html">第22章 超視力</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html23.html">第23章 竹石武館</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html24.html">第24章 不正常組合</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html25.html">第25章 職業考覈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html26.html">第26章 獸潮</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html27.html">第27章 聆聽歷史之音</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html28.html">第28章 冰原市震動</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html29.html">第29章 社區送溫暖</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html30.html">第30章 來自天賦的背刺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html31.html">第31章 加入組織</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html32.html">第32章 三種進化路線</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html33.html">第33章 打破常規</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html34.html">第34章 遺蹟開啓</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html35.html">第35章 決定</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html36.html">第36章 歷練</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html37.html">第37章 奇怪的生物</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html38.html">第38章 進入天邙山</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html39.html">第39章 野豬殺手</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html40.html">第40章 暫時第一</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html41.html">第41章 食鐵獸的雷系培育路線</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html42.html">第42章 電氣礦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html43.html">第43章 複製倍化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html44.html">第44章 技能圖鑑不要也罷</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html45.html">第45章 歷練結束</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html46.html">第46章 購買補品</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html47.html">第47章 第一個高階技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html48.html">第48章 一直氪金一直爽</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html49.html">第49章 登門竹石武館</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html50.html">第50章 雷掌之威</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html51.html">第51章 奧義</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html52.html">第52章 不要好高騖遠</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html53.html">第53章 熊貓王十一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html54.html">第54章 組合技初成</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html55.html">第55章 出發</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html56.html">第56章 進入遺蹟</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html57.html">第57章 歷史影像</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html58.html">第58章 我侄兒有大師之資</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html59.html">第59章 刷新記錄</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html60.html">第60章 空靈石</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html61.html">第61章 怪物般的天賦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html62.html">第62章 新的特訓目標</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html63.html">第63章 加點就完事了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html64.html">第64章 進化聖泉</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html65.html">第65章 上架感言</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html66.html">第66章 打的就是精銳</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html67.html">第67章 戰鬥力單位</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html68.html">第68章 君王氣場</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html69.html">第69章 通靈者</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html70.html">第70章 超階技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html71.html">第71章 食鐵獸進化形</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html72.html">第72章 神話</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html73.html">第73章 新家</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html74.html">第74章 第一個完美級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html75.html">第75章 填報志願的蟲蟲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html76.html">第76章 再戰遺蹟</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html77.html">第77章 最強生物</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html78.html">第78章 遺蹟之主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html79.html">第79章 種田大法好</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html80.html">第80章 該培養蟲蟲了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html81.html">第81章 出神入化的蟲絲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html82.html">第82章 思想領袖十一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html83.html">第83章 空想之蟲（感謝‘沒事看看書可還行’</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html84.html">第84章 古都大學</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html85.html">第85章 蟲蟲站起來了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html86.html">第86章 出發之前</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html87.html">第87章 大城市的御獸師們</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html88.html">第88章 獸耳娘來了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html89.html">第89章 論御獸師的保命能力</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html90.html">第90章 放飛自我的時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html91.html">第91章 食鐵獸遺址</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html92.html">第92章 古代銘文</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html93.html">第93章 考古毀一生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html94.html">第94章 食鐵獸漲價之始</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html95.html">第95章 有特權的好處</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html96.html">第96章 再次聆聽歷史之音</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html97.html">第97章 食鐵獸武裝進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html98.html">第98章 食鐵獸真的進化了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html99.html">第99章 食鐵獸二段進化方式</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html100.html">第100章 進化形的命名</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html101.html">第101章 時宇突破與契約蟲蟲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html102.html">第102章 十一的第一個奧義技</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html103.html">第103章 出神入化之上</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html104.html">第104章 食鐵獸研究小組的進展</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html105.html">第105章 這個時宇就是遜</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html106.html">第106章 對戰餐廳</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html107.html">第107章 蟲蟲首戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html108.html">第108章 我太過於優秀了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html109.html">第109章 職業考覈開始</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html110.html">第110章 嚶嘰長空戰術</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html111.html">第111章 野外生存試煉</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html112.html">第112章 熊貓騎士出擊</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html113.html">第113章 三個空間系技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html114.html">第114章 進化倒計時</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html115.html">第115章 技能圖鑑正確用法</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html116.html">第116章 冰龍蟲蟲VS附魂骨龍</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html117.html">第117章 青綿蟲之王</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html118.html">第118章 生存試煉考覈結束</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html119.html">第119章 古都大學資源庫</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html120.html">第120章 蟲蟲的龍威</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html121.html">第121章 視頻出爐時宇跑路</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html122.html">第122章 最終排名戰開始</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html123.html">第123章 嚶嘰長空來了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html124.html">第124章 蠱蟲師誰不是啊</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html125.html">第125章 又要瘋一個</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html126.html">第126章 真正意義上的暴富</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html127.html">第127章 福利大放送</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html128.html">第128章 被切開的雷電</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html129.html">第129章 食鐵獸進化形公佈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html130.html">第130章 火遍全國</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html131.html">第131章 決戰之前</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html132.html">第132章 時宇最強戰術</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html133.html">第133章 植物寵獸來了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html134.html">第134章 經典七選一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html135.html">第135章 一隻有夢想的參寶寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html136.html">第136章 第三隻寵獸</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html137.html">第137章 參寶寶的隊內弟位</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html138.html">第138章 最佳搭檔</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html139.html">第139章 加點計劃</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html140.html">第140章 各自的極限</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html141.html">第141章 全員實力暴增</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html142.html">第142章 冰龍雪山</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html143.html">第143章 參寶寶的攻擊技</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html144.html">第144章 冰龍爸爸我來了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html145.html">第145章 東煌起源</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html146.html">第146章 冰原歷史真相</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html147.html">第147章 正式成爲十一局成員</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html148.html">第148章 該我時宇自己開掛了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html149.html">第149章 重回古都</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html150.html">第150章 契約參寶寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html151.html">第151章 時宇大鬧植物園</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html152.html">第152章 收錄蓄能光束</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html153.html">第153章 參寶寶也想進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html154.html">第154章 參貫光殺炮</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html155.html">第155章 進化鎧甲完成</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html156.html">第156章 十一進化</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html157.html">第157章 二段進化無敵霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html158.html">第158章 十一的新種族技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html159.html">第159章 時宇的晉升考試</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html160.html">第160章 九黎形態的實力</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html161.html">第161章 參寶寶也突破了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html162.html">第162章 崩潰的蟲蟲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html163.html">第163章 兌換進化材料</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html164.html">第164章 精神空間龍</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html165.html">第165章 蟲蟲也進化了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html166.html">第166章 開學</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html167.html">第167章 英靈遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html168.html">第168章 社團招新開始</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html169.html">第169章 參寶寶神威</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html170.html">第170章 給你機會不中用啊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html171.html">第171章 獸耳娘の厚望</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html172.html">第172章 參寶寶的進化方法</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html173.html">第173章 抵達英靈遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html174.html">第174章 召喚英靈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html175.html">第175章 冰龍大將軍</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html176.html">第176章 劍靈附體</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html177.html">第177章 時宇vs穆徽音</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html178.html">第178章 小劍靈誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html179.html">第179章 起名廢</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html180.html">第180章 學姐來了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html181.html">第181章 赤瞳</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html182.html">第182章 時宇與時帝的對視</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html183.html">第183章 神秘水晶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html184.html">第184章 時空鑰匙</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html185.html">第185章 熊貓學姐的新發現</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html186.html">第186章 御獸師十一上線</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html187.html">第187章 古都大學的詭異現象</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html188.html">第188章 古代霸主霸王龍</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html189.html">第189章 化蝶大會</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html190.html">第190章 異國的御獸師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html191.html">第191章 有朋自遠方來必先苦其心志</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html192.html">第192章 三個月後</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html193.html">第193章 第一屆隊內大會計劃</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html194.html">第194章 三三突破</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html195.html">第195章 神都</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html196.html">第196章 古物與機械</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html197.html">第197章 你這蟲繭不科學啊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html198.html">第198章 參寶寶纔是吸金大戶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html199.html">第199章 化蝶大會開始</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html200.html">第200章 蟲蟲終進化</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html201.html">第201章 蝶神的贈物</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html202.html">第202章 蟲蟲的霸氣</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html203.html">第203章 梅開二度</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html204.html">第204章 時宇的龍之軍團</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html205.html">第205章 月光參寶寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html206.html">第206章 蟲蟲的生財之路</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html207.html">第207章 青蟲繭</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html208.html">第208章 我對研究沒興趣</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html209.html">第209章 新種族誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html210.html">第210章 不死潭</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html211.html">第211章 飼育大會前夕</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html212.html">第212章 改寫格局的成果</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html213.html">第213章 時宇的夢想</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html214.html">第214章 來自尹正凡的約戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html215.html">第215章 赤瞳出戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html216.html">第216章 懷疑人生的凡凡</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html217.html">第217章 好消息與壞消息</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html218.html">第218章 預知未來</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html219.html">第219章 一個比一個離譜</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html220.html">第220章 第三局的邀請</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html221.html">第221章 三個福利</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html222.html">第222章 龍宮中的水系寵獸</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html223.html">第223章 新寵獸是圖騰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html224.html">第224章 遠古霸主之威</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html225.html">第225章 彪悍的戰鬥風格</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html226.html">第226章 橫掃帝都大學的畫龍點睛</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html227.html">第227章 究極聖龍獸</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html228.html">第228章 鑄劍大師時宇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html229.html">第229章 神器冰龍之刃</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html230.html">第230章 赤瞳新形態</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html231.html">第231章 不死潭中變異果</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html232.html">第232章 死靈君王齊聚</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html233.html">第233章 鳳凰血脈覺醒</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html234.html">第234章 不死冥鳳暴走</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html235.html">第235章 造孽啊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html236.html">第236章 武陵市</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html237.html">第237章 再次聆聽歷史</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html238.html">第238章 是時候手搓高達了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html239.html">第239章 武陵人捕魚爲業結局悲慘</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html240.html">第240章 進化規劃師時宇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html241.html">第241章 石鏡主人的身份</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html242.html">第242章 武鬥大會報名風波</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html243.html">第243章 白溪與陸青依的變身</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html244.html">第244章 食鐵獸騎士雷炎形態</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html245.html">第245章 巖柱碎裂引發的猜測</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html246.html">第246章 又出幺蛾子了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html247.html">第247章 準神獸重玄</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html248.html">第248章 十一二段進化的契機</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html249.html">第249章 進化到高等霸主的十一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html250.html">第250章 被關小黑屋了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html251.html">第251章 跨入大師領域的時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html252.html">第252章 機械所及神之禁區</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html253.html">第253章 梅開三度</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html254.html">第254章 平城的誘惑</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html255.html">第255章 冰龍媽媽</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html256.html">第256章 霸主意志</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html257.html">第257章 遺蹟空間的變化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html258.html">第258章 再臨帝都</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html259.html">第259章 參寶寶無敵進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html260.html">第260章 時間系不死參</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html261.html">第261章 打寶寶杯吧</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html262.html">第262章 不當人的時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html263.html">第263章 冰原市最強御獸師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html264.html">第264章 龍宮城三太子</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html265.html">第265章 人族大佬時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html266.html">第266章 第四局高軒</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html267.html">第267章 全國大賽的獎勵</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html268.html">第268章 參寶寶的春天</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html269.html">第269章 王的誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html270.html">第270章 霸海傳奇和他的鯤</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html271.html">第271章 震撼的小夥伴們</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html272.html">第272章 莫非是蟲蟲史詩級加強</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html273.html">第273章 風起雲涌龍宮城</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html274.html">第274章 滄海精靈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html275.html">第275章 不建議入坑</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html276.html">第276章 心儀的第五寵</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html277.html">第277章 斑斕羣島</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html278.html">第278章 龍宮城新部門</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html279.html">第279章 契約水史萊姆</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html280.html">第280章 這座島我罩了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html281.html">第281章 迴歸龍宮城</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html282.html">第282章 龍宮城的珍寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html283.html">第283章 史萊姆VS小白龍</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html284.html">第284章 貓貓突破了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html285.html">第285章 百變之石</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html286.html">第286章 龍宮宴會開始</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html287.html">第287章 無敵的環保徽章</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html288.html">第288章 震撼龍宮城</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html289.html">第289章 地獄難度的考驗</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html290.html">第290章 考驗越來越怪了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html291.html">第291章 垮掉的龍宮城下一代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html292.html">第292章 龍神來了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html293.html">第293章 來自神話時代的黑手</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html294.html">第294章 迴歸東煌</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html295.html">第295章 百年未有之大變局</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html296.html">第296章 世界樹的遊戲</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html297.html">第297章 機械霸王龍</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html298.html">第298章 治癒系電影</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html299.html">第299章 突破君王級的赤瞳</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html300.html">第300章 霸主種族的史萊姆</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html301.html">第301章 參寶寶想自爆了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html302.html">第302章 寶石貓的突破願望</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html303.html">第303章 時宇VS海軍准將</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html304.html">第304章 海賊王遺蹟</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html305.html">第305章 來自兩尊霸主的威脅</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html306.html">第306章 參天帝自爆滅霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html307.html">第307章 忍無可忍想突破的蟲蟲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html308.html">第308章 這一日寶石貓跨入圖騰之境</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html309.html">第309章 迴歸東煌後的大收穫</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html310.html">第310章 全員君王級達成</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html311.html">第311章 隊內排名出爐</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html312.html">第312章 十一新技能</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html313.html">第313章 全國大賽亂殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html314.html">第314章 超越出神入化的威懾</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html315.html">第315章 被史萊姆幹碎的幸運兒</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html316.html">第316章 肉體力量堪比龍族的蝴蝶</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html317.html">第317章 參寶寶翻手壓碎大道</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html318.html">第318章 高軒被打跑了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html319.html">第319章 時宇登頂全國大賽</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html320.html">第320章 全國冠軍時宇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html321.html">第321章 祥瑞神獸麒麟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html322.html">第322章 百變石機械</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html323.html">第323章 返回古都</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html324.html">第324章 機械寵獸的誕生</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html325.html">第325章 主人加點</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html326.html">第326章 再次大豐收與時宇的野心</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html327.html">第327章 安常的傳家寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html328.html">第328章 瘋狂複製技能</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html329.html">第329章 機械幻獸誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html330.html">第330章 龍媽送寶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html331.html">第331章 依然亂殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html332.html">第332章 體力不支的十一</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html333.html">第333章 體力不支的時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html334.html">第334章 空都遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html335.html">第335章 再臨龍宮城</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html336.html">第336章 素素沒站起來</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html337.html">第337章 蟲蟲站起來了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html338.html">第338章 龍神守護</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html339.html">第339章 空帝留下的遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html340.html">第340章 星空異獸蛋</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html341.html">第341章 不想當機械師的考古學家不是好考古</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html342.html">第342章 神話復甦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html343.html">第343章 冰墩墩十一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html344.html">第344章 時宇VS空帝</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html345.html">第345章 世界觀破碎</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html346.html">第346章 名震東煌</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html347.html">第347章 突破六級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html348.html">第348章 霸主之下無敵</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html349.html">第349章 素素也能賣錢了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html350.html">第350章 紀師傅別刮啦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html351.html">第351章 機械大會前夕</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html352.html">第352章 跨界而來</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html353.html">第353章 第四局時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html354.html">第354章 關於序列前四都成爲我保鏢了這檔事</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html355.html">第355章 時宇麾下三大軍團</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html356.html">第356章 改變的命運</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html357.html">第357章 分配傳說資源</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html358.html">第358章 被時宇盯上的七島遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html359.html">第359章 凍結時間的天霜寒氣</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html360.html">第360章 橫掃七島御獸師</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html361.html">第361章 戰七島傳奇之下第一人</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html362.html">第362章 震動七島</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html363.html">第363章 全員霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html364.html">第364章 這隻鴨鴨不簡單</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html365.html">第365章 二隊開建</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html366.html">第366章 來自七島的美人計</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html367.html">第367章 鳳凰神社</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html368.html">第368章 隕犴與龍宮環保部</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html369.html">第369章 時過境遷秘術準備發動</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html370.html">第370章 一件神話兩件傳說</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html371.html">第371章 時宇的圖騰小夥伴們降臨</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html372.html">第372章 開門放時宇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html373.html">第373章 正式踏入頂級強者行列</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html374.html">第374章 哎兩個馬甲就是玩</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html375.html">第375章 藍髮槍神陸白VS紅髮劍神時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html376.html">第376章 打寶寶的霸王龍和鴨嘴獸</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html377.html">第377章 兩個月後的修行成果</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html378.html">第378章 狩獵霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html379.html">第379章 不死太陽參</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html380.html">第380章 時宇的機甲形態</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html381.html">第381章 六尊霸主級傀儡到手</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html382.html">第382章 風起天狐</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html383.html">第383章 時宇VS狐神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html384.html">第384章 掠奪天賦目標人選（感謝‘我叫王老</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html385.html">第385章 時宇圖騰首殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html386.html">第386章 進化不死太陽參</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html387.html">第387章 最強反派時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html388.html">第388章 援軍抵達溜之大吉</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html389.html">第389章 林修竹的隨身老奶奶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html390.html">第390章 有望傳奇的熊貓學姐</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html391.html">第391章 開創超能流派</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html392.html">第392章 傳奇陸學姐和霸主虛空螳螂</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html393.html">第393章 蟲蟲VS虛空螳螂</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html394.html">第394章 時宇的超能力形態</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html395.html">第395章 融合麒麟化石</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html396.html">第396章 又一件神話級資源</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html397.html">第397章 心靈感應的最終形態</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html398.html">第398章 倒黴蛋出爐</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html399.html">第399章 隊內第一個準神技</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html400.html">第400章 準神技的強大</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html401.html">第401章 一凜成神全隊昇天</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html402.html">第402章 滄海傳承狗都不要</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html403.html">第403章 神話時代結束的原因</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html404.html">第404章 第七寵</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html405.html">第405章 庭鄉古國</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html406.html">第406章 祈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html407.html">第407章 她們太正常了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html408.html">第408章 祈的真實身份</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html409.html">第409章 時之傘亂殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html410.html">第410章 最弱霸主祈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html411.html">第411章 世界賽上的強敵</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html412.html">第412章 目標爲圖騰</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html413.html">第413章 十一神之進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html414.html">第414章 海底大監獄</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html415.html">第415章 混沌熊貓與陰陽磨盤</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html416.html">第416章 化龍果</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html417.html">第417章 心靈領域</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html418.html">第418章 機械傳說甦醒</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html419.html">第419章 亂殺世界賽的最強底蘊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html420.html">第420章 星空中的進化</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html421.html">第421章 青龍養成計劃</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html422.html">第422章 榮光之國</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html423.html">第423章 時之精靈</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html424.html">第424章 活着的神話歷史</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html425.html">第425章 時宇講神話</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html426.html">第426章 傳說中的考古學家</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html427.html">第427章 世界賽前夕</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html428.html">第428章 時宇之名</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html429.html">第429章 又不當人</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html430.html">第430章 星之子</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html431.html">第431章 星空蛋孵化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html432.html">第432章 走別人的路讓別人無路可走</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html433.html">第433章 神話試煉開啓（祝薇拉生日快樂）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html434.html">第434章 殺到無人敢戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html435.html">第435章 深淵的凝視</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html436.html">第436章 有一些研究</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html437.html">第437章 果然不是好人</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html438.html">第438章 不按套路出牌</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html439.html">第439章 最強天賦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html440.html">第440章 機械亦可通神（感謝‘宅菜’大佬的</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html441.html">第441章 令人嫉妒的獎勵</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html442.html">第442章 最強之龍試煉</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html443.html">第443章 青龍神降臨</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html444.html">第444章 必殺目標</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html445.html">第445章 時間系的強大</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html446.html">第446章 大量加點資源</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html447.html">第447章 金牛古神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html448.html">第448章 最強的寵獸</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html449.html">第449章 全力爆發</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html450.html">第450章 屠神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html451.html">第451章 快進到下一屆</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html452.html">第452章 世界樹的祝福plus版</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html453.html">第453章 突破傳奇級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html454.html">第454章 赤瞳再進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html455.html">第455章 一直融合一直爽</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html456.html">第456章 契約與覺醒（感謝‘宅菜’大佬的黃</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html457.html">第457章 擼下寶石貓就跑真刺激</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html458.html">第458章 目標天劍國</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html459.html">第459章 契約第二隊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html460.html">第460章 金剛伏魔鴨</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html461.html">第461章 時宇入魔宗</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html462.html">第462章 計劃趕不上變化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html463.html">第463章 鴨鴨進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html464.html">第464章 可再生資源隕犴現身</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html465.html">第465章 武帝現身</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html466.html">第466章 赤瞳神之進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html467.html">第467章 迎接神話時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html468.html">第468章 四聖獸降臨</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html469.html">第469章 陸學姐到來</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html470.html">第470章 時宇創造世界</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html471.html">第471章 大地與海洋霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html472.html">第472章 受傷的總是考官</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html473.html">第473章 心靈感應天賦都是怪物</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html474.html">第474章 衝擊半神級戰鬥力</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html475.html">第475章 穿越武帝時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html476.html">第476章 古今食鐵獸對決</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html477.html">第477章 舉報隕族送人頭</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html478.html">第478章 究極機械凜</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html479.html">第479章 可憐無助的隕犴</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html480.html">第480章 震驚武帝一萬年</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html481.html">第481章 不屬於這片時空</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html482.html">第482章 十一查漏補缺的進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html483.html">第483章 第一次規則復甦</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html484.html">第484章 史上最慘半神</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html485.html">第485章 迴歸原時空</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html486.html">第486章 半神貓娘寶石貓（感謝‘薇拉’大佬</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html487.html">第487章 大人時代變了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html488.html">第488章 龍宮尋玄武</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html489.html">第489章 跨越種族的戀愛</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html490.html">第490章 不正常的兩隻新寵</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html491.html">第491章 小機鴨鴨的準神技</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html492.html">第492章 太兇殘了太殘暴了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html493.html">第493章 可憐的劍靈啊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html494.html">第494章 來自隕犴的刺殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html495.html">第495章 來了就別想走了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html496.html">第496章 深淵海來襲</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html497.html">第497章 突破八級御獸師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html498.html">第498章 半神熊貓娘</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html499.html">第499章 無聊我要看血流成河</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html500.html">第500章 時宇封神之戰</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html501.html">第501章 開啓星空時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html502.html">第502章 收服貓貓</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html503.html">第503章 劍劈不死冥鳳</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html504.html">第504章 女帝王朝真相</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html505.html">第505章 穿越女帝時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html506.html">第506章 升官發財娶女帝</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html507.html">第507章 求婚女帝</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html508.html">第508章 大型認親現場</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html509.html">第509章 烤半神鳥翅</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html510.html">第510章 獵媽組合</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html511.html">第511章 當參寶寶吃了不死果實</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html512.html">第512章 編的自己都快信了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html513.html">第513章 半神級朱雀劍姬</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html514.html">第514章 空帝與進化傳說</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html515.html">第515章 宇宙中</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html516.html">第516章 龍宮政變</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html517.html">第517章 創世青龍神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html518.html">第518章 天下無敵天上來敵</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html519.html">第519章 外星御獸師降臨藍星</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html520.html">第520章 星空的面貌</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html521.html">第521章 外星人心態崩了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html522.html">第522章 龍神退位蟲蟲登基</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html523.html">第523章 時宇與龍帝與龍神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html524.html">第524章 嗚嗚龍神宮我的龍神宮</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html525.html">第525章 頂級神資源乘二</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html526.html">第526章 時宇與時帝</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html527.html">第527章 半神級廚子</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html528.html">第528章 突破傳說御獸師</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html529.html">第529章 震驚空帝一萬年</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html530.html">第530章 離開前的準備</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html531.html">第531章 出發（藍星卷結束）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html532.html">第532章 瘋狂之旅</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html533.html">第533章 滅世巨龍小機</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html534.html">第534章 宇宙第一戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html535.html">第535章 樂極生悲的空帝</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html536.html">第536章 宇宙災害研究所</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html537.html">第537章 星河異動星海精靈現</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html538.html">第538章 素素鴨鴨史詩級增強</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html539.html">第539章 考鴨</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html540.html">第540章 秒速上任環保協會會長</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html541.html">第541章 掛機使我變強</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html542.html">第542章 我有億個夢想</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html543.html">第543章 叼劍鳥</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html544.html">第544章 萬族排名戰</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html545.html">第545章 鬥戰神熊十一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html546.html">第546章 捏爆星辰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html547.html">第547章 半神戰真神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html548.html">第548章 寶寶隊起飛</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html549.html">第549章 蟲蟲的星辰武器</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html550.html">第550章 倒黴之族麒麟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html551.html">第551章 貓貓重新上線</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html552.html">第552章 星空風暴有手就行</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html553.html">第553章 幸運貓貓</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html554.html">第554章 龍與蝶</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html555.html">第555章 參天帝出品</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html556.html">第556章 宇宙霸主軍團來了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html557.html">第557章 玄武的誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html558.html">第558章 歪了全進化歪了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html559.html">第559章 我真沒想破解遺蹟啊</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html560.html">第560章 幕後黑手時氏騙局</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html561.html">第561章 一人養四聖四聖養一人</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html562.html">第562章 陸青依的逆襲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html563.html">第563章 薅四聖家族羊毛</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html564.html">第564章 藍星第一人</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html565.html">第565章 貓頭鷹的前世今生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html566.html">第566章 半年之後</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html567.html">第567章 最慫之神與迴歸（感謝薇拉和宅菜大</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html568.html">第568章 封神戰開啓</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html569.html">第569章 首戰爆冷（1.3w大章）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html570.html">第570章 各方反應</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html571.html">第571章 今年的新人怎麼回事</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html572.html">第572章 十大超新星</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html573.html">第573章 考古考出自己前世身體</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html574.html">第574章 運氣也是實力的一部分</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html575.html">第575章 繞不開的名字</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html576.html">第576章 快去請十一大神</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html577.html">第577章 只有紫見受傷的世界</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html578.html">第578章 四聖超神的注視</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html579.html">月票懸賞！</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html580.html">第579章 時宇翻車</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html581.html">第580章 隊內賽現狀（月票加更+0.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html582.html">第581章 看穿真相之人</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html583.html">第582章 封神誰爲王（月票加更+1.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html584.html">第583章 冠軍時刻</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html585.html">第584章 此戰封神（月票加更+2.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html586.html">十月繼續求票！</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html587.html">第585章 突破神級御獸師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html588.html">第586章 全員突破神級（月票加更+3.5）（感</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html589.html">第587章 媧神遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html590.html">第588章 傳說帝王復活（月票加更+4.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html591.html">第589章 時宇獸</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html592.html">第590章 五帝同框指日可待（月票加更+5.5）</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html593.html">第591章 遺蹟我的遺蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html594.html">第592章 沒有道德的時宇（月票加更+6）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html595.html">第593章 時宇獸進化</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html596.html">第594章 爆料王圖圖（月票加更+6.5）</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html597.html">第595章 復活的帝王們</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html598.html">第596章 藍星升了（10.6保底）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html599.html">第597章 時帝出場</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html600.html">第598章 藍星第一次團建活動（月票加更+7）</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html601.html">第599章 藍星文化宣傳大使</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html602.html">第600章 一星十超神（月票加更+7.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html603.html">第601章 新超脫之源給誰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html604.html">第602章 預知了個寂寞（月票加更+8.5）</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html605.html">第603章 全員武器大師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html606.html">第604章 前往污染之地</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html607.html">第605章 前有狼後有虎</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html608.html">第606章 窮兇惡極的時宇海賊團（月票加更+9</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html609.html">第607章 地球遺蹟與媧神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html610.html">第608章 我契約我自己（月票加更+9.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html611.html">第609章 喊話深淵超神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html612.html">第610章 素鴨組合</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html613.html">第611章 超神首殺</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html614.html">第612章 超脫之源歸屬</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html615.html">第613章 新一屆封神</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html616.html">第614章 界王星震動</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html617.html">第615章 打破神級極限</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html618.html">第616章 粉絲行爲卡恩買單</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html619.html">第617章 藍星意志的技能</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html620.html">第618章 蚩尤遺蹟</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html621.html">第619章 紀元之戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html622.html">第620章 逐漸明白一切</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html623.html">第621章 保護型考古與破壞型考古</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html624.html">第622章 霸主疆域</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html625.html">第623章 挑戰宇宙霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html626.html">第624章 時來運轉</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html627.html">第625章 沒關係我會出手</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html628.html">第626章 神級十二重天</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html629.html">第627章 榮耀挑戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html630.html">第628章 宇宙海最強和霸主疆域最強</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html631.html">第629章 創造奇蹟</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html632.html">第630章 宇宙霸主賽波斯</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html633.html">第631章 沉睡之地</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html634.html">第632章 加速的時代</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html635.html">第633章 被詛咒的巨獸</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html636.html">第634章 宇宙巨獸布戮</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html637.html">第635章 套娃（月票加更+12.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html638.html">第636章 巨獸與小紫</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html639.html">第637章 爆料王再出新活（月票加更+13）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html640.html">第638章 冤家路窄</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html641.html">第639章 請君入甕</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html642.html">第640章 兩次穿越（月票加更+14）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html643.html">第641章 超脫決鬥</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html644.html">第642章 一棒砸死（月票加更+15）</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html645.html">第643章 打成練寵戰</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html646.html">第644章 界王的任務</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html647.html">第645章 一眼億年（月票加更+16）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html648.html">第646章 降臨神話時代</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html649.html">第647章 第六宇宙級的信息（補11號請假保底</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html650.html">第648章 超能女皇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html651.html">第649章 破局的關鍵（月票加更+16.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html652.html">第650章 宇宙之路</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html653.html">第651章 超能女皇現身</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html654.html">第652章 百合身份（月票加更+17）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html655.html">第653章 紀元突破</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html656.html">第654章 震驚第六宇宙級竟然是…</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html657.html">第655章 返回原宇宙</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html658.html">第656章 再見界王</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html659.html">第657章 衝擊超神的小紫</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html660.html">第658章 超脫本源成</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html661.html">第659章 星空焦點</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html662.html">第660章 十八重天</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html663.html">第661章 第七個宇宙帝王</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html664.html">第662章 再見女皇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html665.html">第662章：超神時宇</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html666.html">第663章：嶽女來了</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html667.html">第664章：嶽女老師</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html668.html">第665章：參天帝的憂愁</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html669.html">第666章：藍星第五個超神人族</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html670.html">第667章：全村的希望</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html671.html">第668章：貓貓歸來（20.5）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html672.html">第669章：病了</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html673.html">第670章：第三穿越者</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html674.html">第671章：劍斬宇宙級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html675.html">第672章：認賊作母</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html676.html">第673章：認媽證道</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html677.html">第674章：對貓貓孝心變質圖窮匕見</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html678.html">第675章：挑戰萬族第一</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html679.html">第676章：《天帝經》和混沌熊貓</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html680.html">第677章：宇宙霸主的預知夢</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html681.html">第678章：寵獸比主人還離譜</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html682.html">第679章：慘</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html683.html">第680章：蟲蟲進化，吞噬宇宙之蟲</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html684.html">第681章：新奶媽超能女皇</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html685.html">第682章：衝擊宇宙級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html686.html">第683章：放我回去（感謝《御獸巡使》作者‘書荒被迫寫書’的白銀盟！）</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html687.html">第684章：緣來如此</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html688.html">第685章：前世今生的牽絆</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html689.html">第686章：終成宇宙級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html690.html">第687章：艱難的宇宙級</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html691.html">第688章：宣戰宇宙帝王</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html692.html">第689章：平衡</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html693.html">第690章：污染之地易主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html694.html">第691章：銀河霸主</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html695.html">第692章：宇宙強盜</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html696.html">第693章：時宇女兒的到來</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html697.html">第694章:特殊的平行時空</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html698.html">第695章:父女局</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html699.html">第696章:沒有時宇的時空</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html700.html">第697章:第二隻宇宙級</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html701.html">第699章 怪物老爹</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html702.html">第700章 怎麼又一隻</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html703.html">第701章 最強の誕生</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html704.html">第702章 永無止境的突破</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html705.html">第703章 混沌神魔</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html706.html">第704章 宇宙會議</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html707.html">第705章 又迫害牛牛</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html708.html">第706章 新的宇宙霸主</a></td>
+                
+                        </tr>
+                    
+                        <tr>
+                    
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html709.html">第707章 契約宇宙</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html710.html">第708章 改變的歷史</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html711.html">第709章 維繫者</a></td>
+                
+                    <td class="title-td"><a href="https://jimmy-shian.github.io/novel/bukexueyushou-qingquanliuxiang/不科學御獸_html712.html">第710章  御獸終章</a></td>
+                
+                        </tr>
+                    
+                </table>
+        <div class="spacer"></div>
+            
