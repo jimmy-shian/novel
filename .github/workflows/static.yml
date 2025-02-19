@@ -29,14 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@4.1.4
+        uses: actions/checkout@v3
       - name: Setup Pages
-        uses: actions/configure-pages@4.1.4
+        uses: actions/configure-pages@v4
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@4.1.4
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload entire repository
           path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@4.1.4
+        uses: actions/github-pages-deploy-action@4.1.4
