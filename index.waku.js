@@ -784,7 +784,7 @@ xhr.onreadystatechange = function() {
             const input = document.createElement('input');
             input.type = 'number';
             input.value = currentPageNumElement.textContent;
-            input.style.width = '50px';
+            input.style.width = '5.5rem';
         
             // 替換 span 為 input
             currentPageNumElement.replaceWith(input);
