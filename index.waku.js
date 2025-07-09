@@ -778,23 +778,25 @@ xhr.onreadystatechange = function() {
 
         if (currentPageNumElement !== null ) {
           currentPageNumElement.textContent = currentPageNum;
-
+        
           currentPageNumElement.addEventListener('click', function () {
-            // 創建 input 元素
+            const originalValue = currentPageNumElement.textContent; // 儲存原始數值
+        
             const input = document.createElement('input');
             input.type = 'number';
-            input.value = currentPageNumElement.textContent;
+            input.value = originalValue;
             input.style.width = '5.5rem';
         
-            // 替換 span 為 input
             currentPageNumElement.replaceWith(input);
             input.focus();
         
-            // 按下 Enter 鍵觸發跳轉
+            let enterPressed = false; // 用來標記是否按過 Enter
+        
             input.addEventListener('keydown', function (e) {
               if (e.key === 'Enter') {
                 const newPageNum = parseInt(input.value);
                 if (!isNaN(newPageNum) && newPageNum > 0) {
+                  enterPressed = true;
                   const currentUrl = window.location.href;
                   const updatedUrl = currentUrl.replace(/html\d+/, `html${newPageNum}`);
                   window.location.href = updatedUrl;
@@ -802,13 +804,15 @@ xhr.onreadystatechange = function() {
               }
             });
         
-            // 離開輸入框，還原成 span（不跳轉）
             input.addEventListener('blur', function () {
-              currentPageNumElement.textContent = input.value;
-              input.replaceWith(currentPageNumElement);
+              if (!enterPressed) {
+                // 沒按 Enter，還原原始數值
+                currentPageNumElement.textContent = originalValue;
+                input.replaceWith(currentPageNumElement);
+              }
             });
           });
-        } else {
+        }else {
           console.log('currentPageNum not show');
         }
 
