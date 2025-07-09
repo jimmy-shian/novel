@@ -367,6 +367,61 @@ $(document).ready(function () {
 
 });
 */
+
+// Space鍵控制：啟動或中止自動緩慢滾動並觸發ArrowRight
+let isScrolling = false;
+let scrollInterval;
+
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space') {
+    // 阻止預設的空白鍵捲動頁面
+    e.preventDefault();
+
+    if (!isScrolling) {
+      // 開始滾動
+      isScrolling = true;
+
+      const speed = 50; // 每秒 50px
+      const intervalTime = 1000; // 每秒一次
+      const triggerBuffer = 100; // 距底部 100px 時觸發
+
+      scrollInterval = setInterval(() => {
+        const scrollTop = window.scrollY;
+        const scrollHeight = document.body.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const distanceToBottom = scrollHeight - (scrollTop + windowHeight);
+
+        if (distanceToBottom <= triggerBuffer) {
+          clearInterval(scrollInterval);
+          isScrolling = false;
+
+          console.log('剩下不到 100px，觸發右方向鍵');
+
+          // 模擬按下 → 鍵
+          const event = new KeyboardEvent('keydown', {
+            key: 'ArrowRight',
+            code: 'ArrowRight',
+            keyCode: 39,
+            which: 39,
+            bubbles: true
+          });
+
+          document.dispatchEvent(event);
+        } else {
+          window.scrollBy(0, speed);
+        }
+      }, intervalTime);
+
+    } else {
+      // 再次按空白鍵 → 停止滾動
+      clearInterval(scrollInterval);
+      isScrolling = false;
+      console.log('滾動已停止');
+    }
+  }
+});
+
+
 // 書名和拼音的字典
 const bookDictionary = {
   "百鍊成仙": "bailianchengxian-huanyu",
@@ -723,6 +778,36 @@ xhr.onreadystatechange = function() {
 
         if (currentPageNumElement !== null ) {
           currentPageNumElement.textContent = currentPageNum;
+
+          currentPageNumElement.addEventListener('click', function () {
+            // 創建 input 元素
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentPageNumElement.textContent;
+            input.style.width = '50px';
+        
+            // 替換 span 為 input
+            currentPageNumElement.replaceWith(input);
+            input.focus();
+        
+            // 按下 Enter 鍵觸發跳轉
+            input.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter') {
+                const newPageNum = parseInt(input.value);
+                if (!isNaN(newPageNum) && newPageNum > 0) {
+                  const currentUrl = window.location.href;
+                  const updatedUrl = currentUrl.replace(/html\d+/, `html${newPageNum}`);
+                  window.location.href = updatedUrl;
+                }
+              }
+            });
+        
+            // 離開輸入框，還原成 span（不跳轉）
+            input.addEventListener('blur', function () {
+              currentPageNumElement.textContent = input.value;
+              input.replaceWith(currentPageNumElement);
+            });
+          });
         } else {
           console.log('currentPageNum not show');
         }
