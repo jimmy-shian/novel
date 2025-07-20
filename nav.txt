@@ -80,7 +80,7 @@
                       <a class="nav-link" href="/zerifeisheng-zhaizhu/zerifeisheng-zhaizhu.html">擇日飛昇</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="sheirangtaxiuxiande-zuibaidewuya/sheirangtaxiuxiande-zuibaidewuya.html">誰讓他修仙的！</a>
+                      <a class="nav-link" href="/sheirangtaxiuxiande-zuibaidewuya/sheirangtaxiuxiande-zuibaidewuya.html">誰讓他修仙的！</a>
                     </li>
 
                     <li class="nav-item dropdown">
