@@ -1,6 +1,6 @@
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
               <div class="container-fluid">
-                <a class="navbar-brand" href="">Jimmy novel</a>
+                <a class="navbar-brand" href="/novel">Jimmy novel</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
@@ -60,6 +60,8 @@
                         <li><a class="dropdown-item" href="/mulongshi-luan/mulongshi-luan.html">牧龍師</a></li>
                         <li><a class="dropdown-item" href="/bailianchengxian-huanyu/bailianchengxian-huanyu.html">百鍊成仙</a></li>
                         <li><a class="dropdown-item" href="/xingmen-laoyingchixiaoji/xingmen-laoyingchixiaoji.html">星門</a></li>
+                        <li><a class="dropdown-item" href="/bukexueyushou-qingquanliuxiang/bukexueyushou-qingquanliuxiang.html">不科學御獸</a></li>
+                        <li><a class="dropdown-item" href="/wodetudidoushidafanpai-moushengrenzhuanpeng/wodetudidoushidafanpai-moushengrenzhuanpeng.html">我的徒弟都是大反派</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
@@ -70,10 +72,7 @@
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="/xuanjiezhimen-wangyu/xuanjiezhimen-wangyu.html">玄界之門</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/wodetudidoushidafanpai-moushengrenzhuanpeng/wodetudidoushidafanpai-moushengrenzhuanpeng.html">我的徒弟都是大反派</a>
-                    </li>                    
+                    </li>                
                     <li class="nav-item">
                       <a class="nav-link" href="/yipindaomen-dijiutianming/yipindaomen-dijiutianming.html">一品道門</a>
                     </li>
@@ -81,7 +80,7 @@
                       <a class="nav-link" href="/zerifeisheng-zhaizhu/zerifeisheng-zhaizhu.html">擇日飛昇</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="/bukexueyushou-qingquanliuxiang/bukexueyushou-qingquanliuxiang.html">不科學御獸</a>
+                      <a class="nav-link" href="sheirangtaxiuxiande-zuibaidewuya/sheirangtaxiuxiande-zuibaidewuya.html">誰讓他修仙的！</a>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -92,8 +91,8 @@
                         <li><a class="dropdown-item" href="/serch.html">keywords search</a></li>
                         <li><a class="dropdown-item" href="/404.html">404</a></li>
                         <li><a class="dropdown-item" href="https://github.com/jimmy-shian/novel" target="_blank">Github</a></li>
-                        <li><a class="dropdown-item" href="/linesend" target="_blank">傳送line</a></li>
-                        <li><a class="dropdown-item" href="/savech" target="_blank">儲存章節_excel</a></li>
+                        <li><a class="dropdown-item" href="/linesend.html" target="_blank">傳送line</a></li>
+                        <li><a class="dropdown-item" href="/savech.html" target="_blank">儲存章節_excel</a></li>
                       </ul>
                     </li>
                     <li class="nav-item">
