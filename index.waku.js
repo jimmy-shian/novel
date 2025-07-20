@@ -738,7 +738,11 @@ if (!/savech(\.html)?$/.test(window.location.pathname)) {
 
 const contentDiv = document.getElementById("content-nav");
 const xhr = new XMLHttpRequest();
-xhr.open("GET", "nav.txt", true);
+var navUrl = "https://jimmy-shian.github.io/novel/nav.txt";
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
+    navUrl = "nav.txt";
+}
+xhr.open("GET", navUrl, true);
 xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE || xhr.status === 200) {
         contentDiv.innerHTML = xhr.responseText;
@@ -747,7 +751,7 @@ xhr.onreadystatechange = function() {
         var href_first = "https://jimmy-shian.github.io/";
 
         // 檢查是否在本地端執行
-        if (window.location.hostname === "localhost" || window.location.protocol === "file:") {
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
             // 本地端執行時，將 novelPath 設置為空字串
             novelPath = "";
             href_first = "";
@@ -849,7 +853,11 @@ xhr.send();
 const contentEnd = document.getElementById("content-end");
 
 const end = new XMLHttpRequest();
-end.open("GET", "end.txt", true);
+var endUrl = "https://jimmy-shian.github.io/novel/end.txt";
+if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
+    endUrl = "end.txt";
+}
+end.open("GET", endUrl, true);
 end.onreadystatechange = function() {
     if (end.readyState === XMLHttpRequest.DONE || end.status === 200) {
     contentEnd.innerHTML = end.responseText;
