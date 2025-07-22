@@ -425,12 +425,12 @@ document.addEventListener('keydown', function (e) {
 });
 
 // 自動滾動按鈕
-const autoScrollBtn = document.getElementById('autoScrollBtn');
-if (autoScrollBtn) {
-  autoScrollBtn.addEventListener('click', () => {
-    toggleAutoScroll();
-  });
-}
+// const autoScrollBtn = document.getElementById('autoScrollBtn');
+// if (autoScrollBtn) {
+//   autoScrollBtn.addEventListener('click', () => {
+//     toggleAutoScroll();
+//   });
+// }
 
 // 書名和拼音的字典
 const bookDictionary = {
