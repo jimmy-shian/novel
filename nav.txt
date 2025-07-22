@@ -102,11 +102,9 @@
                 </div>
               </div>
             </nav>   
-<center>
-  <div class="currentPageNumplace" style="font-size: 145%; margin: 0;">
-    <p style="display: inline;">當前頁數：<span id="currentPageNum"></span></p>
-    <button id="autoScrollBtn" title="自動滾動" style="background-color: unset;" onclick="toggleAutoScroll()">📜</button>
-  </div>
-</center>
+<div class="currentPageNumplace" style="width: 100%; font-size: 145%; margin: 0; text-align: center; z-index: 1050; background-color: rgb(100, 100, 100);">
+  <p style="display: inline;">當前頁數：<span id="currentPageNum"></span></p>
+  <button id="autoScrollBtn" title="自動滾動" style="background-color: unset;" onclick="toggleAutoScroll()">📜</button>
+</div>
 
 <!--https://jimmy-shian.github.io/novel -->

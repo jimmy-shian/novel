@@ -377,8 +377,8 @@ function toggleAutoScroll() {
     // 開始滾動
     isScrolling = true;
 
-    const speed = 15; // 每100毫秒 15px
-    const intervalTime = 100; // 每100毫秒一次
+    const speed = 1.2; // 每100毫秒 1.2px
+    const intervalTime = 10; // 每10毫秒一次
     const triggerBuffer = 100; // 距底部 100px 時觸發
 
     scrollInterval = setInterval(() => {
