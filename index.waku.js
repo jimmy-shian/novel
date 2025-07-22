@@ -368,59 +368,69 @@ $(document).ready(function () {
 });
 */
 
-// Space鍵控制：啟動或中止自動緩慢滾動並觸發ArrowRight
+// Space空白鍵控制：啟動或中止自動緩慢滾動並觸發ArrowRight
 let isScrolling = false;
 let scrollInterval;
+
+function toggleAutoScroll() {
+  if (!isScrolling) {
+    // 開始滾動
+    isScrolling = true;
+
+    const speed = 15; // 每100毫秒 15px
+    const intervalTime = 100; // 每100毫秒一次
+    const triggerBuffer = 100; // 距底部 100px 時觸發
+
+    scrollInterval = setInterval(() => {
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.body.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const distanceToBottom = scrollHeight - (scrollTop + windowHeight);
+
+      if (distanceToBottom <= triggerBuffer) {
+        clearInterval(scrollInterval);
+        isScrolling = false;
+
+        console.log('剩下不到 100px，觸發右方向鍵');
+
+        // 模擬按下 → 鍵
+        const event = new KeyboardEvent('keydown', {
+          key: 'ArrowRight',
+          code: 'ArrowRight',
+          keyCode: 39,
+          which: 39,
+          bubbles: true
+        });
+
+        document.dispatchEvent(event);
+      } else {
+        window.scrollBy(0, speed);
+      }
+    }, intervalTime);
+
+  } else {
+    // 再次按空白鍵 → 停止滾動
+    clearInterval(scrollInterval);
+    isScrolling = false;
+    console.log('滾動已停止');
+  }
+}
 
 document.addEventListener('keydown', function (e) {
   if (e.code === 'Space') {
     // 阻止預設的空白鍵捲動頁面
     e.preventDefault();
-
-    if (!isScrolling) {
-      // 開始滾動
-      isScrolling = true;
-
-      const speed = 50; // 每秒 50px
-      const intervalTime = 1000; // 每秒一次
-      const triggerBuffer = 100; // 距底部 100px 時觸發
-
-      scrollInterval = setInterval(() => {
-        const scrollTop = window.scrollY;
-        const scrollHeight = document.body.scrollHeight;
-        const windowHeight = window.innerHeight;
-        const distanceToBottom = scrollHeight - (scrollTop + windowHeight);
-
-        if (distanceToBottom <= triggerBuffer) {
-          clearInterval(scrollInterval);
-          isScrolling = false;
-
-          console.log('剩下不到 100px，觸發右方向鍵');
-
-          // 模擬按下 → 鍵
-          const event = new KeyboardEvent('keydown', {
-            key: 'ArrowRight',
-            code: 'ArrowRight',
-            keyCode: 39,
-            which: 39,
-            bubbles: true
-          });
-
-          document.dispatchEvent(event);
-        } else {
-          window.scrollBy(0, speed);
-        }
-      }, intervalTime);
-
-    } else {
-      // 再次按空白鍵 → 停止滾動
-      clearInterval(scrollInterval);
-      isScrolling = false;
-      console.log('滾動已停止');
-    }
+    toggleAutoScroll();
   }
 });
 
+// 自動滾動按鈕
+const autoScrollBtn = document.getElementById('autoScrollBtn');
+if (autoScrollBtn) {
+  autoScrollBtn.addEventListener('click', () => {
+    toggleAutoScroll();
+  });
+}
 
 // 書名和拼音的字典
 const bookDictionary = {
@@ -740,7 +750,7 @@ const contentDiv = document.getElementById("content-nav");
 const xhr = new XMLHttpRequest();
 var navUrl = "https://jimmy-shian.github.io/novel/nav.txt";
 if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
-    navUrl = "nav.txt";
+    navUrl = "/nav.txt";
 }
 xhr.open("GET", navUrl, true);
 xhr.onreadystatechange = function() {
@@ -855,7 +865,7 @@ const contentEnd = document.getElementById("content-end");
 const end = new XMLHttpRequest();
 var endUrl = "https://jimmy-shian.github.io/novel/end.txt";
 if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
-    endUrl = "end.txt";
+    endUrl = "/end.txt";
 }
 end.open("GET", endUrl, true);
 end.onreadystatechange = function() {
