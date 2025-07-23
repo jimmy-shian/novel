@@ -368,20 +368,80 @@ $(document).ready(function () {
 });
 */
 
-// Space空白鍵控制：啟動或中止自動緩慢滾動並觸發ArrowRight
+// Space 空白鍵控制：啟動或中止自動緩慢滾動並觸發 ArrowRight
 let isScrolling = false;
 let scrollInterval;
+let isPaused = false;
+let resumeTimer = null;
+let restartScrollTime = 100;
+
+// === Auto scroll helper functions ===
+function stopAutoScroll() {
+  if (scrollInterval) {
+    clearInterval(scrollInterval);
+  }
+  if (isScrolling) {
+    console.log('自動捲動已停止');
+  }
+  isScrolling = false;
+  removeManualScrollListeners();
+}
+
+function stopAutoScrollByUser() {
+  if (isScrolling) {
+    stopAutoScroll();
+  }
+}
+
+function addManualScrollListeners() {
+  let lastScrollTime = 0;
+
+  const pauseHandler = () => {
+    if (!isScrolling) return;
+
+    isPaused = true;
+    lastScrollTime = Date.now();
+
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(checkResume, restartScrollTime);
+  };
+
+  function checkResume() {
+    const now = Date.now();
+    if (now - lastScrollTime >= restartScrollTime) {
+      isPaused = false;
+    } else {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(checkResume, restartScrollTime);
+    }
+  }
+
+  window.addEventListener('wheel', pauseHandler, { passive: true });
+  window.addEventListener('touchstart', pauseHandler, { passive: true });
+
+  addManualScrollListeners.pauseHandler = pauseHandler;
+}
+
+function removeManualScrollListeners() {
+  const handler = addManualScrollListeners.pauseHandler;
+  if (handler) {
+    window.removeEventListener('wheel', handler);
+    window.removeEventListener('touchstart', handler);
+  }
+}
 
 function toggleAutoScroll() {
   if (!isScrolling) {
-    // 開始滾動
     isScrolling = true;
+    addManualScrollListeners();
 
-    const speed = 1.2; // 每100毫秒 1.2px
-    const intervalTime = 10; // 每10毫秒一次
-    const triggerBuffer = 100; // 距底部 100px 時觸發
+    const speed = 1.2; // 每次滾動 px
+    const intervalTime = 10; // 每 10 毫秒滾動一次
+    const triggerBuffer = 100; // 距底部 100px 觸發鍵盤事件
 
     scrollInterval = setInterval(() => {
+      if (isPaused) return;
+
       const scrollTop = window.scrollY;
       const scrollHeight = document.body.scrollHeight;
       const windowHeight = window.innerHeight;
@@ -390,10 +450,8 @@ function toggleAutoScroll() {
       if (distanceToBottom <= triggerBuffer) {
         clearInterval(scrollInterval);
         isScrolling = false;
-
         console.log('剩下不到 100px，觸發右方向鍵');
 
-        // 模擬按下 → 鍵
         const event = new KeyboardEvent('keydown', {
           key: 'ArrowRight',
           code: 'ArrowRight',
@@ -401,7 +459,6 @@ function toggleAutoScroll() {
           which: 39,
           bubbles: true
         });
-
         document.dispatchEvent(event);
       } else {
         window.scrollBy(0, speed);
@@ -409,20 +466,17 @@ function toggleAutoScroll() {
     }, intervalTime);
 
   } else {
-    // 再次按空白鍵 → 停止滾動
-    clearInterval(scrollInterval);
-    isScrolling = false;
-    console.log('滾動已停止');
+    stopAutoScroll();
   }
 }
 
 document.addEventListener('keydown', function (e) {
   if (e.code === 'Space') {
-    // 阻止預設的空白鍵捲動頁面
-    e.preventDefault();
+    e.preventDefault(); // 阻止空白鍵預設行為
     toggleAutoScroll();
   }
 });
+
 
 // 自動滾動按鈕
 // const autoScrollBtn = document.getElementById('autoScrollBtn');
