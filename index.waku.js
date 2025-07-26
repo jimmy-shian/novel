@@ -1578,3 +1578,28 @@ constVariables.forEach(([name, value]) => {
 
 // };
 //})(); 
+
+
+// 1. 載入 Google AdSense 的 script
+const adScript = document.createElement('script');
+adScript.async = true;
+adScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2415998114933157";
+adScript.crossOrigin = "anonymous";
+document.head.appendChild(adScript);
+
+// 2. 廣告元素
+const adContainer = document.createElement('ins');
+adContainer.className = "adsbygoogle";
+adContainer.style.display = "block";
+adContainer.setAttribute("data-ad-client", "ca-pub-2415998114933157");
+adContainer.setAttribute("data-ad-slot", "3809557888"); // 你的廣告 slot ID
+adContainer.setAttribute("data-ad-format", "auto");
+adContainer.setAttribute("data-full-width-responsive", "true");
+
+// 3. 插入廣告位置（你可以更換成你想插入的位置，例如特定容器中）
+document.body.appendChild(adContainer);
+
+// 4. 等 script 載入完成後再初始化廣告
+adScript.onload = () => {
+  (window.adsbygoogle = window.adsbygoogle || []).push({});
+};
