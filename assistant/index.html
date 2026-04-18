@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>閱讀助手</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0ede8;color:#1a1a1a;font-family:'Inter','Segoe UI',sans-serif;display:flex;height:100vh;overflow:hidden;font-size:14px}
+
+/* SIDEBAR */
+#sidebar{width:230px;min-width:200px;background:#fff;border-right:1px solid #e0ddd8;display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,0.06);z-index:10;}
+#sidebar-header{padding:20px 16px 14px;border-bottom:1px solid #ece9e4}
+#sidebar-header h1{font-size:16px;font-weight:700;color:#8b6914;letter-spacing:.5px}
+#sidebar-header p{font-size:12px;color:#999;margin-top:3px}
+#mode-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-top:6px;font-weight:600}
+#mode-badge.local{background:#e8f5e9;color:#2e7d32}
+#mode-badge.web{background:#fff3e0;color:#e65100}
+#novel-list{flex:1;overflow-y:auto;padding:8px}
+.novel-btn{width:100%;text-align:left;padding:9px 12px;border-radius:6px;border:none;background:none;color:#555;cursor:pointer;font-size:13px;font-weight:500;transition:.15s;display:block;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.novel-btn:hover{background:#f5f2ee;color:#222}
+.novel-btn.active{background:#fdf5e6;color:#8b6914;border-left:3px solid #c8a96e}
+#sidebar-footer{padding:12px 16px;border-top:1px solid #ece9e4}
+#btn-set-dir{width:100%;padding:8px;border-radius:6px;border:1px solid #c8a96e;background:#fff;color:#8b6914;cursor:pointer;font-size:12px;font-weight:600;transition:.15s}
+#btn-set-dir:hover{background:#fdf5e6}
+#dir-status{font-size:11px;color:#999;margin-top:5px;text-align:center;word-break:break-all}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+#main-bg{position:absolute;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center;opacity:0.05;z-index:0;pointer-events:none;}
+#top-bar{padding:14px 24px;background:rgba(255,255,255,0.9);border-bottom:1px solid #e0ddd8;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,0.04);z-index:1;}
+#top-bar h2{font-size:16px;font-weight:700;color:#1a1a1a;flex:1}
+.btn{padding:7px 16px;border-radius:6px;border:1px solid #d0ccc8;background:#fff;color:#333;cursor:pointer;font-size:13px;font-weight:500;transition:.15s;white-space:nowrap}
+.btn:hover{background:#f5f2ee;border-color:#bbb}
+.btn.primary{background:#c8a96e;border-color:#c8a96e;color:#fff}
+.btn.primary:hover{background:#b8934a;border-color:#b8934a}
+.btn.danger{border-color:#e0a0a0;color:#c0392b}
+.btn.danger:hover{background:#fff5f5}
+#content-area{flex:1;overflow-y:auto;padding:24px;z-index:1;position:relative;}
+
+/* ADD CHAR BOX */
+.add-char-box{background:rgba(255,255,255,0.9);border:1px solid #e8e4df;border-radius:10px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.add-char-box h4{font-size:14px;font-weight:600;color:#333;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ede8}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* CHAR CARD */
+.char-card{background:rgba(255,255,255,0.95);border:1px solid #e8e4df;border-radius:10px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:.2s;backdrop-filter:blur(5px);}
+.char-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.char-head{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;border-radius:10px}
+.char-head:hover{background:rgba(253,252,251,0.9)}
+.char-name-label{font-weight:700;color:#1a1a1a;font-size:16px;flex:1;display:flex;align-items:center;gap:8px;}
+.char-tags{display:flex;gap:5px;font-size:11px;font-weight:normal;}
+.char-tag{background:#e8e4df;padding:2px 6px;border-radius:4px;color:#555;}
+.char-count{font-size:12px;color:#999;background:#f5f2ee;padding:2px 8px;border-radius:10px}
+.char-body{padding:18px;border-top:1px solid #f0ede8}
+
+/* FORM */
+label{display:block;font-size:12px;font-weight:600;color:#666;margin-bottom:5px;margin-top:14px}
+label:first-child{margin-top:0}
+input[type="text"],textarea,input[type="url"],select{width:100%;background:#f8f7f5;border:1.5px solid #e0ddd8;border-radius:6px;color:#1a1a1a;padding:9px 12px;font-size:14px;outline:none;transition:.15s;resize:vertical;font-family:inherit}
+input[type="text"]:focus,textarea:focus,input[type="url"]:focus,select:focus{border-color:#c8a96e;background:#fff}
+textarea{min-height:72px;line-height:1.6}
+
+/* URL ADD APPEARANCE */
+.add-app-box{background:#fdf5e6;border:1.5px solid #e8d5a3;border-radius:8px;padding:16px;margin-top:16px}
+.add-app-box h5{font-size:13px;font-weight:700;color:#8b6914;margin-bottom:12px}
+.url-row{display:flex;gap:8px;align-items:stretch}
+.url-row input{flex:1}
+.url-row .btn{padding:9px 16px;background:#c8a96e;border-color:#c8a96e;color:#fff;font-weight:700;font-size:13px}
+.url-row .btn:hover{background:#b8934a}
+.url-status{font-size:12px;color:#888;min-height:18px;margin-top:6px}
+.url-status.ok{color:#2e7d32;font-weight:600}
+.url-status.err{color:#c0392b}
+
+/* APP ITEMS */
+.appearances-list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.app-item{background:#f8f7f5;border:1px solid #e8e4df;border-radius:8px;padding:12px 14px;position:relative}
+.app-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.app-ch{background:#fdf5e6;border:1px solid #e8d5a3;border-radius:4px;padding:3px 10px;font-size:12px;font-weight:700;color:#8b6914;white-space:nowrap}
+.app-title{font-size:13px;font-weight:600;color:#333;flex:1}
+.app-event{font-size:13px;color:#555;line-height:1.6;white-space:pre-wrap}
+.app-del{position:absolute;top:10px;right:12px;background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;transition:.15s}
+.app-del:hover{color:#c0392b}
+
+/* EMPTY */
+#empty-state{text-align:center;padding:80px 20px;color:#bbb;background:rgba(255,255,255,0.8);border-radius:10px;}
+#empty-state p{font-size:15px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d8d4ce;border-radius:3px}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h1>閱讀助手</h1>
+    <p>人物編輯器</p>
+    <div id="mode-badge">偵測中...</div>
+  </div>
+  <div id="novel-list"></div>
+  <div id="sidebar-footer" id="footer-local" style="display:none">
+    <button id="btn-set-dir">設定儲存資料夾</button>
+    <div id="dir-status">尚未設定儲存位置</div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="main-bg"></div>
+  <div id="top-bar">
+    <h2 id="top-title">請選擇左側小說</h2>
+    <button class="btn primary" id="btn-export" style="display:none">儲存 / 匯出</button>
+  </div>
+  <div id="content-area">
+    <div id="empty-state"><p>從左側選擇小說開始編輯人物資料</p></div>
+    <div id="editor-body" style="display:none">
+      
+      <div class="add-char-box">
+        <h4>新增人物</h4>
+        <div class="form-grid">
+          <div>
+            <label>人物名稱 *</label>
+            <input type="text" id="new-char-name" placeholder="例如：李七夜">
+          </div>
+          <div>
+            <label>性別</label>
+            <select id="new-char-gender">
+              <option value="">未知</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+          <div>
+            <label>身分 / 所屬勢力</label>
+            <input type="text" id="new-char-faction" placeholder="例如：洗顏古派、天神書院...">
+          </div>
+          <div>
+            <label>境界 / 實力</label>
+            <input type="text" id="new-char-power" placeholder="例如：仙帝、大魔神...">
+          </div>
+          <div>
+            <label>目前狀態</label>
+            <select id="new-char-status">
+              <option value="存活">存活</option>
+              <option value="死亡">死亡</option>
+              <option value="失蹤">失蹤</option>
+              <option value="未知">未知</option>
+            </select>
+          </div>
+        </div>
+        <label>人物介紹</label>
+        <textarea id="new-char-desc" placeholder="背景、性格、重要事蹟..."></textarea>
+        <div style="margin-top:12px"><button class="btn primary" id="btn-add-char">新增人物</button></div>
+      </div>
+      <div id="char-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BOOKS=[{title:"帝霸",folder:"diba-yanbixiaosheng"},{title:"全職法師",folder:"quanzhifashi-luan"},{title:"凡人修仙傳",folder:"fanrenxiuxianchuan-wangyu"},{title:"凡人修仙之仙界篇",folder:"fanrenxiuxianzhixianjiepian-wangyu"},{title:"魔天記",folder:"motianji-wangyu"},{title:"玄界之門",folder:"xuanjiezhimen-wangyu"},{title:"仙逆",folder:"xianni-ergen"},{title:"求魔",folder:"qiumo-ergen"},{title:"我欲封天",folder:"woyufengtian-ergen"},{title:"一念永恆",folder:"yinianyongheng-ergen"},{title:"三寸人間",folder:"sancunrenjian-ergen"},{title:"吞噬星空",folder:"tunshixingkong-wochixihongshi"},{title:"飛劍問道",folder:"feijianwendao-wochixihongshi"},{title:"滄元圖",folder:"cangyuantu-wochixihongshi"},{title:"我師兄實在太穩健了",folder:"woshixiongshizaitaiwenjianle-yanguizhengzhuan"},{title:"修真聊天羣",folder:"xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo"},{title:"大奉打更人",folder:"dafengdagengren-maibaoxiaolangjun"},{title:"大符篆師",folder:"dafuzhuanshi-xiaodaofengli"},{title:"牧龍師",folder:"mulongshi-luan"},{title:"百鍊成仙",folder:"bailianchengxian-huanyu"},{title:"星門",folder:"xingmen-laoyingchixiaoji"},{title:"不科學御獸",folder:"bukexueyushou-qingquanliuxiang"},{title:"我的徒弟都是大反派",folder:"wodetudidoushidafanpai-moushengrenzhuanpeng"},{title:"鬥破蒼穹",folder:"doupocangqiong-tiancantudou"},{title:"聖墟",folder:"shengxu-chendong"},{title:"一品道門",folder:"yipindaomen-dijiutianming"},{title:"擇日飛昇",folder:"zerifeisheng-zhaizhu"},{title:"誰讓他修仙的！",folder:"sheirangtaxiuxiande-zuibaidewuya"}];
+
+// ── Mode detection ──
+const isLocal=location.protocol==='file:'||['localhost','127.0.0.1'].includes(location.hostname);
+const badge=document.getElementById('mode-badge');
+badge.textContent=isLocal?'本機模式':'網路模式';
+badge.className='mode-badge '+(isLocal?'local':'web');
+
+const footer=document.getElementById('sidebar-footer');
+if(isLocal) footer.style.display='block';
+
+// ── File System Access API ──
+let dirHandle=null;
+
+document.getElementById('btn-set-dir').addEventListener('click',async()=>{
+  try{
+    dirHandle=await window.showDirectoryPicker({mode:'readwrite',startIn:'desktop'});
+    document.getElementById('dir-status').textContent='已設定: '+dirHandle.name;
+    // Try to load current novel if selected
+    if(currentBook) await tryLoadFromDir(currentBook.folder);
+  }catch(e){if(e.name!=='AbortError')alert('無法存取資料夾: '+e.message);}
+});
+
+async function saveToDir(folder,data){
+  if(!dirHandle)return false;
+  try{
+    const fh=await dirHandle.getFileHandle(folder+'.json',{create:true});
+    const w=await fh.createWritable();
+    await w.write(JSON.stringify(data,null,2));
+    await w.close();
+    return true;
+  }catch(e){return false;}
+}
+
+async function tryLoadFromDir(folder){
+  if(!dirHandle)return null;
+  try{
+    const fh=await dirHandle.getFileHandle(folder+'.json');
+    const f=await fh.getFile();
+    return JSON.parse(await f.text());
+  }catch{return null;}
+}
+
+// ── State ──
+let currentBook=null,currentData=null;
+
+function makeEmpty(b){return{novel:b.title,folder:b.folder,characters:[]};}
+
+function lsKey(f){return'assist_'+f;}
+
+function saveData(){
+  if(!currentBook||!currentData)return;
+  localStorage.setItem(lsKey(currentBook.folder),JSON.stringify(currentData));
+  if(isLocal&&dirHandle) saveToDir(currentBook.folder,currentData);
+}
+
+// ── Sidebar ──
+const novelListEl=document.getElementById('novel-list');
+BOOKS.forEach(b=>{
+  const btn=document.createElement('button');
+  btn.className='novel-btn';
+  btn.textContent=b.title;
+  btn.addEventListener('click',()=>selectBook(b,btn));
+  novelListEl.appendChild(btn);
+});
+
+async function selectBook(b,btn){
+  document.querySelectorAll('.novel-btn').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  currentBook=b;
+  document.getElementById('top-title').textContent=b.title;
+  document.getElementById('btn-export').style.display='';
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('editor-body').style.display='block';
+  document.getElementById('main-bg').style.backgroundImage=`url('../picture/${b.title}封面.jpg')`;
+
+  // Load: try dir first, then localStorage
+  let loaded=null;
+  if(isLocal&&dirHandle) loaded=await tryLoadFromDir(b.folder);
+  if(!loaded){
+    const ls=localStorage.getItem(lsKey(b.folder));
+    if(ls){try{loaded=JSON.parse(ls);}catch{}}
+  }
+  currentData=loaded||makeEmpty(b);
+  renderChars();
+}
+
+// ── Add character ──
+document.getElementById('btn-add-char').addEventListener('click',()=>{
+  const name=document.getElementById('new-char-name').value.trim();
+  if(!name){alert('請輸入人物名稱');return;}
+  const gender=document.getElementById('new-char-gender').value;
+  const faction=document.getElementById('new-char-faction').value.trim();
+  const power=document.getElementById('new-char-power').value.trim();
+  const status=document.getElementById('new-char-status').value;
+  const desc=document.getElementById('new-char-desc').value.trim();
+  
+  currentData.characters.push({
+    id:Date.now(),
+    name, gender, faction, power, status,
+    description:desc, appearances:[]
+  });
+  saveData();renderChars();
+  
+  // Clear inputs
+  document.getElementById('new-char-name').value='';
+  document.getElementById('new-char-gender').value='';
+  document.getElementById('new-char-faction').value='';
+  document.getElementById('new-char-power').value='';
+  document.getElementById('new-char-status').value='存活';
+  document.getElementById('new-char-desc').value='';
+});
+
+// ── Render ──
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderChars(){
+  const list=document.getElementById('char-list');
+  list.innerHTML='';
+  if(!currentData)return;
+  // Render newest first or alphabetical? Let's just do order of creation.
+  currentData.characters.forEach((ch,ci)=>{
+    const card=document.createElement('div');
+    card.className='char-card';
+    card.innerHTML=cardHTML(ch,ci);
+    list.appendChild(card);
+    bindCard(card,ch,ci);
+  });
+}
+
+function cardHTML(ch,ci){
+  const apps=ch.appearances||[];
+  let tagsHTML = '';
+  if(ch.gender) tagsHTML += `<span class="char-tag">${esc(ch.gender)}</span>`;
+  if(ch.faction) tagsHTML += `<span class="char-tag">${esc(ch.faction)}</span>`;
+  if(ch.power) tagsHTML += `<span class="char-tag">${esc(ch.power)}</span>`;
+  if(ch.status) {
+    let color = ch.status==='存活'?'#2e7d32':(ch.status==='死亡'?'#c0392b':'#666');
+    tagsHTML += `<span class="char-tag" style="color:${color};font-weight:bold;">${esc(ch.status)}</span>`;
+  }
+
+  return`<div class="char-head">
+    <div class="char-name-label">
+      ${esc(ch.name)}
+      <div class="char-tags">${tagsHTML}</div>
+    </div>
+    <span class="char-count">${apps.length} 筆登場</span>
+    <button class="btn danger" style="padding:4px 10px;font-size:12px" data-del-char="${ci}">移除</button>
+  </div>
+  <div class="char-body">
+    <div class="form-grid">
+      <div><label>身分 / 所屬勢力</label><input type="text" data-ci="${ci}" data-field="faction" value="${esc(ch.faction||'')}"></div>
+      <div><label>境界 / 實力</label><input type="text" data-ci="${ci}" data-field="power" value="${esc(ch.power||'')}"></div>
+      <div>
+        <label>目前狀態</label>
+        <select data-ci="${ci}" data-field="status">
+          <option value="存活" ${ch.status==='存活'?'selected':''}>存活</option>
+          <option value="死亡" ${ch.status==='死亡'?'selected':''}>死亡</option>
+          <option value="失蹤" ${ch.status==='失蹤'?'selected':''}>失蹤</option>
+          <option value="未知" ${ch.status==='未知'?'selected':''}>未知</option>
+        </select>
+      </div>
+      <div><label>性別</label>
+        <select data-ci="${ci}" data-field="gender">
+          <option value="" ${!ch.gender?'selected':''}>未知</option>
+          <option value="男" ${ch.gender==='男'?'selected':''}>男</option>
+          <option value="女" ${ch.gender==='女'?'selected':''}>女</option>
+        </select>
+      </div>
+    </div>
+    <label>人物介紹</label>
+    <textarea data-ci="${ci}" data-field="description">${esc(ch.description||'')}</textarea>
+
+    <div class="appearances-list">
+      ${apps.map((a,ai)=>`
+        <div class="app-item">
+          <div class="app-top">
+            <span class="app-ch">第 ${a.chapterNum} 章</span>
+            <span class="app-title">${esc(a.chapterTitle||'')}</span>
+          </div>
+          ${a.event?`<div class="app-event">${esc(a.event)}</div>`:''}
+          <button class="app-del" data-ci="${ci}" data-ai="${ai}">&#10005;</button>
+        </div>`).join('')}
+    </div>
+
+    <div class="add-app-box">
+      <h5>新增登場記錄</h5>
+      <label>章節連結（貼上即自動解析章節號碼與標題）</label>
+      <div class="url-row">
+        <input type="url" class="url-inp" data-ci="${ci}" placeholder="http://localhost:5500/.../帝霸_html100.html">
+        <button class="btn primary" data-add-app="${ci}">新增登場</button>
+      </div>
+      <div class="url-status" id="us-${ch.id}"></div>
+      <label style="margin-top:10px">事件說明</label>
+      <input type="text" class="evt-inp" data-ci="${ci}" placeholder="例如：初登場，於黑暗礦坑甦醒">
+    </div>
+  </div>`;
+}
+
+function bindCard(card,ch,ci){
+  // Accordion
+  card.querySelector('.char-head').addEventListener('click',e=>{
+    if(e.target.closest('button') || e.target.tagName==='INPUT' || e.target.tagName==='SELECT' || e.target.tagName==='TEXTAREA')return;
+    card.classList.toggle('open');
+    const body=card.querySelector('.char-body');
+    body.style.display=card.classList.contains('open')?'block':'none';
+  });
+  card.querySelector('.char-body').style.display='none';
+
+  // Delete char
+  card.querySelector('[data-del-char]').addEventListener('click',()=>{
+    if(!confirm('移除人物「'+ch.name+'」?'))return;
+    currentData.characters.splice(ci,1);
+    saveData();renderChars();
+  });
+
+  // Edit fields
+  const fields = ['faction', 'power', 'status', 'gender', 'description'];
+  fields.forEach(f => {
+    const el = card.querySelector(`[data-field="${f}"]`);
+    if(el) {
+      el.addEventListener('change', e => {
+        currentData.characters[ci][f] = e.target.value;
+        saveData();
+        // optionally update the tags without full render to keep accordion open:
+        renderChars();
+        // re-open
+        const c=document.getElementById('char-list').children[ci];
+        if(c){c.classList.add('open');c.querySelector('.char-body').style.display='block';}
+      });
+    }
+  });
+
+  // Delete appearance
+  card.querySelectorAll('.app-del').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ai=parseInt(btn.dataset.ai);
+      currentData.characters[ci].appearances.splice(ai,1);
+      saveData();renderChars();
+      const c=document.getElementById('char-list').children[ci];
+      if(c){c.classList.add('open');c.querySelector('.char-body').style.display='block';}
+    });
+  });
+
+  // Add appearance
+  const addBtn=card.querySelector('[data-add-app]');
+  const urlInp=card.querySelector('.url-inp');
+  const evtInp=card.querySelector('.evt-inp');
+  const statusEl=document.getElementById('us-'+ch.id);
+
+  addBtn.addEventListener('click',async()=>{
+    const url=urlInp.value.trim();
+    if(!url){statusEl.textContent='請貼上章節連結';statusEl.className='url-status err';return;}
+    statusEl.textContent='解析中...';statusEl.className='url-status';
+
+    const decoded=decodeURIComponent(url);
+    const numM=decoded.match(/_html(\d+)\.html/i);
+    const chapterNum=numM?parseInt(numM[1]):null;
+    let chapterTitle='';
+
+    try{
+      const r=await fetch(url,{cache:'no-store'});
+      if(r.ok){
+        const html=await r.text();
+        const tm=html.match(/<title[^>]*>([^<]+)<\/title>/i);
+        if(tm)chapterTitle=tm[1].trim();
+        if(!chapterTitle){
+          const hm=html.match(/<h[23][^>]*>([^<]+)<\/h[23]>/i);
+          if(hm)chapterTitle=hm[1].replace(/<[^>]+>/g,'').trim();
+        }
+      }
+    }catch(e){statusEl.textContent='無法 fetch（已用 URL 解析章節號）';statusEl.className='url-status err';}
+
+    if(!chapterNum){statusEl.textContent='找不到章節號碼，請確認 URL 含 _html數字.html';statusEl.className='url-status err';return;}
+
+    const event=evtInp.value.trim();
+    currentData.characters[ci].appearances.push({chapterNum,chapterTitle,url,event});
+    currentData.characters[ci].appearances.sort((a,b)=>a.chapterNum-b.chapterNum);
+    saveData();renderChars();
+    const c=document.getElementById('char-list').children[ci];
+    if(c){c.classList.add('open');c.querySelector('.char-body').style.display='block';}
+    statusEl.textContent='已新增：第'+chapterNum+'章 '+chapterTitle;
+    statusEl.className='url-status ok';
+    urlInp.value='';evtInp.value='';
+  });
+}
+
+// ── Export ──
+document.getElementById('btn-export').addEventListener('click',async()=>{
+  if(!currentData)return;
+  const json=JSON.stringify(currentData,null,2);
+  if(isLocal&&dirHandle){
+    const ok=await saveToDir(currentBook.folder,json.split?json:json);
+    if(ok){alert('已儲存到資料夾：'+currentBook.folder+'.json');return;}
+  }
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=currentBook.folder+'.json';
+  a.click();
+  if(isLocal) setTimeout(()=>alert('請點左下「設定儲存資料夾」以後即可自動存檔'),400);
+});
+</script>
+</body>
+</html>

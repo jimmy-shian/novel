@@ -1603,3 +1603,18 @@ document.body.appendChild(adContainer);
 adScript.onload = () => {
   (window.adsbygoogle = window.adsbygoogle || []).push({});
 };
+
+// === 人物高亮 Overlay (本機閱讀時自動載入) ===
+(function () {
+  const isLocal = window.location.protocol === 'file:' ||
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1';
+  if (!isLocal) return;
+  // Only inject on chapter pages (not index / directory pages)
+  const path = window.location.pathname.replace(/\\/g, '/');
+  if (!/_html\d+\.html/i.test(path)) return;
+  const s = document.createElement('script');
+  s.src = '../assistant/overlay.js';
+  s.onerror = () => { /* no assistant data, silently skip */ };
+  document.head.appendChild(s);
+})();

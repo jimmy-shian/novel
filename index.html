@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
   <head>
     <!-- Required meta tags -->
     <meta name="google-site-verification" content="yYD82Aavnj3Ey0ieJxHEPL61iH9767ncuevx9vPzSsI" />
@@ -9,59 +9,310 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://jimmy-shian.github.io/novel/novel.css">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script> -->
-    <!-- <script src="../novel.js"></script> -->
-    <!-- <script src="../table.js"></script> -->
-    <meta name="google-site-verification" content="yYD82Aavnj3Ey0ieJxHEPL61iH9767ncuevx9vPzSsI" />
-  <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
-  <!-- <style>
-  </style> -->
-<title>Jimmy 小說庫</title>
+    
+    <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
+    
+    <title>Jimmy 小說庫 - 書架</title>
+
+    <style>
+      body {
+        background-color: #f4ecd8; /* Light parchment/wood background */
+        background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+        color: #333;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .header-title {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 8px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #5c3a21;
+        letter-spacing: 4px;
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+      }
+      .header-sub {
+        text-align: center;
+        color: #8b5a2b;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+      .search-section {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .search-input {
+        padding: 10px 15px;
+        width: 250px;
+        border-radius: 20px;
+        border: 2px solid #a67c52;
+        background: rgba(255,255,255,0.8);
+        outline: none;
+        font-size: 1rem;
+        margin-right: 10px;
+      }
+      .search-select {
+        padding: 10px 15px;
+        border-radius: 20px;
+        border: 2px solid #a67c52;
+        background: rgba(255,255,255,0.8);
+        outline: none;
+        font-size: 1rem;
+      }
+      .bookshelf {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 25px;
+        padding: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+        background-color: #d1b48c;
+        background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+        border-radius: 8px;
+        box-shadow: inset 0 10px 20px rgba(0,0,0,0.4), 0 5px 15px rgba(0,0,0,0.3);
+        border: 4px solid #8b5a2b;
+      }
+      .book-card {
+        background: #fff;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+        border: 1px solid #c9b18c;
+        position: relative;
+      }
+      .book-card::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 8px; height: 100%;
+        background: linear-gradient(to right, rgba(255,255,255,0.6), rgba(255,255,255,0) 100%);
+        pointer-events: none;
+      }
+      .book-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 8px 12px 20px rgba(0,0,0,0.6);
+        border-color: #8b5a2b;
+      }
+      .book-cover-wrapper {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        overflow: hidden;
+        background: #e6e0d3;
+        flex-shrink: 0;
+        border-bottom: 1px solid #d4c39c;
+      }
+      .book-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+        transition: transform 0.4s ease;
+      }
+      .book-card:hover .book-cover {
+        transform: scale(1.06);
+      }
+      .book-info {
+        padding: 10px 8px;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #faf4e8;
+      }
+      .book-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: #4a3018;
+      }
+      .tools-section {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .btn-reading-assistant {
+        background: #1e1e1e;
+        border: 1px solid #444;
+        color: #c8a96e;
+        padding: 8px 22px;
+        font-size: 0.95rem;
+        border-radius: 4px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-block;
+        letter-spacing: 1px;
+      }
+      .btn-reading-assistant:hover {
+        background: #2a2a2a;
+        color: #e8d5a3;
+        border-color: #c8a96e;
+      }
+    </style>
   </head>
   <body>
 
-          <div id="content-nav">  </div>
+    <div id="content-nav"></div>
 
-    <!-- <center> -->
-      <div class="card-index text-center mx-auto mt-5">
-        <div class="card-body">
-          <button  class="btn btn-change" id="changeBtn">翻譯成中文</button>
-          <div class="card-in">
-          <p id="cardText" class="card-text"></p> 
-          </div>
-        </div>
+    <h1 class="header-title">Jimmy 小說庫</h1>
+    <p class="header-sub">MY NOVEL LIBRARY</p>
+    
+    <div class="tools-section">
+      <a href="assistant/index.html" target="_blank" class="btn-reading-assistant">閱讀助手 &mdash; 人物 / 章節筆記</a>
+    </div>
+
+    <div class="search-section">
+      <input type="text" id="searchInput" class="search-input" placeholder="搜尋書名...">
+      <select id="authorSelect" class="search-select">
+        <option value="">所有作者</option>
+      </select>
+    </div>
+
+    <div class="bookshelf" id="bookshelf-container">
+      <!-- Books will be dynamically injected here -->
+    </div>
+
+    <div class="spacer"></div>
+    <center>
+      <div class="col" style="max-width: 800px; margin: 0 auto;">
+        <br><hr style="border-color: #444;">
+        <div class="responsive-div alert" role="alert" style="background-color: #1e1e1e; color: #ddd; border: 1px solid #333;">
+          <h4><p>歡迎來到我的網站，有甚麼想要反映的，請<a target="_blank" 
+            href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報" class="alert-link" style="color: #ff8a00;">寫信</a>
+            告訴我! 謝謝你~</p>
+          </h4>
+        </div>  
       </div>
+    </center>
+    
+    <div id="content-end"></div>
 
-      <div class="spacer"></div>
-      <center>
-      <div class="col">
-        <br><hr>
-          <div class="responsive-div alert" role="alert">
-            <h4><p>歡迎來到我的網站，有甚麼想要反映的，請<a target="_blank" 
-              href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報" class="alert-link">寫信</a>
-              告訴我! 謝謝你~</p>
-              <img style="margin: auto; " src="picture/cover.jpg">
-            </h4>
-          </div>  
-        </div>
-        </center>
-<div id="content-end">  </div>
+    <script src="https://jimmy-shian.github.io/novel/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    
+    <!-- Load Waku JS for nav and structure -->
+    <script>
+      (function() {
+          var script = document.createElement('script');
+          script.defer = true;
+          if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+              script.src = 'index.waku.js';
+          } else {
+              script.src = 'https://jimmy-shian.github.io/novel/index.waku.js';
+          }
+          document.head.appendChild(script);
+      })();
+    </script>
 
-  <!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script> -->
-  <script src="https://jimmy-shian.github.io/novel/jquery-3.7.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
-  <script>
-    (function() {
-        var script = document.createElement('script');
-        script.defer = true;
-        if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            script.src = 'index.waku.js';
-        } else {
-            script.src = 'https://jimmy-shian.github.io/novel/index.waku.js';
-        }
-        document.head.appendChild(script);
-    })();
-</script>
+    <!-- Bookshelf Generator -->
+    <script>
+      const books = [
+        { title: "帝霸", url: "diba-yanbixiaosheng/diba-yanbixiaosheng.html", cover: "帝霸封面.jpg" },
+        { title: "全職法師", url: "quanzhifashi-luan/quanzhifashi-luan.html", cover: "全職法師封面.jpg" },
+        { title: "凡人修仙傳", url: "fanrenxiuxianchuan-wangyu/fanrenxiuxianchuan-wangyu.html", cover: "凡人修仙傳封面.jpg" },
+        { title: "凡人修仙之仙界篇", url: "fanrenxiuxianzhixianjiepian-wangyu/fanrenxiuxianzhixianjiepian-wangyu.html", cover: "凡人修仙之仙界篇封面.jpg" },
+        { title: "魔天記", url: "motianji-wangyu/motianji-wangyu.html", cover: "魔天記封面.jpg" },
+        { title: "玄界之門", url: "xuanjiezhimen-wangyu/xuanjiezhimen-wangyu.html", cover: "玄界之門封面.jpg" },
+        { title: "仙逆", url: "xianni-ergen/xianni-ergen.html", cover: "仙逆封面.jpg" },
+        { title: "求魔", url: "qiumo-ergen/qiumo-ergen.html", cover: "求魔封面.jpg" },
+        { title: "我欲封天", url: "woyufengtian-ergen/woyufengtian-ergen.html", cover: "我欲封天封面.jpg" },
+        { title: "一念永恆", url: "yinianyongheng-ergen/yinianyongheng-ergen.html", cover: "一念永恆封面.jpg" },
+        { title: "三寸人間", url: "sancunrenjian-ergen/sancunrenjian-ergen.html", cover: "三寸人間封面.jpg" },
+        { title: "吞噬星空", url: "tunshixingkong-wochixihongshi/tunshixingkong-wochixihongshi.html", cover: "吞噬星空封面.jpg" },
+        { title: "飛劍問道", url: "feijianwendao-wochixihongshi/feijianwendao-wochixihongshi.html", cover: "飛劍問道封面.jpg" },
+        { title: "滄元圖", url: "cangyuantu-wochixihongshi/cangyuantu-wochixihongshi.html", cover: "滄元圖封面.jpg" },
+        { title: "我師兄實在太穩健了", url: "woshixiongshizaitaiwenjianle-yanguizhengzhuan/woshixiongshizaitaiwenjianle-yanguizhengzhuan.html", cover: "我師兄實在太穩健了封面.jpg" },
+        { title: "修真聊天羣", url: "xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo/xiuzhenliaotianqunliaotianqunderichangshenghuo-shengqishidechuanshuo.html", cover: "修真聊天羣封面.jpg" },
+        { title: "大奉打更人", url: "dafengdagengren-maibaoxiaolangjun/dafengdagengren-maibaoxiaolangjun.html", cover: "大奉打更人封面.jpg" },
+        { title: "大符篆師", url: "dafuzhuanshi-xiaodaofengli/dafuzhuanshi-xiaodaofengli.html", cover: "大符篆師封面.jpg" },
+        { title: "牧龍師", url: "mulongshi-luan/mulongshi-luan.html", cover: "牧龍師封面.jpg" },
+        { title: "百鍊成仙", url: "bailianchengxian-huanyu/bailianchengxian-huanyu.html", cover: "百鍊成仙封面.jpg" },
+        { title: "星門", url: "xingmen-laoyingchixiaoji/xingmen-laoyingchixiaoji.html", cover: "星門封面.jpg" },
+        { title: "不科學御獸", url: "bukexueyushou-qingquanliuxiang/bukexueyushou-qingquanliuxiang.html", cover: "不科學御獸封面.jpg" },
+        { title: "我的徒弟都是大反派", url: "wodetudidoushidafanpai-moushengrenzhuanpeng/wodetudidoushidafanpai-moushengrenzhuanpeng.html", cover: "我的徒弟都是大反派封面.jpg" },
+        { title: "鬥破蒼穹", url: "doupocangqiong-tiancantudou/doupocangqiong-tiancantudou.html", cover: "鬥破蒼穹封面.jpg" },
+        { title: "聖墟", url: "shengxu-chendong/shengxu-chendong.html", cover: "聖墟封面.jpg" },
+        { title: "一品道門", url: "yipindaomen-dijiutianming/yipindaomen-dijiutianming.html", cover: "一品道門封面.jpg" },
+        { title: "擇日飛昇", url: "zerifeisheng-zhaizhu/zerifeisheng-zhaizhu.html", cover: "擇日飛昇封面.jpg" },
+        { title: "誰讓他修仙的！", url: "sheirangtaxiuxiande-zuibaidewuya/sheirangtaxiuxiande-zuibaidewuya.html", cover: "誰讓他修仙的！封面.jpg" }
+      ];
+
+      const container = document.getElementById('bookshelf-container');
+      const searchInput = document.getElementById('searchInput');
+      const authorSelect = document.getElementById('authorSelect');
+
+      // Extract authors from folder names
+      const authors = [...new Set(books.map(b => b.url.split('/')[0].split('-')[1]).filter(Boolean))];
+      
+      // Map pinyin author names to Chinese (simplified heuristic mapping based on current list)
+      const authorMap = {
+        "yanbixiaosheng": "厭筆蕭生",
+        "luan": "亂",
+        "wangyu": "忘語",
+        "ergen": "耳根",
+        "wochixihongshi": "我吃西紅柿",
+        "yanguizhengzhuan": "言歸正傳",
+        "shengqishidechuanshuo": "聖騎士的傳說",
+        "maibaoxiaolangjun": "賣報小郎君",
+        "xiaodaofengli": "小刀鋒利",
+        "huanyu": "幻雨",
+        "laoyingchixiaoji": "老鷹吃小雞",
+        "qingquanliuxiang": "輕泉流響",
+        "moushengrenzhuanpeng": "謀生任轉蓬",
+        "tiancantudou": "天蠶土豆",
+        "chendong": "辰東",
+        "dijiutianming": "第九天命",
+        "zhaizhu": "宅豬",
+        "zuibaidewuya": "最白的烏鴉"
+      };
+
+      authors.forEach(author => {
+        const option = document.createElement('option');
+        option.value = author;
+        option.textContent = authorMap[author] || author;
+        authorSelect.appendChild(option);
+      });
+
+      function renderBooks() {
+        container.innerHTML = '';
+        const query = searchInput.value.toLowerCase();
+        const author = authorSelect.value;
+        
+        const filtered = books.filter(b => {
+          const matchTitle = b.title.toLowerCase().includes(query);
+          const bAuthor = b.url.split('/')[0].split('-')[1];
+          const matchAuthor = author === "" || bAuthor === author;
+          return matchTitle && matchAuthor;
+        });
+
+        filtered.forEach(book => {
+          const a = document.createElement('a');
+          a.href = book.url;
+          a.className = 'book-card';
+          a.innerHTML = `
+            <div class="book-cover-wrapper">
+              <img src="picture/${book.cover}" class="book-cover" alt="${book.title} 封面" onerror="this.src='picture/cover.jpg'">
+            </div>
+            <div class="book-info">
+              <div class="book-title">${book.title}</div>
+            </div>
+          `;
+          container.appendChild(a);
+        });
+      }
+
+      searchInput.addEventListener('input', renderBooks);
+      authorSelect.addEventListener('change', renderBooks);
+      renderBooks();
+    </script>
     
   </body>
 </html>
