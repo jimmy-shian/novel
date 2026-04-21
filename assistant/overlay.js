@@ -91,6 +91,33 @@
     }
     #co-toggle:hover { background: #252525; border-color: #c8a96e; }
     #co-toggle.off { color: #555; border-color: #2a2a2a; }
+    
+    /* Plot Sidebar */
+    #co-sidebar {
+      position: fixed; top: 0; right: -360px; width: 340px; height: 100vh;
+      background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px);
+      border-left: 1px solid #333; z-index: 99990; transition: right 0.3s ease;
+      padding: 30px 20px; overflow-y: auto; color: #eee;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+    #co-sidebar.open { right: 0; }
+    #co-sidebar h2 { color: #c8a96e; font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+    #co-sidebar h3 { color: #c8a96e; font-size: 16px; margin: 20px 0 10px; }
+    .co-story-card { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333; line-height: 1.8; margin-bottom: 20px; }
+    .co-timeline-item { position: relative; padding: 0 0 20px 20px; border-left: 2px solid #c8a96e; margin-left: 10px; }
+    .co-timeline-item::before { content: ''; position: absolute; left: -7px; top: 0; width: 12px; height: 12px; background: #c8a96e; border-radius: 50%; }
+    .co-tl-name { font-weight: 700; color: #fff; display: block; margin-bottom: 4px; }
+    .co-tl-desc { font-size: 13px; color: #aaa; }
+    
+    #co-plot-btn {
+      position: fixed; bottom: 120px; right: 16px; width: 36px; height: 36px;
+      background: #1a1a1a; border: 1px solid #3a3a3a; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #c8a96e; box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      z-index: 9998; transition: 0.2s; title: '故事大綱/時間軸';
+    }
+    #co-plot-btn:hover { background: #252525; border-color: #c8a96e; }
+
   `;
   document.head.appendChild(style);
 
@@ -107,6 +134,44 @@
   toggleBtn.title = '人物高亮開關';
   toggleBtn.textContent = '人';
   document.body.appendChild(toggleBtn);
+
+  // --- Plot Sidebar ---
+  const plotSidebar = document.createElement('div');
+  plotSidebar.id = 'co-sidebar';
+  document.body.appendChild(plotSidebar);
+
+  const plotBtn = document.createElement('div');
+  plotBtn.id = 'co-plot-btn';
+  plotBtn.title = '故事大綱與時間軸';
+  plotBtn.textContent = '📚';
+  document.body.appendChild(plotBtn);
+
+  plotBtn.addEventListener('click', () => {
+    plotSidebar.classList.toggle('open');
+  });
+
+  // Render plot data
+  let plotHTML = `<h2>${data.novel || folder} 劇情分析</h2>`;
+  if (data.summary) {
+    plotHTML += `<h3>故事大綱</h3><div class="co-story-card">${data.summary}</div>`;
+  }
+  if (data.timeline && data.timeline.length > 0) {
+    plotHTML += `<h3>故事時間軸</h3><div class="co-timeline">`;
+    data.timeline.forEach(item => {
+      plotHTML += `
+        <div class="co-timeline-item">
+          <span class="co-tl-name">${item['事件名稱'] || item.name}</span>
+          <div class="co-tl-desc">${item['前後關係'] || item.description || ''}</div>
+          <div style="font-size:11px;color:#666;margin-top:4px;">登場角：${(item['關聯角色'] || []).join('、')}</div>
+        </div>`;
+    });
+    plotHTML += `</div>`;
+  }
+  if (!data.summary && (!data.timeline || data.timeline.length === 0)) {
+    plotHTML += `<p style="color:#666;text-align:center;margin-top:40px;">（無 AI 劇情資料）</p>`;
+  }
+  plotSidebar.innerHTML = plotHTML;
+
 
   toggleBtn.addEventListener('click', () => {
     hlEnabled = !hlEnabled;

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel AI Proofreader Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="brand">Proofreader</h1>
+    </div>
+    
+    <div class="sidebar-section">
+      <label>Novels</label>
+      <div id="novel-tree" class="file-tree"></div>
+    </div>
+
+    <div class="sidebar-section" id="section-chapters" style="display:none">
+      <label>Chapters</label>
+      <div id="chapter-tree" class="file-tree"></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div id="api-status" class="status-badge status-offline">Connecting...</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-layout">
+    <header class="app-header">
+      <div class="header-left">
+        <div id="current-file" class="current-file-label">SELECT A PROJECT</div>
+      </div>
+      
+      <div class="header-actions" id="topbar-actions" style="display:none">
+        <div class="analysis-options">
+          <label><input type="checkbox" id="check-mark" checked> Proofread</label>
+          <label><input type="checkbox" id="check-chars" checked> Chars</label>
+          <label><input type="checkbox" id="check-events" checked> Plot</label>
+        </div>
+        <button class="btn btn-primary" id="btn-full-analyze">⚡ FULL ANALYZE</button>
+        <button class="btn btn-primary" id="btn-apply">💾 SAVE CHANGES</button>
+        <div class="menu-sep"></div>
+        <button class="btn btn-ghost" id="btn-export-assistant">BOOK</button>
+      </div>
+    </header>
+
+    <nav class="tab-nav" id="tab-nav" style="display:none">
+      <button class="tab-btn tab-active" data-tab="proofread">PROOFREAD</button>
+      <button class="tab-btn" data-tab="analysis">ANALYSIS</button>
+      <button class="tab-btn" data-tab="batch">BATCH</button>
+    </nav>
+
+    <div class="workspace" id="workspace">
+      
+      <!-- TAB: Proofread -->
+      <section class="tab-content tab-active" id="tab-proofread">
+        <div class="proofread-grid">
+          <div class="text-panel" id="text-display"></div>
+          <div class="issue-panel">
+            <div class="panel-header">
+              <span class="panel-title">ISSUES</span>
+              <div class="filter-group">
+                <button class="filter-btn filter-active" data-filter="all">ALL</button>
+                <button class="filter-btn" data-filter="錯字">TYPO</button>
+                <button class="filter-btn" data-filter="人名">NAME</button>
+              </div>
+            </div>
+            <div id="issue-list" class="issue-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Analysis -->
+      <section class="tab-content" id="tab-analysis">
+        <div class="analysis-layout">
+          <div class="analysis-main">
+            <div id="summary-section" class="summary-box" style="display:none">
+              <h3>SUMMARY</h3>
+              <div id="summary-text" class="summary-text"></div>
+            </div>
+            <h3>CHARACTERS</h3>
+            <div id="chars-grid" class="chars-grid"></div>
+          </div>
+          <div class="analysis-side">
+            <h3>TIMELINE</h3>
+            <div id="timeline-container" class="timeline-compact"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Batch -->
+      <section class="tab-content" id="tab-batch">
+        <div class="batch-header">
+          <h2 style="margin-bottom:20px">Queue</h2>
+          <button class="btn btn-ghost" id="btn-batch-clear">CLEAR</button>
+          <button class="btn btn-primary" id="btn-start-batch">START BATCH MARKING</button>
+        </div>
+        <div id="batch-progress-list" class="batch-list" style="margin-top:30px"></div>
+      </section>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-msg">Select a chapter to begin</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <div id="edit-modal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+      <h3>Manual Correction</h3>
+      <textarea id="modal-input" placeholder="Type correction..."></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modal-cancel">CANCEL</button>
+        <button class="btn btn-primary" id="modal-confirm">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>
