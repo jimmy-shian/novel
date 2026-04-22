@@ -97,22 +97,23 @@ NOVEL_BASE_DIR = Path("c:/Users/user/Downloads/novel")
 
 @app.get("/api/fs/novels")
 async def list_novels():
-    """Lists directories in the novel base directory (each directory = a novel)."""
+    """Lists directories in the novel base directory that contain table.txt."""
     items = []
     try:
         for entry in NOVEL_BASE_DIR.iterdir():
             if entry.is_dir() and not entry.name.startswith("."):
-                items.append({
-                    "name": entry.name,
-                    "path": entry.name
-                })
+                if (entry / "table.txt").exists():
+                    items.append({
+                        "name": entry.name,
+                        "path": entry.name
+                    })
     except Exception as e:
         log.error(f"FS List Novel error: {e}")
     return {"novels": sorted(items, key=lambda x: x["name"])}
 
 @app.get("/api/fs/chapters")
 async def list_chapters(novel_path: str):
-    """Lists .txt files within a novel directory."""
+    """Lists .txt files within a novel directory, excluding table.txt."""
     target = (NOVEL_BASE_DIR / novel_path).resolve()
     if not str(target).startswith(str(NOVEL_BASE_DIR.resolve())):
         raise HTTPException(403, "Access denied")
@@ -120,7 +121,7 @@ async def list_chapters(novel_path: str):
     items = []
     try:
         for entry in target.iterdir():
-            if entry.is_file() and entry.suffix.lower() == ".txt":
+            if entry.is_file() and entry.suffix.lower() == ".txt" and entry.name.lower() != "table.txt":
                 items.append({
                     "name": entry.name,
                     "path": str(entry.relative_to(NOVEL_BASE_DIR)).replace("\\", "/")

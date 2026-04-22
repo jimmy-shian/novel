@@ -1,387 +1,573 @@
-/**
- * Novel AI Proofreader – Frontend Logic v3.0 (Local FS Access)
- */
+const API_BASE = 'http://localhost:7788/api';
 
-const API = 'http://localhost:7788/api';
-
+// ── State ──
 const state = {
-  dirHandle: null,
-  fileHandles: {},
-  currentFileHandle: null,
-  novelId: '',
-  fileName: '',
-  chapter: '',
-  rawText: '',
+  novels: [],
+  chapters: [],
+  currentNovel: null,
+  currentChapter: null,
+  originalText: '',
   issues: [],
-  characters: [],
-  events: [],
-  timeline: [],
-  summary: '',
-  batchFiles: [],
-  currentFilter: 'all',
-  apiOnline: false
+  decisions: {}, // issue.id -> { action: 'accept'|'ignore'|'manual', manualText?: '' }
+  aiData: null // { chars, events, summary, timeline }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  initEventListeners();
-  checkApiStatus();
-  setInterval(checkApiStatus, 10000);
-});
+// ── DOM Elements ──
+const els = {
+  status: document.getElementById('api-status'),
+  novelList: document.getElementById('novel-list'),
+  novelCount: document.getElementById('novel-count'),
+  chapterList: document.getElementById('chapter-list'),
+  chapterCount: document.getElementById('chapter-count'),
+  currentInfo: document.getElementById('current-info'),
+  actions: document.getElementById('actions'),
+  tabs: document.getElementById('tabs'),
+  workspace: document.getElementById('workspace'),
+  emptyState: document.getElementById('empty-state'),
+  editor: document.getElementById('editor-content'),
+  issueList: document.getElementById('issue-list'),
+  batchList: document.getElementById('batch-list'),
+  
+  // Buttons
+  btnAnalyze: document.getElementById('btn-analyze'),
+  btnApply: document.getElementById('btn-apply'),
+  btnExport: document.getElementById('btn-export'),
+  btnBatchStart: document.getElementById('btn-batch-start'),
+  btnAcceptAll: document.getElementById('btn-accept-all'),
+  
+  // Modal
+  modal: document.getElementById('modal-overlay'),
+  modalInput: document.getElementById('modal-input'),
+  modalCancel: document.getElementById('modal-cancel'),
+  modalConfirm: document.getElementById('modal-confirm')
+};
 
-async function checkApiStatus() {
-  const badge = document.getElementById('api-status');
+// ── Initialization ──
+async function init() {
   try {
-    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(2000) });
-    state.apiOnline = r.ok;
-    badge.className = `status-badge ${r.ok ? 'status-ok' : 'status-offline'}`;
-    badge.textContent = r.ok ? 'LLM 連線成功' : 'LLM 離線';
-  } catch (e) {
-    state.apiOnline = false;
-    badge.className = 'status-badge status-offline';
-    badge.textContent = 'LLM 離線';
-  }
-}
-
-function initEventListeners() {
-  document.getElementById('btn-open-folder').onclick = openFolder;
-  document.getElementById('btn-full-analyze').onclick = runFullAnalysis;
-  document.getElementById('btn-apply').onclick = applyCorrections;
-  document.getElementById('btn-export-assistant').onclick = exportToAssistant;
-  document.getElementById('btn-accept-all').onclick = acceptAllIssues;
-  document.getElementById('btn-batch-clear').onclick = () => { state.batchFiles = []; renderBatchList(); };
-  document.getElementById('btn-start-batch').onclick = startBatchMarking;
-
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.onclick = () => switchTab(btn.dataset.tab);
-  });
-
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-active'));
-      btn.classList.add('filter-active');
-      state.currentFilter = btn.dataset.filter;
-      renderIssueList();
-    };
-  });
-
-  document.getElementById('modal-cancel').onclick = closeModal;
-  document.getElementById('modal-confirm').onclick = confirmManualEdit;
-}
-
-// ── EXPLORER (Local File System API) ──
-async function openFolder() {
-  try {
-    const dirHandle = await window.showDirectoryPicker({
-      mode: 'readwrite'
-    });
-    state.dirHandle = dirHandle;
-    state.novelId = dirHandle.name;
-    document.getElementById('current-file').textContent = `PROJECT: ${state.novelId}`;
-    
-    const container = document.getElementById('chapter-tree');
-    document.getElementById('section-chapters').style.display = 'block';
-    container.innerHTML = '<div style="padding:10px">讀取章節中...</div>';
-    
-    state.fileHandles = {};
-    for await (const entry of dirHandle.values()) {
-      if (entry.kind === 'file' && entry.name.endsWith('.txt')) {
-        state.fileHandles[entry.name] = entry;
-      }
+    const res = await fetch(`${API_BASE}/health`);
+    if (res.ok) {
+      els.status.textContent = '已連線';
+      els.status.className = 'badge ok';
+      loadNovels();
     }
-    
-    const files = Object.keys(state.fileHandles).sort((a,b) => a.localeCompare(b, undefined, {numeric: true}));
-    
-    state.batchFiles = files.map(name => ({ filename: name, status: 'pending' }));
-    
-    container.innerHTML = files.map(name => 
-      `<div class="file-tree-item" id="file-${name.replace(/[^a-zA-Z0-9]/g, '_')}" onclick="selectChapter('${name}')">${name}</div>`
-    ).join('');
-    
-    renderBatchList();
-    toast(`已載入 ${files.length} 份章節`, 'info');
-  } catch (e) { 
-    if (e.name !== 'AbortError') {
-      console.error(e);
-      toast('無法讀取本地資料夾，請確認權限', 'error');
-    }
+  } catch (err) {
+    els.status.textContent = '無法連線至後端';
+    els.status.className = 'badge error';
   }
 }
 
-async function selectChapter(filename) {
+// ── Filesystem Navigation ──
+async function loadNovels() {
   try {
-    const handle = state.fileHandles[filename];
-    state.currentFileHandle = handle;
-    const file = await handle.getFile();
-    const text = await file.text();
-    
-    state.rawText = text;
-    state.fileName = filename;
-    state.chapter = filename.replace('.txt', '');
-    
-    document.getElementById('current-file').textContent = `${state.novelId} / ${state.chapter}`;
-    
-    // UI Transitions
-    document.getElementById('topbar-actions').style.display = 'flex';
-    document.getElementById('tab-nav').style.display = 'flex';
-    document.getElementById('empty-state').style.display = 'none';
-    document.getElementById('tab-proofread').classList.add('tab-active');
-
-    // Clear Previous Analysis Results
-    document.getElementById('summary-section').style.display = 'none';
-    document.getElementById('chars-grid').innerHTML = '';
-    document.getElementById('timeline-container').innerHTML = '';
-    state.issues = [];
-    
-    renderTextDisplay(state.rawText, []);
-    renderIssueList();
-    switchTab('proofread');
-    
-    document.querySelectorAll('#chapter-tree .file-tree-item').forEach(el => 
-      el.classList.toggle('active', el.textContent === filename)
-    );
-  } catch (e) { 
-    console.error(e);
-    toast('讀取內容出錯', 'error'); 
+    const res = await fetch(`${API_BASE}/fs/novels`);
+    const data = await res.json();
+    state.novels = data.novels;
+    renderNovels();
+  } catch (err) {
+    console.error('Failed to load novels:', err);
+    els.novelList.innerHTML = '<div class="error-text">無法載入小說清單</div>';
   }
 }
 
-// ── ACTIONS ──
-async function runFullAnalysis() {
-  if (!state.apiOnline) {
-    // Mock behavior when backend is offline for UI testing
-    toast('LLM 離線，使用測試假資料...', 'info');
-    state.issues = [
-      { id: 'mock1', start: 10, end: 12, original: '測試', type: '錯字', reason: '可能為錯別字', suggestion: '測試用', action: 'pending' }
-    ];
-    renderAll();
+function renderNovels() {
+  els.novelList.innerHTML = '';
+  els.novelCount.textContent = `(${state.novels.length})`;
+  
+  if (state.novels.length === 0) {
+    els.novelList.innerHTML = '<div class="empty-text">找不到小說資料夾</div>';
     return;
   }
+  
+  state.novels.forEach(novel => {
+    const btn = document.createElement('button');
+    btn.className = 'list-item';
+    btn.textContent = novel.name;
+    btn.onclick = () => selectNovel(novel, btn);
+    els.novelList.appendChild(btn);
+  });
+}
 
-  const btn = document.getElementById('btn-full-analyze');
-  btn.disabled = true;
-  btn.textContent = '分析啟動中...';
+async function selectNovel(novel, btnEl) {
+  document.querySelectorAll('#novel-list .list-item').forEach(el => el.classList.remove('active'));
+  btnEl.classList.add('active');
+  
+  state.currentNovel = novel;
+  state.currentChapter = null;
+  state.chapters = [];
+  
+  els.chapterList.innerHTML = '<div class="loading-text">載入中...</div>';
+  els.chapterCount.textContent = '';
+  resetWorkspace();
+  
+  try {
+    const res = await fetch(`${API_BASE}/fs/chapters?novel_path=${encodeURIComponent(novel.path)}`);
+    const data = await res.json();
+    state.chapters = data.chapters;
+    renderChapters();
+  } catch (err) {
+    console.error('Failed to load chapters:', err);
+    els.chapterList.innerHTML = '<div class="error-text">無法載入章節清單</div>';
+  }
+}
+
+function renderChapters() {
+  els.chapterList.innerHTML = '';
+  els.chapterCount.textContent = `(${state.chapters.length})`;
+  
+  if (state.chapters.length === 0) {
+    els.chapterList.innerHTML = '<div class="empty-text">此資料夾沒有 .txt 檔案</div>';
+    return;
+  }
+  
+  state.chapters.forEach(chap => {
+    const btn = document.createElement('button');
+    btn.className = 'list-item';
+    btn.textContent = chap.name;
+    btn.onclick = () => selectChapter(chap, btn);
+    els.chapterList.appendChild(btn);
+  });
+}
+
+async function selectChapter(chap, btnEl) {
+  document.querySelectorAll('#chapter-list .list-item').forEach(el => el.classList.remove('active'));
+  btnEl.classList.add('active');
+  
+  state.currentChapter = chap;
+  els.currentInfo.textContent = `${state.currentNovel.name} / ${chap.name}`;
+  
+  // Show workspace
+  els.emptyState.style.display = 'none';
+  els.actions.style.display = 'flex';
+  els.tabs.style.display = 'flex';
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-proofread').style.display = 'block';
+  
+  els.editor.innerHTML = '載入中...';
+  
+  try {
+    const res = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(chap.path)}`);
+    const data = await res.json();
+    state.originalText = data.content;
+    state.issues = [];
+    state.decisions = {};
+    state.aiData = null;
+    renderEditor();
+    renderIssues();
+  } catch (err) {
+    console.error('Failed to load file content:', err);
+    els.editor.innerHTML = '無法載入檔案內容';
+  }
+}
+
+function resetWorkspace() {
+  els.currentInfo.textContent = '請選擇章節';
+  els.actions.style.display = 'none';
+  els.tabs.style.display = 'none';
+  els.emptyState.style.display = 'flex';
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+}
+
+// ── AI Processing ──
+els.btnAnalyze.addEventListener('click', async () => {
+  if (!state.currentChapter) return;
+  
+  const runMark = document.getElementById('chk-mark').checked;
+  const runAnalyze = document.getElementById('chk-analyze').checked;
+  
+  if (!runMark && !runAnalyze) {
+    alert('請勾選至少一項分析任務');
+    return;
+  }
+  
+  els.btnAnalyze.disabled = true;
+  els.btnAnalyze.textContent = 'AI 分析中...';
   
   const tasks = [];
-  if (document.getElementById('check-mark').checked) tasks.push('mark');
-  if (document.getElementById('check-chars').checked) tasks.push('chars');
-  if (document.getElementById('check-events').checked) tasks.push('events');
-  tasks.push('summary');
-
+  if (runMark) tasks.push('mark');
+  if (runAnalyze) tasks.push('chars', 'events', 'summary');
+  
   try {
-    const r = await fetch(`${API}/analyze/full`, {
+    const res = await fetch(`${API_BASE}/analyze/full`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ novel_id: state.novelId, chapter: state.chapter, text: state.rawText, tasks })
+      body: JSON.stringify({
+        novel_id: state.currentNovel.name,
+        chapter: state.currentChapter.name,
+        text: state.originalText,
+        tasks: tasks
+      })
     });
-    const data = await r.json();
+    
+    const data = await res.json();
     
     if (data.mark) {
-      state.issues = (data.mark.issues || []).map(iss => ({ ...iss, id: iss.id || Math.random().toString(36).substr(2,9), action: 'pending' }));
+      // Add unique IDs to issues
+      state.issues = (data.mark.issues || []).map((issue, idx) => ({ ...issue, id: `i_${idx}` }));
+      state.decisions = {};
     }
-    state.characters = data.chars || [];
-    state.summary = data.summary || '';
-    state.timeline = data.timeline || [];
     
-    renderAll();
-    toast('分析成功！結果已更新至各面板。', 'success');
-  } catch (e) { toast('AI 分析失敗，請檢查 API 狀態', 'error'); }
-  finally { btn.disabled = false; btn.textContent = '⚡ FULL ANALYZE'; }
-}
-
-async function applyCorrections() {
-  // Check if any corrections to apply
-  const toApply = state.issues.filter(i => i.action === 'accept' || i.action === 'manual');
-  
-  // Here we simulate applying the corrections to the text.
-  // (In full version, backend does this securely, or we do it here by slicing text backward)
-  if (toApply.length > 0) {
-    let newText = state.rawText;
-    // Sort descending by start index to avoid index shifting
-    const sorted = [...toApply].sort((a,b) => b.start - a.start);
-    for (const iss of sorted) {
-      const replacement = iss.action === 'manual' ? iss.manual_text : iss.suggestion;
-      newText = newText.slice(0, iss.start) + replacement + newText.slice(iss.end);
+    if (runAnalyze) {
+      state.aiData = {
+        characters: data.chars || [],
+        timeline: data.timeline || [],
+        summary: data.summary || '',
+        novel: state.currentNovel.name
+      };
+      alert('角色與劇情分析完成！您可以點擊「匯出至閱讀助手」儲存資料。');
     }
-    state.rawText = newText;
-    state.issues = state.issues.filter(i => i.action === 'pending' || i.action === 'ignore');
-  }
-
-  // Save to local file using File System Access API
-  try {
-    if (!state.currentFileHandle) return;
-    const writable = await state.currentFileHandle.createWritable();
-    await writable.write(state.rawText);
-    await writable.close();
     
-    renderTextDisplay(state.rawText, state.issues);
-    renderIssueList();
-    toast('✅ 原始檔案已更新並儲存', 'success');
-  } catch (e) { 
-    console.error(e);
-    toast('儲存失敗，請確認資料夾寫入權限', 'error'); 
+    renderEditor();
+    renderIssues();
+  } catch (err) {
+    console.error(err);
+    alert('分析失敗');
+  } finally {
+    els.btnAnalyze.disabled = false;
+    els.btnAnalyze.textContent = '啟動 AI 分析';
   }
-}
+});
 
-// ── RENDERERS ──
-function renderAll() {
-  renderTextDisplay(state.rawText, state.issues);
-  renderIssueList();
-  
-  if (state.summary) {
-    document.getElementById('summary-section').style.display = 'block';
-    document.getElementById('summary-text').textContent = state.summary;
-  }
-  
-  document.getElementById('chars-grid').innerHTML = state.characters.map(c => `
-    <div class='issue-card'>
-      <div class='issue-top'><span class='issue-type-badge'>CHAR</span><span class='issue-orig'>${esc(c['角色名稱'])}</span></div>
-      <div class='issue-reason'>${esc(c['身份'])}</div>
-      <div style='font-size:12px; color:var(--text-dim); line-height:1.5'>${esc(c['角色描述'])}</div>
-    </div>`).join('');
-    
-  document.getElementById('timeline-container').innerHTML = state.timeline.map(tl => `
-    <div class='tl-compact-item'><strong>${esc(tl['事件名稱'])}</strong><p>${esc(tl['前後關係'])}</p></div>`).join('');
-}
-
-function renderTextDisplay(text, issues) {
-  const display = document.getElementById('text-display');
-  const sorted = [...issues].sort((a,b) => a.start - b.start);
-  let html = ''; let cur = 0;
-  for (const iss of sorted) {
-    html += esc(text.slice(cur, iss.start));
-    html += `<mark class='hl hl-${iss.type} ${iss.action !== 'pending' ? 'hl-' + iss.action : ''}' id="hl-${iss.id}" onclick='focusIssue("${iss.id}")'>${esc(text.slice(iss.start, iss.end))}</mark>`;
-    cur = iss.end;
-  }
-  html += esc(text.slice(cur));
-  display.innerHTML = html.replace(/\n/g, '<br>');
-}
-
-function renderIssueList() {
-  const container = document.getElementById('issue-list');
-  const filtered = state.currentFilter === 'all' ? state.issues : state.issues.filter(i => i.type === state.currentFilter);
-  if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-state" style="height:100px"><div class="empty-msg" style="font-size:12px">無偵測結果</div></div>';
+// ── Rendering Editor & Issues ──
+function renderEditor() {
+  if (!state.issues.length) {
+    els.editor.textContent = state.originalText;
     return;
   }
-  container.innerHTML = filtered.map(iss => `
-    <div class='issue-card ${iss.action !== 'pending' ? 'i-' + iss.action : ''}' id='card-${iss.id}' onclick='focusHl("${iss.id}")'>
-      <div class='issue-top'><span class='issue-type-badge badge-${iss.type}'>${iss.type}</span><span class='issue-orig'>${esc(iss.original)}</span></div>
-      <div class='issue-reason'>${esc(iss.reason)} ${iss.suggestion ? ' → ' + esc(iss.suggestion) : ''}</div>
-      <div class='issue-actions'>
-        <button class='act-btn' onclick='setAction("${iss.id}", "accept"); event.stopPropagation();'>接受</button>
-        <button class='act-btn' onclick='setAction("${iss.id}", "ignore"); event.stopPropagation();'>忽略</button>
-        <button class='act-btn' onclick='openManualModal("${iss.id}"); event.stopPropagation();'>手動</button>
-      </div>
-    </div>`).join('');
-}
-
-function renderBatchList() {
-  const container = document.getElementById('batch-progress-list');
-  container.innerHTML = state.batchFiles.map(f => `
-    <div class="file-tree-item" style="display:flex; justify-content:space-between">
-      <span>${f.filename}</span>
-      <span class="status-badge">${f.status}</span>
-    </div>`).join('');
-}
-
-// ── UTILS ──
-function switchTab(t) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('tab-active', b.dataset.tab === t));
-  document.querySelectorAll('.tab-content').forEach(s => s.classList.toggle('tab-active', s.id === 'tab-' + t));
-}
-function toast(m, t='info') {
-  const c = document.getElementById('toast-container');
-  const el = document.createElement('div');
-  el.className = `toast toast-${t}`;
-  el.textContent = m;
-  c.appendChild(el);
-  setTimeout(() => el.remove(), 3500);
-}
-function esc(s) { return String(s||'').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function setAction(id, action) {
-  const iss = state.issues.find(i => i.id === id);
-  if (iss) { iss.action = action; renderTextDisplay(state.rawText, state.issues); renderIssueList(); }
-}
-window.setAction = setAction;
-
-function acceptAllIssues() {
-  state.issues.forEach(iss => {
-    if (iss.action === 'pending') iss.action = 'accept';
-  });
-  renderTextDisplay(state.rawText, state.issues);
-  renderIssueList();
-  toast('已接受所有建議內容', 'success');
-}
-
-async function startBatchMarking() {
-  if (state.batchFiles.length === 0) return toast('佇列中無檔案', 'info');
   
-  toast('開始批次掃描...', 'info');
-  const btn = document.getElementById('btn-start-batch');
-  btn.disabled = true;
-
-  for (let item of state.batchFiles) {
-    if (item.status === 'done') continue;
+  // Sort issues in reverse order to not mess up indices during insertion
+  const sorted = [...state.issues].sort((a, b) => b.start - a.start);
+  let html = escapeHTML(state.originalText);
+  
+  for (const issue of sorted) {
+    const dec = state.decisions[issue.id];
+    let actionClass = '';
+    let displayStr = issue.original;
     
-    item.status = 'processing';
-    renderBatchList();
-    
-    try {
-      const handle = state.fileHandles[item.filename];
-      const file = await handle.getFile();
-      const text = await file.text();
-      
-      if (!state.apiOnline) {
-        // Mock analysis
-        await new Promise(r => setTimeout(r, 500));
-        item.status = 'done (mock)';
-      } else {
-        const r = await fetch(`${API}/analyze/full`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            novel_id: state.novelId, 
-            chapter: item.filename.replace('.txt', ''), 
-            text: text, 
-            tasks: ['mark'] 
-          })
-        });
-        if (r.ok) item.status = 'done';
-        else item.status = 'failed';
-      }
-    } catch (e) {
-      item.status = 'error';
+    if (dec) {
+      actionClass = `hl-${dec.action}`;
+      if (dec.action === 'accept') displayStr = issue.suggestion;
+      else if (dec.action === 'manual') displayStr = dec.manualText;
+    } else {
+      actionClass = `hl-${issue.type}`;
     }
-    renderBatchList();
+    
+    const markHtml = `<mark class="hl ${actionClass}" data-id="${issue.id}" title="${issue.reason}">${escapeHTML(displayStr)}</mark>`;
+    const origBytes = new TextEncoder().encode(state.originalText);
+    
+    // Note: Python string indices might be character-based, not byte-based.
+    // The previous implementation used JS string slicing which matches Python's unicode char indices.
+    const before = state.originalText.slice(0, issue.start);
+    const after = state.originalText.slice(issue.end);
+    
+    // Rebuild text with markers
+    // Since we are replacing backwards, we must use the original string slice indices,
+    // but wait, html is being built by escaping... 
+    // It's safer to build fragments.
   }
   
-  btn.disabled = false;
-  toast('批次處理完成', 'success');
+  // Better approach: build DOM nodes or fragments to avoid index shift with HTML entities.
+  let currentIdx = 0;
+  const fragments = [];
+  const fSorted = [...state.issues].sort((a, b) => a.start - b.start);
+  
+  for (const issue of fSorted) {
+    if (issue.start >= currentIdx) {
+      fragments.push(escapeHTML(state.originalText.slice(currentIdx, issue.start)));
+      
+      const dec = state.decisions[issue.id];
+      let actionClass = dec ? `hl-${dec.action}` : `hl-${issue.type}`;
+      let displayStr = issue.original;
+      if (dec?.action === 'accept') displayStr = issue.suggestion;
+      if (dec?.action === 'manual') displayStr = dec.manualText;
+      
+      fragments.push(`<mark class="hl ${actionClass}" data-id="${issue.id}" title="${issue.reason}">${escapeHTML(displayStr)}</mark>`);
+      currentIdx = issue.end;
+    }
+  }
+  fragments.push(escapeHTML(state.originalText.slice(currentIdx)));
+  els.editor.innerHTML = fragments.join('');
+  
+  // Bind clicks
+  els.editor.querySelectorAll('mark.hl').forEach(mark => {
+    mark.addEventListener('click', () => {
+      const id = mark.dataset.id;
+      const card = document.getElementById(`card-${id}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.querySelectorAll('.issue-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      }
+    });
+  });
 }
 
-window.focusIssue = (id) => {
-  document.querySelectorAll('.issue-card').forEach(c => c.classList.remove('active'));
-  const card = document.getElementById(`card-${id}`);
-  if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-};
-window.focusHl = (id) => {
-  const hl = document.getElementById(`hl-${id}`);
-  if (hl) hl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-};
-async function exportToAssistant() {
-  if (!state.apiOnline) return toast('LLM 離線，無法導出', 'error');
-  const payload = { novel_id: state.novelId, characters: state.characters, summary: state.summary, timeline: state.timeline, events: state.events };
-  try {
-    const r = await fetch(`${API}/export/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ novel_id: state.novelId, data: payload }) });
-    if (r.ok) toast('導出成功！', 'success');
-  } catch(e) {
-    toast('導出失敗', 'error');
+function renderIssues(filterType = 'all') {
+  els.issueList.innerHTML = '';
+  
+  let filtered = state.issues;
+  if (filterType !== 'all') {
+    filtered = state.issues.filter(i => i.type === filterType);
+  }
+  
+  if (filtered.length === 0) {
+    els.issueList.innerHTML = '<div class="empty-text">目前沒有待處理的問題</div>';
+    return;
+  }
+  
+  filtered.forEach(issue => {
+    const dec = state.decisions[issue.id];
+    let cardClass = 'issue-card';
+    if (dec) cardClass += ` i-${dec.action}`;
+    
+    const card = document.createElement('div');
+    card.className = cardClass;
+    card.id = `card-${issue.id}`;
+    card.innerHTML = `
+      <div class="issue-top">
+        <span class="type-badge ${issue.type}">${issue.type}</span>
+        <span class="issue-orig">${escapeHTML(issue.original)}</span>
+        <span style="color:#aaa">➔</span>
+        <span class="issue-suggest">${escapeHTML(issue.suggestion)}</span>
+      </div>
+      <div class="issue-reason">${escapeHTML(issue.reason)}</div>
+      <div class="issue-actions">
+        <button class="btn-acc" data-act="accept">接受</button>
+        <button class="btn-ign" data-act="ignore">忽略</button>
+        <button class="btn-man" data-act="manual">手動</button>
+      </div>
+    `;
+    
+    card.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleDecision(issue, btn.dataset.act);
+      });
+    });
+    
+    els.issueList.appendChild(card);
+  });
+}
+
+// ── User Actions ──
+function handleDecision(issue, action) {
+  if (action === 'manual') {
+    openModal(issue);
+  } else {
+    state.decisions[issue.id] = { action };
+    updateAfterDecision();
   }
 }
-let _mid = '';
-function openManualModal(id) { _mid = id; document.getElementById('edit-modal').style.display='flex'; }
-function closeModal() { document.getElementById('edit-modal').style.display='none'; }
-function confirmManualEdit() { const t = document.getElementById('modal-input').value; setAction(_mid, 'manual'); const iss = state.issues.find(i => i.id === _mid); if (iss) iss.manual_text = t; closeModal(); }
 
+els.btnAcceptAll.addEventListener('click', () => {
+  state.issues.forEach(issue => {
+    if (!state.decisions[issue.id]) {
+      state.decisions[issue.id] = { action: 'accept' };
+    }
+  });
+  updateAfterDecision();
+});
 
+function updateAfterDecision() {
+  renderEditor();
+  const filter = document.querySelector('.filter-btn.active').dataset.filter;
+  renderIssues(filter);
+}
+
+// ── Manual Edit Modal ──
+let activeIssueForModal = null;
+
+function openModal(issue) {
+  activeIssueForModal = issue;
+  els.modalInput.value = issue.original;
+  els.modal.style.display = 'flex';
+  els.modalInput.focus();
+}
+
+els.modalCancel.addEventListener('click', () => {
+  els.modal.style.display = 'none';
+  activeIssueForModal = null;
+});
+
+els.modalConfirm.addEventListener('click', () => {
+  if (activeIssueForModal) {
+    const val = els.modalInput.value.trim();
+    if (val) {
+      state.decisions[activeIssueForModal.id] = { action: 'manual', manualText: val };
+      updateAfterDecision();
+    }
+  }
+  els.modal.style.display = 'none';
+  activeIssueForModal = null;
+});
+
+// ── Apply & Export ──
+els.btnApply.addEventListener('click', async () => {
+  if (!state.currentChapter) return;
+  
+  // Format decisions for backend
+  const payloadDecisions = [];
+  for (const issue of state.issues) {
+    const dec = state.decisions[issue.id];
+    if (!dec) continue; // Unresolved issues remain unchanged
+    payloadDecisions.push({
+      ...issue,
+      action: dec.action,
+      manual_text: dec.manualText || ''
+    });
+  }
+  
+  els.btnApply.disabled = true;
+  els.btnApply.textContent = '儲存中...';
+  
+  try {
+    const res = await fetch(`${API_BASE}/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        novel_id: state.currentNovel.name,
+        chapter: state.currentChapter.name,
+        text: state.originalText,
+        decisions: payloadDecisions
+      })
+    });
+    
+    const data = await res.json();
+    alert(`儲存成功！\n儲存路徑：${data.saved_to}`);
+    
+    // Reload chapter text
+    const readRes = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(state.currentChapter.path)}`);
+    const readData = await readRes.json();
+    state.originalText = readData.content;
+    state.issues = [];
+    state.decisions = {};
+    renderEditor();
+    renderIssues();
+    
+  } catch (err) {
+    console.error(err);
+    alert('儲存失敗');
+  } finally {
+    els.btnApply.disabled = false;
+    els.btnApply.textContent = '儲存至檔案';
+  }
+});
+
+els.btnExport.addEventListener('click', async () => {
+  if (!state.aiData || !state.currentNovel) {
+    alert('請先勾選「角色/劇情分析」並執行 AI 分析後，再進行匯出！');
+    return;
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/export/assistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        novel_id: state.currentNovel.name,
+        data: state.aiData
+      })
+    });
+    const result = await res.json();
+    if (result.success) {
+      alert('已成功匯出至閱讀助手資料夾：\n' + result.path);
+    }
+  } catch (err) {
+    console.error(err);
+    alert('匯出失敗');
+  }
+});
+
+// ── Tab & Filter Logic ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).style.display = 'block';
+  });
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderIssues(btn.dataset.filter);
+  });
+});
+
+// ── Batch Processing ──
+els.btnBatchStart.addEventListener('click', async () => {
+  if (!state.currentNovel || state.chapters.length === 0) return;
+  if (!confirm(`確定要批次掃描 ${state.currentNovel.name} 的 ${state.chapters.length} 個章節嗎？這可能需要一段時間。`)) return;
+  
+  els.btnBatchStart.disabled = true;
+  els.batchList.innerHTML = '<div class="loading-text">正在讀取所有檔案內容...</div>';
+  
+  try {
+    // Collect all files
+    const filesData = [];
+    for (const chap of state.chapters) {
+      const res = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(chap.path)}`);
+      const data = await res.json();
+      filesData.push({
+        filename: chap.name,
+        chapter: chap.name,
+        content: data.content
+      });
+    }
+    
+    await fetch(`${API_BASE}/batch/mark`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        novel_id: state.currentNovel.name,
+        files: filesData
+      })
+    });
+    
+    els.batchList.innerHTML = '<div class="loading-text">批次任務已啟動，請稍候...</div>';
+    
+    // Poll status
+    const timer = setInterval(async () => {
+      const res = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(state.currentNovel.name)}`);
+      const data = await res.json();
+      
+      if (data.status === 'processing') {
+        els.batchList.innerHTML = `<div class="batch-item">
+          <span>掃描進度</span>
+          <strong>${data.current} / ${data.total}</strong>
+        </div>`;
+      } else if (data.status === 'done') {
+        clearInterval(timer);
+        els.batchList.innerHTML = `<div class="batch-item">
+          <span style="color:#2e7d32; font-weight:bold;">批次掃描完成！</span>
+          <strong>${data.total} / ${data.total}</strong>
+        </div>`;
+        els.btnBatchStart.disabled = false;
+      }
+    }, 2000);
+    
+  } catch (err) {
+    console.error(err);
+    alert('啟動批次任務失敗');
+    els.btnBatchStart.disabled = false;
+  }
+});
+
+// ── Utils ──
+function escapeHTML(str) {
+  if (!str) return '';
+  return str.replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+}
+
+// Start app
+init();
