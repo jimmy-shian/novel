@@ -18,8 +18,8 @@
     </div>
     
     <div class="sidebar-section">
-      <label>Novels</label>
-      <div id="novel-tree" class="file-tree"></div>
+      <button id="btn-open-folder" class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 15px;">📂 Open Novel Folder</button>
+      <div id="novel-tree" class="file-tree" style="display:none"></div>
     </div>
 
     <div class="sidebar-section" id="section-chapters" style="display:none">
@@ -67,6 +67,9 @@
           <div class="issue-panel">
             <div class="panel-header">
               <span class="panel-title">ISSUES</span>
+              <div class="header-tools">
+                <button class="btn btn-ghost btn-sm" id="btn-accept-all" style="padding: 4px 8px; font-size: 10px;">ACCEPT ALL</button>
+              </div>
               <div class="filter-group">
                 <button class="filter-btn filter-active" data-filter="all">ALL</button>
                 <button class="filter-btn" data-filter="錯字">TYPO</button>

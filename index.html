@@ -15,136 +15,48 @@
     <title>Jimmy 小說庫 - 書架</title>
 
     <style>
+      :root {
+        --bg-main: #121212;
+        --bg-secondary: #1e1e1e;
+        --text-primary: #e0e0e0;
+        --text-secondary: #888888;
+        --border-color: #333333;
+      }
       body {
-        background-color: #f4ecd8; /* Light parchment/wood background */
-        background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-        color: #333;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
         font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
       }
       .header-title {
         text-align: center;
-        margin-top: 40px;
+        margin-top: 60px;
         margin-bottom: 8px;
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 800;
-        color: #5c3a21;
-        letter-spacing: 4px;
-        text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        color: #ffffff;
+        letter-spacing: 2px;
       }
       .header-sub {
         text-align: center;
-        color: #8b5a2b;
+        color: var(--text-secondary);
         font-size: 0.9rem;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        font-weight: bold;
-      }
-      .search-section {
-        text-align: center;
+        letter-spacing: 3px;
         margin-bottom: 30px;
-      }
-      .search-input {
-        padding: 10px 15px;
-        width: 250px;
-        border-radius: 20px;
-        border: 2px solid #a67c52;
-        background: rgba(255,255,255,0.8);
-        outline: none;
-        font-size: 1rem;
-        margin-right: 10px;
-      }
-      .search-select {
-        padding: 10px 15px;
-        border-radius: 20px;
-        border: 2px solid #a67c52;
-        background: rgba(255,255,255,0.8);
-        outline: none;
-        font-size: 1rem;
-      }
-      .bookshelf {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 25px;
-        padding: 30px;
-        max-width: 1400px;
-        margin: 0 auto;
-        background-color: #d1b48c;
-        background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-        border-radius: 8px;
-        box-shadow: inset 0 10px 20px rgba(0,0,0,0.4), 0 5px 15px rgba(0,0,0,0.3);
-        border: 4px solid #8b5a2b;
-      }
-      .book-card {
-        background: #fff;
-        border-radius: 4px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-        text-decoration: none;
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-        border: 1px solid #c9b18c;
-        position: relative;
-      }
-      .book-card::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 8px; height: 100%;
-        background: linear-gradient(to right, rgba(255,255,255,0.6), rgba(255,255,255,0) 100%);
-        pointer-events: none;
-      }
-      .book-card:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 8px 12px 20px rgba(0,0,0,0.6);
-        border-color: #8b5a2b;
-      }
-      .book-cover-wrapper {
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        overflow: hidden;
-        background: #e6e0d3;
-        flex-shrink: 0;
-        border-bottom: 1px solid #d4c39c;
-      }
-      .book-cover {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top center;
-        display: block;
-        transition: transform 0.4s ease;
-      }
-      .book-card:hover .book-cover {
-        transform: scale(1.06);
-      }
-      .book-info {
-        padding: 10px 8px;
-        text-align: center;
-        flex-grow: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #faf4e8;
-      }
-      .book-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        line-height: 1.4;
-        color: #4a3018;
+        font-weight: 500;
       }
       .tools-section {
         text-align: center;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
       }
       .btn-reading-assistant {
-        background: #1e1e1e;
-        border: 1px solid #444;
-        color: #c8a96e;
-        padding: 8px 22px;
-        font-size: 0.95rem;
-        border-radius: 4px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 10px 24px;
+        font-size: 0.9rem;
+        border-radius: 6px;
         font-weight: 500;
         text-decoration: none;
         transition: all 0.2s ease;
@@ -153,9 +65,117 @@
       }
       .btn-reading-assistant:hover {
         background: #2a2a2a;
-        color: #e8d5a3;
-        border-color: #c8a96e;
+        color: #ffffff;
+        border-color: #555;
       }
+      .search-section {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .search-input {
+        padding: 12px 20px;
+        width: 300px;
+        border-radius: 30px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        outline: none;
+        font-size: 1rem;
+        margin-right: 15px;
+        transition: border-color 0.2s ease;
+      }
+      .search-input:focus {
+        border-color: var(--text-secondary);
+      }
+      .search-input::placeholder {
+        color: #666;
+      }
+      .search-select {
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        outline: none;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .bookshelf {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 30px;
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: transparent;
+      }
+      .book-card {
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border-color);
+      }
+      .book-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        border-color: #555;
+      }
+      .book-cover-wrapper {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        overflow: hidden;
+        background: #0a0a0a;
+        flex-shrink: 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .book-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+        transition: transform 0.5s ease, opacity 0.3s ease;
+        opacity: 0.9;
+      }
+      .book-card:hover .book-cover {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+      .book-info {
+        padding: 15px 10px;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+      }
+      .book-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.4;
+        color: var(--text-primary);
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-main);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .spacer { height: 40px; }
     </style>
   </head>
   <body>
@@ -181,17 +201,12 @@
     </div>
 
     <div class="spacer"></div>
-    <center>
-      <div class="col" style="max-width: 800px; margin: 0 auto;">
-        <br><hr style="border-color: #444;">
-        <div class="responsive-div alert" role="alert" style="background-color: #1e1e1e; color: #ddd; border: 1px solid #333;">
-          <h4><p>歡迎來到我的網站，有甚麼想要反映的，請<a target="_blank" 
-            href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報" class="alert-link" style="color: #ff8a00;">寫信</a>
-            告訴我! 謝謝你~</p>
-          </h4>
-        </div>  
-      </div>
-    </center>
+    <div style="max-width: 800px; margin: 0 auto; text-align: center; padding: 20px;">
+      <hr style="border-color: var(--border-color); margin-bottom: 30px;">
+      <div style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; font-size: 0.95rem;">
+        歡迎來到我的網站，有甚麼想要反映的，請 <a target="_blank" href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報" style="color: #ffffff; text-decoration: underline; font-weight: 500;">寫信</a> 告訴我！謝謝你～
+      </div>  
+    </div>
     
     <div id="content-end"></div>
 
