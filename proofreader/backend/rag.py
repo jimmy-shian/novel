@@ -103,6 +103,8 @@ def query(
 ) -> list[str]:
     """Return top-k document strings from the named collection."""
     col = _col(COLLECTIONS[collection_key])
+    if col.count() == 0:
+        return []
     try:
         results = col.query(
             query_embeddings=_embed([query_text]),

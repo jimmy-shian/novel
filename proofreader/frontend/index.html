@@ -42,6 +42,7 @@
         <label class="chk-label"><input type="checkbox" id="chk-mark" checked> 標記錯誤</label>
         <label class="chk-label"><input type="checkbox" id="chk-analyze" checked> 角色/劇情分析</label>
         <button id="btn-analyze" class="btn primary">啟動 AI 分析</button>
+        <button id="btn-edit-mode" class="btn outline">進入手動編輯</button>
         <button id="btn-apply" class="btn success">儲存至檔案</button>
         <button id="btn-export" class="btn outline" title="將角色與劇情資料傳送至閱讀助手">匯出至閱讀助手</button>
       </div>
@@ -65,6 +66,7 @@
           <!-- 文字編輯區 -->
           <div class="editor-pane">
             <div id="editor-content" class="editor-text"></div>
+            <textarea id="editor-manual" class="editor-text" style="display:none; width:100%; height:100%; border:none; outline:none; resize:none; padding: 0; background: transparent;"></textarea>
           </div>
           
           <!-- 問題列表區 -->

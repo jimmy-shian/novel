@@ -3,8 +3,9 @@ setlocal
 chcp 65001 > nul
 
 :: ==========================================
-:: CONFIGURATION
+:: CONFIGURATION  
 :: ==========================================
+::  cd /mnt/c/Users/user/Downloads/novel
 set "WSL_DIR=/mnt/c/Users/user/Desktop/test_html/BioMistral_double"
 set "WSL_MODEL=/mnt/c/Users/user/Downloads/novel/Model"
 set "BACKEND_PY=C:\Users\user\venv\Scripts\python.exe"
@@ -14,12 +15,12 @@ echo ------------------------------------------
 echo NOVEL AI PROOFREADER - STARTER (v1.7)
 echo ------------------------------------------
 
-:: [1] Start vLLM in WSL
-echo [1/3] Launching vLLM in WSL...
-start "VLLM_PROCESS" wsl sh -c "cd %WSL_DIR% && . .venv/bin/activate && python3 -m vllm.entrypoints.openai.api_server --model %WSL_MODEL% --served-model-name gptoss20b --port 8000 --max-model-len 8192 --trust-remote-code --dtype float16"
+:: [1] Start HF Flask Server (Windows)
+echo [1/3] Launching HF Transformers Server on Windows...
+start "HF_SERVER_PROCESS" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
 
-echo Waiting for model (20s)...
-timeout /t 2 /nobreak > nul
+echo Waiting for model to load (approx. 3s)...
+timeout /t 3 /nobreak > nul
 
 :: [2] Start Backend
 echo [2/3] Launching Backend...
@@ -43,13 +44,14 @@ pause
 
 echo Stopping servers...
 
-:: Cleanup Backend (Windows)
+:: Cleanup Backend (Port 7788)
 powershell -Command "Get-NetTCPConnection -LocalPort 7788 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
-taskkill /F /FI "WINDOWTITLE eq BACKEND_PROCESS*" /T > nul 2>&1
 
-:: Cleanup vLLM (WSL)
-wsl pkill -f vllm
-taskkill /F /FI "WINDOWTITLE eq VLLM_PROCESS*" /T > nul 2>&1
+:: Cleanup HF Server (Port 8000)
+powershell -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
+
+taskkill /F /FI "WINDOWTITLE eq BACKEND_PROCESS*" /T > nul 2>&1
+taskkill /F /FI "WINDOWTITLE eq HF_SERVER_PROCESS*" /T > nul 2>&1
 
 echo Done.
 timeout /t 2 > nul

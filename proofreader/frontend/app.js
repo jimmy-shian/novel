@@ -25,6 +25,8 @@ const els = {
   workspace: document.getElementById('workspace'),
   emptyState: document.getElementById('empty-state'),
   editor: document.getElementById('editor-content'),
+  editorManual: document.getElementById('editor-manual'),
+  btnEditMode: document.getElementById('btn-edit-mode'),
   issueList: document.getElementById('issue-list'),
   batchList: document.getElementById('batch-list'),
   
@@ -214,7 +216,7 @@ els.btnAnalyze.addEventListener('click', async () => {
         summary: data.summary || '',
         novel: state.currentNovel.name
       };
-      alert('角色與劇情分析完成！您可以點擊「匯出至閱讀助手」儲存資料。');
+      console.log('角色與劇情分析完成');
     }
     
     renderEditor();
@@ -227,6 +229,63 @@ els.btnAnalyze.addEventListener('click', async () => {
     els.btnAnalyze.textContent = '啟動 AI 分析';
   }
 });
+
+// ── Manual Edit Mode Toggle ──
+let isManualEdit = false;
+
+els.btnEditMode.addEventListener('click', () => {
+  isManualEdit = !isManualEdit;
+  
+  if (isManualEdit) {
+    // Switch to manual
+    els.btnEditMode.textContent = '完成手動編輯';
+    els.btnEditMode.classList.add('primary');
+    els.btnAnalyze.disabled = true;
+    
+    // Get currently "applied" text (what user sees in the editor)
+    // But it's easier to just use state.originalText if they haven't applied anything,
+    // or if they have decisions, we should technically apply them first.
+    // Let's just use the raw originalText for now, or the text with accepted decisions.
+    
+    const currentViewText = getProcessedText();
+    els.editorManual.value = currentViewText;
+    
+    els.editor.style.display = 'none';
+    els.editorManual.style.display = 'block';
+    els.editorManual.focus();
+  } else {
+    // Switch back to AI mode
+    els.btnEditMode.textContent = '進入手動編輯';
+    els.btnEditMode.classList.remove('primary');
+    els.btnAnalyze.disabled = false;
+    
+    state.originalText = els.editorManual.value;
+    state.issues = [];
+    state.decisions = {};
+    
+    els.editor.style.display = 'block';
+    els.editorManual.style.display = 'none';
+    renderEditor();
+    renderIssues();
+  }
+});
+
+function getProcessedText() {
+  if (state.issues.length === 0) return state.originalText;
+  
+  const sorted = [...state.issues].sort((a, b) => b.start - a.start);
+  let text = state.originalText;
+  
+  for (const issue of sorted) {
+    const dec = state.decisions[issue.id];
+    if (dec?.action === 'accept') {
+      text = text.slice(0, issue.start) + issue.suggestion + text.slice(issue.end);
+    } else if (dec?.action === 'manual') {
+      text = text.slice(0, issue.start) + dec.manualText + text.slice(issue.end);
+    }
+  }
+  return text;
+}
 
 // ── Rendering Editor & Issues ──
 function renderEditor() {
