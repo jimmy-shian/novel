@@ -883,39 +883,49 @@ els.btnGlobalBatch.addEventListener('click', async () => {
     for (const item of chaptersByNovel) {
       els.globalBatchLabel.textContent = `正在處理: ${item.novel.name}`;
       
-      // Start batch for this novel
-      await fetch(`${API_BASE}/batch/scan`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ novel_id: item.novel.name })
-      });
-      
-      // Poll status for this novel
-      let isDone = false;
-      while (!isDone) {
-        const statusRes = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(item.novel.name)}`);
-        const statusData = await statusRes.json();
+      try {
+        // Start batch for this novel
+        const startRes = await fetch(`${API_BASE}/batch/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ novel_id: item.novel.name })
+        });
         
-        if (statusData.status === 'done' || statusData.status === 'idle') {
-          isDone = true;
-        } else {
-          // Update progress
-          const currentProgress = completedChapters + statusData.current;
-          const pct = Math.min(100, (currentProgress / totalChapters) * 100);
-          els.globalBatchProgress.style.width = `${pct}%`;
-          els.globalBatchDetails.textContent = `當前進度: ${currentProgress} / ${totalChapters} (${item.novel.name})`;
+        if (!startRes.ok) throw new Error(`HTTP ${startRes.status}`);
+
+        // Poll status for this novel
+        let isDone = false;
+        while (!isDone) {
+          const statusRes = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(item.novel.name)}`);
+          if (!statusRes.ok) break;
           
-          // ETA Calculation
-          const elapsed = (Date.now() - startTime) / 1000;
-          if (currentProgress > 0) {
-            const totalSec = (elapsed / currentProgress) * totalChapters;
-            const remaining = Math.max(0, totalSec - elapsed);
-            const m = Math.floor(remaining / 60);
-            const s = Math.floor(remaining % 60);
-            els.globalBatchETA.textContent = `預計剩餘時間：${m}分 ${s}秒`;
+          const statusData = await statusRes.json();
+          
+          if (statusData.status === 'done' || statusData.status === 'idle') {
+            isDone = true;
+          } else {
+            // Update progress
+            const novelCurrent = statusData.current || 0;
+            const currentProgress = completedChapters + novelCurrent;
+            const pct = Math.min(100, (currentProgress / totalChapters) * 100);
+            
+            els.globalBatchProgress.style.width = `${pct}%`;
+            els.globalBatchDetails.textContent = `當前進度: ${currentProgress} / ${totalChapters} (${item.novel.name})`;
+            
+            // ETA Calculation
+            const elapsed = (Date.now() - startTime) / 1000;
+            if (currentProgress > 0) {
+              const totalSec = (elapsed / currentProgress) * totalChapters;
+              const remaining = Math.max(0, totalSec - elapsed);
+              const m = Math.floor(remaining / 60);
+              const s = Math.floor(remaining % 60);
+              els.globalBatchETA.textContent = `預計剩餘時間：${m}分 ${s}秒`;
+            }
           }
+          await new Promise(r => setTimeout(r, 2000));
         }
-        await new Promise(r => setTimeout(r, 2000));
+      } catch (novelErr) {
+        console.error(`Error processing ${item.novel.name}:`, novelErr);
       }
       completedChapters += item.chapters.length;
     }

@@ -53,6 +53,9 @@ class BatchMarkRequest(BaseModel):
     novel_id: str
     files: List[dict] # {filename, content, chapter}
 
+class BatchScanRequest(BaseModel):
+    novel_id: str
+
 class Decision(BaseModel):
     id: str
     type: str
@@ -175,6 +178,31 @@ async def check_cache(req: AnalyzeRequest):
 async def api_mark_errors(req: MarkRequest):
     result = await tasks.run_mark_errors(req.novel_id, req.chapter, req.text, req.use_cache)
     return result
+
+@app.post("/api/batch/scan")
+async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTasks):
+    novel_id = req.novel_id
+    novel_dir = NOVEL_BASE_DIR / novel_id
+    if not novel_dir.exists():
+        raise HTTPException(404, "Novel not found")
+        
+    files = sorted(list(novel_dir.glob("*.txt")), key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
+    
+    batch_status[novel_id] = {"total": len(files), "current": 0, "status": "processing"}
+    
+    async def process_all():
+        for i, f_path in enumerate(files):
+            try:
+                # Read content
+                content = f_path.read_text("utf-8", errors="ignore")
+                await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=True)
+                batch_status[novel_id]["current"] = i + 1
+            except Exception as e:
+                log.error(f"Scan batch error for {f_path.name}: {e}")
+        batch_status[novel_id]["status"] = "done"
+
+    background_tasks.add_task(process_all)
+    return {"message": "Scan started", "total": len(files)}
 
 @app.post("/api/batch/mark")
 async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTasks):
