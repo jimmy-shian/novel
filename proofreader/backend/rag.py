@@ -119,18 +119,31 @@ def query(
 
 def build_rag_context(novel_id: str, task: str, query_text: str) -> str:
     """
-    Build a RAG context string based on task type:
-      - 'name'      → query characters + corrections
-      - 'plot'      → query events + paragraphs
-      - 'character' → query paragraphs
-      - 'timeline'  → query events
-      - 'mark'      → query corrections + characters
+    Build a RAG context string based on task type.
     """
     snippets: list[str] = []
 
     if task in ("name", "mark"):
-        snippets += query("corrections", query_text, novel_id, k=3)
-        snippets += query("characters", query_text, novel_id, k=3)
+        # For marking/naming, focus on name mappings and character identities
+        corrections = query("corrections", query_text, novel_id, k=5)
+        characters = query("characters", query_text, novel_id, k=5)
+        
+        if corrections:
+            snippets.append("【已知名稱修正紀錄】：")
+            snippets.extend([f"• {c}" for c in corrections])
+            
+        if characters:
+            snippets.append("\n【核心人物表】：")
+            for c_json in characters:
+                try:
+                    c = json.loads(c_json)
+                    name = c.get("角色名稱", "未知")
+                    desc = c.get("角色描述", "") or c.get("身份", "")
+                    aliases = f" (別名: {', '.join(c.get('別名', []))})" if c.get("別名") else ""
+                    snippets.append(f"• {name}{aliases}: {desc}")
+                except:
+                    snippets.append(f"• {c_json}")
+    
     elif task in ("plot", "character"):
         snippets += query("paragraphs", query_text, novel_id, k=3)
         snippets += query("events", query_text, novel_id, k=2)
@@ -139,4 +152,5 @@ def build_rag_context(novel_id: str, task: str, query_text: str) -> str:
 
     if not snippets:
         return ""
-    return "\n\n---參考資料---\n" + "\n\n".join(snippets[:RAG_TOP_K])
+        
+    return "\n".join(snippets)

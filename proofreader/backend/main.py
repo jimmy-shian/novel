@@ -9,6 +9,7 @@ import asyncio
 import os
 from pathlib import Path
 from typing import Dict, List, Optional
+import re
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, UploadFile, File, BackgroundTasks
@@ -19,7 +20,7 @@ from pydantic import BaseModel
 
 import rag
 import tasks
-from config import DATA_DIR, RESULTS_DIR, NAMES_DICT_PATH, LOGS_DIR
+from config import DATA_DIR, RESULTS_DIR, NAMES_DICT_PATH, LOGS_DIR, USE_LOCAL_VLLM
 
 logging.basicConfig(
     level=logging.INFO,
@@ -128,7 +129,12 @@ async def list_chapters(novel_path: str):
                 })
     except Exception as e:
         log.error(f"FS List Chapter error: {e}")
-    return {"chapters": sorted(items, key=lambda x: x["name"])}
+        
+    def natural_sort_key(s):
+        return [int(text) if text.isdigit() else text.lower()
+                for text in re.split('([0-9]+)', s)]
+
+    return {"chapters": sorted(items, key=lambda x: natural_sort_key(x["name"]))}
 
 @app.get("/api/fs/read")
 async def read_file(path: str):
@@ -146,6 +152,22 @@ async def read_file(path: str):
             return {"content": content_bytes.decode(enc), "filename": target.name}
         except: continue
     raise HTTPException(400, "Encoding not supported")
+    
+@app.post("/api/cache/check")
+async def check_cache(req: AnalyzeRequest):
+    """Checks if analysis cache exists for the given content."""
+    res = {}
+    tags = {
+        "mark": tasks.get_cache_tag("mark", req.novel_id, req.chapter),
+        "chars": tasks.get_cache_tag("chars", req.novel_id, "global"),
+        "events": tasks.get_cache_tag("events", req.novel_id, req.chapter)
+    }
+    
+    for key, tag in tags.items():
+        cached = tasks.load_cache(tag, req.text)
+        if cached is not None:
+            res[key] = cached
+    return res
 
 # --- Processing Endpoints ---
 
@@ -183,7 +205,8 @@ async def api_apply_corrections(req: ApplyRequest):
     # Overwrite the original file
     original_path = NOVEL_BASE_DIR / req.novel_id / (req.chapter if req.chapter.endswith(".txt") else f"{req.chapter}.txt")
     if original_path.exists():
-        original_path.write_text(new_text, "utf-8")
+        with original_path.open("w", encoding="utf-8", newline="") as f:
+            f.write(new_text)
         log.info(f"Overwritten file: {original_path}")
     
     return {"text": new_text, "changes": log_entries, "saved_to": str(original_path)}
@@ -209,7 +232,13 @@ async def api_full_analysis(req: FullAnalyzeRequest):
         elif t == "summary": 
             results["summary"] = await tasks.run_extract_summary(req.novel_id, [req.text[:3000]])
 
-    await asyncio.gather(*(run_task(t) for t in tasks_to_run))
+    if USE_LOCAL_VLLM:
+        await asyncio.gather(*(run_task(t) for t in tasks_to_run))
+    else:
+        # Sequential for API to avoid rate limits / concurrency issues
+        for t in tasks_to_run:
+            await run_task(t)
+            
     return results
 
 @app.post("/api/analyze/characters")

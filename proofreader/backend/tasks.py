@@ -25,22 +25,36 @@ log = logging.getLogger(__name__)
 
 # ── Helpers ─────────────────────────────────────────────────────────────────────
 
-def _cache_key(tag: str, text: str) -> str:
+def get_cache_tag(category: str, novel_id: str, chapter: str) -> str:
+    return f"{category}:{novel_id}:{chapter}"
+
+
+def cache_key(tag: str, text: str) -> str:
     return hashlib.sha256(f"{tag}:{text}".encode()).hexdigest()[:16]
 
 
-def _load_cache(tag: str, text: str) -> dict | list | None:
-    p = CACHE_DIR / f"{_cache_key(tag, text)}.json"
+def load_cache(tag: str, text: str) -> dict | list | None:
+    p = CACHE_DIR / f"{cache_key(tag, text)}.json"
     if p.exists():
         try:
-            return json.loads(p.read_text("utf-8"))
+            data = json.loads(p.read_text("utf-8"))
+            if not data: return None
+            if isinstance(data, dict):
+                if "raw_error" in data: return None
+                if tag.startswith("mark:") and "issues" not in data: return None
+            
+            # Auto-fix offsets for older cache files or AI failures
+            if tag.startswith("mark:") and isinstance(data, dict) and "issues" in data:
+                data["issues"] = _fix_offsets(text, data["issues"])
+                
+            return data
         except Exception:
             pass
     return None
 
 
-def _save_cache(tag: str, text: str, data: dict | list) -> None:
-    p = CACHE_DIR / f"{_cache_key(tag, text)}.json"
+def save_cache(tag: str, text: str, data: dict | list) -> None:
+    p = CACHE_DIR / f"{cache_key(tag, text)}.json"
     p.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
 
 
@@ -64,6 +78,80 @@ def _save_name_dict(d: dict) -> None:
     NAMES_DICT_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=2), "utf-8")
 
 
+def _fix_offsets(text: str, issues: list[dict]) -> list[dict]:
+    """
+    Finds the correct start/end offsets for issues.
+    Uses regex for robust context matching (ignoring extra spaces/tags).
+    """
+    fixed = []
+    for issue in issues:
+        orig = issue.get("original")
+        context = issue.get("context", "")
+        if not orig: continue
+        
+        # Scenario A: AI provided a context string
+        if context and orig in context:
+            # Create a regex from context that allows for flexible whitespace/tags between chars
+            # We escape the context and then replace 'gaps' with a pattern that matches tags/whitespace
+            escaped_context = re.escape(context)
+            # Allow for optional HTML tags or whitespace between characters in the context
+            # (only between characters, not inside the 'original' word itself if possible, 
+            # but AI usually provides context with the word inside)
+            
+            # Simplified robust pattern: replace any escaped space with \s* 
+            # and insert a tag-ignoring pattern between characters if needed.
+            # But let's start with a simpler approach: 
+            # Replace spaces in context with \s*(?:<[^>]+>)*\s*
+            pattern = escaped_context.replace(r"\ ", r"\s*(?:<[^>]+>|&nbsp;|&emsp;)*\s*")
+            
+            try:
+                match = re.search(pattern, text)
+                if match:
+                    # We found the context block! 
+                    # Now we need the exact offset of 'orig' within this match.
+                    # This is tricky because the match might have tags inside.
+                    # We'll search for 'orig' within the matched substring.
+                    match_text = match.group(0)
+                    match_start = match.start()
+                    
+                    # Search for 'orig' in the match text
+                    # (Usually 'orig' itself won't have tags inside it)
+                    inner_idx = match_text.find(orig)
+                    if inner_idx != -1:
+                        start = match_start + inner_idx
+                        end = start + len(orig)
+                        
+                        new_issue = issue.copy()
+                        new_issue["start"] = start
+                        new_issue["end"] = end
+                        fixed.append(new_issue)
+                        continue
+            except Exception as e:
+                log.debug(f"Regex match failed: {e}")
+
+        # Scenario B: Fallback to global search (same as before)
+        start_search = 0
+        found_any = False
+        while True:
+            idx = text.find(orig, start_search)
+            if idx == -1: break
+            
+            if len(orig) < 2 and not context:
+                break
+
+            new_issue = issue.copy()
+            new_issue["start"] = idx
+            new_issue["end"] = idx + len(orig)
+            fixed.append(new_issue)
+            start_search = idx + len(orig)
+            found_any = True
+        
+        if not found_any:
+            log.warning(f"Could not locate '{orig}' in text (Context: {context})")
+            
+    return fixed
+
+
 def _log_issues(novel_id: str, chapter: str, issues: list) -> None:
     log_file = LOGS_DIR / f"{novel_id}_issues.jsonl"
     with log_file.open("a", encoding="utf-8") as f:
@@ -82,7 +170,7 @@ async def run_mark_errors(
 ) -> dict:
     cache_tag = f"mark:{novel_id}:{chapter}"
     if use_cache:
-        cached = _load_cache(cache_tag, text)
+        cached = load_cache(cache_tag, text)
         if cached is not None:
             log.info("Cache hit for mark_errors %s/%s", novel_id, chapter)
             return cached
@@ -91,14 +179,21 @@ async def run_mark_errors(
     messages = mark_errors_prompt(text, rag_ctx)
 
     raw = await chat(messages, max_tokens=MAX_TOKENS_MARK)
+    
+    if raw.startswith("錯誤："):
+        return {"issues": [], "error": raw}
+
     try:
         result = _parse_json(raw)
+        if isinstance(result, dict) and "issues" in result:
+            # Fix offsets before saving to cache
+            result["issues"] = _fix_offsets(text, result["issues"])
+            
+        if use_cache:
+            save_cache(cache_tag, text, result)
     except Exception as e:
         log.error("JSON parse failed for mark_errors: %s", e)
-        result = {"issues": [], "raw_error": str(e)}
-
-    if use_cache:
-        _save_cache(cache_tag, text, result)
+        result = {"issues": [], "raw_error": str(e), "raw_response": raw}
 
     if isinstance(result, dict) and "issues" in result:
         _log_issues(novel_id, chapter, result["issues"])
@@ -156,26 +251,30 @@ async def run_extract_characters(
     text: str,
     use_cache: bool = True,
 ) -> list:
-    cache_tag = f"chars:{novel_id}"
+    cache_tag = get_cache_tag("chars", novel_id, "global")
     if use_cache:
-        cached = _load_cache(cache_tag, text)
+        cached = load_cache(cache_tag, text)
         if cached is not None:
             return cached
 
     rag_ctx = rag.build_rag_context(novel_id, "character", text[:500])
     messages = extract_characters_prompt(text, rag_ctx)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+    if raw.startswith("錯誤："):
+        return []
 
     try:
         result = _parse_json(raw)
-        if isinstance(result, list):
+        if isinstance(result, list) and result:
             for char in result:
                 rag.add_character(novel_id, char)
+            if use_cache:
+                save_cache(cache_tag, text, result)
+        else:
+            result = []
     except Exception:
         result = []
 
-    if use_cache:
-        _save_cache(cache_tag, text, result)
     return result
 
 
@@ -187,27 +286,31 @@ async def run_extract_events(
     text: str,
     use_cache: bool = True,
 ) -> list:
-    cache_tag = f"events:{novel_id}:{chapter}"
+    cache_tag = get_cache_tag("events", novel_id, chapter)
     if use_cache:
-        cached = _load_cache(cache_tag, text)
+        cached = load_cache(cache_tag, text)
         if cached is not None:
             return cached
 
     rag_ctx = rag.build_rag_context(novel_id, "plot", text[:500])
     messages = extract_events_prompt(text, chapter, rag_ctx)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+    if raw.startswith("錯誤："):
+        return []
 
     try:
         result = _parse_json(raw)
-        if isinstance(result, list):
+        if isinstance(result, list) and result:
             for ev in result:
                 ev["章節"] = ev.get("章節") or chapter
                 rag.add_event(novel_id, ev)
+            if use_cache:
+                save_cache(cache_tag, text, result)
+        else:
+            result = []
     except Exception:
         result = []
 
-    if use_cache:
-        _save_cache(cache_tag, text, result)
     return result
 
 

@@ -51,13 +51,37 @@
     <!-- 標籤頁導航 -->
     <div id="tabs" style="display:none;">
       <button class="tab-btn active" data-tab="proofread">人工校對 (Human-in-the-loop)</button>
+      <button class="tab-btn" data-tab="analysis">角色與劇情分析</button>
       <button class="tab-btn" data-tab="batch">批次處理</button>
     </div>
 
     <!-- 工作區 -->
     <div id="workspace">
       <div id="empty-state" class="empty-state">
-        <p>點擊左側章節開始校對</p>
+        <div class="home-hero">
+          <div class="hero-icon">✨</div>
+          <h2>歡迎使用 AI 校對助手</h2>
+          <p>請從左側選擇小說與章節開始工作，或使用下方的高級功能：</p>
+          
+          <div class="premium-card">
+            <div class="card-tag">PREMIUM</div>
+            <h3>高級全庫批次處理</h3>
+            <p>自動掃描系統內所有小說的未分析章節，建立完整的跨卷角色字典與劇情時間軸。</p>
+            
+            <div id="global-batch-ui" class="batch-status-ui" style="display:none;">
+              <div class="progress-meta">
+                <span id="global-batch-label">正在處理...</span>
+                <span id="global-batch-eta">預計剩餘：--:--</span>
+              </div>
+              <div class="progress-track">
+                <div id="global-batch-progress" class="progress-fill"></div>
+              </div>
+              <div id="global-batch-details" class="batch-details"></div>
+            </div>
+
+            <button id="btn-global-batch" class="btn primary large">啟動全庫自動掃描</button>
+          </div>
+        </div>
       </div>
       
       <!-- 人工校對分頁 -->
@@ -88,7 +112,26 @@
         </div>
       </div>
       
-      <!-- 批次處理分頁 -->
+      <!-- 角色與劇情分析分頁 -->
+      <div id="tab-analysis" class="tab-content" style="display:none;">
+        <div class="analysis-layout">
+          <div class="analysis-sidebar">
+            <div class="analysis-section">
+              <h4>故事大綱</h4>
+              <div id="analysis-summary" class="summary-box">尚未進行分析</div>
+            </div>
+            <div class="analysis-section">
+              <h4>登場角色</h4>
+              <div id="analysis-characters" class="character-grid"></div>
+            </div>
+          </div>
+          <div class="analysis-main">
+            <h4>劇情時間軸</h4>
+            <div id="analysis-timeline" class="timeline-container"></div>
+          </div>
+        </div>
+      </div>
+      
       <div id="tab-batch" class="tab-content" style="display:none;">
         <div class="batch-header">
           <div>

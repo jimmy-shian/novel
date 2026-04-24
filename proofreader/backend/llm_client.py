@@ -1,6 +1,6 @@
 
 """
-LLM Client - Simple wrapper to connect to the local HF Flask Server.
+LLM Client - Connects to the local HF Flask Server (which may proxy to NVIDIA).
 """
 import logging
 from openai import AsyncOpenAI
@@ -13,7 +13,8 @@ _client: AsyncOpenAI | None = None
 def get_client() -> AsyncOpenAI:
     global _client
     if _client is None:
-        # Connect to the Flask server (it uses the same OpenAI-compatible format)
+        # ALWAYS connect to the local proxy server (llm_server_hf.py)
+        # It will decide whether to run local inference or proxy to NVIDIA.
         _client = AsyncOpenAI(
             base_url=VLLM_BASE_URL,
             api_key="not-needed"
@@ -26,11 +27,11 @@ async def chat(
     temperature: float = TEMPERATURE,
     top_p: float = TOP_P,
 ) -> str:
-    """Send a chat request to the local Windows HF Flask server."""
+    """Send a chat request to the local server."""
     client = get_client()
     try:
         resp = await client.chat.completions.create(
-            model=MODEL_NAME,
+            model=MODEL_NAME, # This is just a placeholder when proxying
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature,
@@ -39,4 +40,4 @@ async def chat(
         return resp.choices[0].message.content or ""
     except Exception as e:
         log.error(f"LLM Chat Error: {e}")
-        return f"錯誤：無法連線至本地模型伺服器 ({e})。請確認 Flask 伺服器已啟動完成。"
+        return f"錯誤：無法連線至模型伺服器 ({e})。請確認 llm_server_hf.py 已啟動。"

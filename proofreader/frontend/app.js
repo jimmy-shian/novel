@@ -41,7 +41,15 @@ const els = {
   modal: document.getElementById('modal-overlay'),
   modalInput: document.getElementById('modal-input'),
   modalCancel: document.getElementById('modal-cancel'),
-  modalConfirm: document.getElementById('modal-confirm')
+  modalConfirm: document.getElementById('modal-confirm'),
+  
+  // Global Batch
+  btnGlobalBatch: document.getElementById('btn-global-batch'),
+  globalBatchUI: document.getElementById('global-batch-ui'),
+  globalBatchProgress: document.getElementById('global-batch-progress'),
+  globalBatchLabel: document.getElementById('global-batch-label'),
+  globalBatchETA: document.getElementById('global-batch-eta'),
+  globalBatchDetails: document.getElementById('global-batch-details')
 };
 
 // ── Initialization ──
@@ -91,9 +99,19 @@ function renderNovels() {
 }
 
 async function selectNovel(novel, btnEl) {
+  const wasActive = btnEl.classList.contains('active');
   document.querySelectorAll('#novel-list .list-item').forEach(el => el.classList.remove('active'));
-  btnEl.classList.add('active');
   
+  if (wasActive) {
+    state.currentNovel = null;
+    state.currentChapter = null;
+    state.chapters = [];
+    renderChapters();
+    resetWorkspace();
+    return;
+  }
+
+  btnEl.classList.add('active');
   state.currentNovel = novel;
   state.currentChapter = null;
   state.chapters = [];
@@ -132,9 +150,16 @@ function renderChapters() {
 }
 
 async function selectChapter(chap, btnEl) {
+  const wasActive = btnEl.classList.contains('active');
   document.querySelectorAll('#chapter-list .list-item').forEach(el => el.classList.remove('active'));
-  btnEl.classList.add('active');
   
+  if (wasActive) {
+    state.currentChapter = null;
+    resetWorkspace();
+    return;
+  }
+
+  btnEl.classList.add('active');
   state.currentChapter = chap;
   els.currentInfo.textContent = `${state.currentNovel.name} / ${chap.name}`;
   
@@ -156,9 +181,64 @@ async function selectChapter(chap, btnEl) {
     state.aiData = null;
     renderEditor();
     renderIssues();
+    renderAnalysis(); 
+    
+    // Check if cache exists and load it
+    await checkAndLoadCache();
   } catch (err) {
     console.error('Failed to load file content:', err);
     els.editor.innerHTML = '無法載入檔案內容';
+  }
+}
+
+async function checkAndLoadCache() {
+  try {
+    const res = await fetch(`${API_BASE}/cache/check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        novel_id: state.currentNovel.name,
+        chapter: state.currentChapter.name,
+        text: state.originalText
+      })
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      let hasCache = false;
+      
+      if (data.mark) {
+        state.issues = (data.mark.issues || []).map((issue, idx) => ({ ...issue, id: `i_${idx}` }));
+        state.decisions = {};
+        hasCache = true;
+      }
+      
+      if (data.chars || data.events) {
+        state.aiData = {
+          characters: data.chars || [],
+          timeline: data.events || [], // Note: cache check returns 'events' key
+          summary: '', // Summary is not per-chapter cached yet
+          novel: state.currentNovel.name
+        };
+        hasCache = true;
+      }
+      
+      if (hasCache) {
+        console.log('載入快取資料完成');
+        renderEditor();
+        renderIssues();
+        renderAnalysis();
+        
+        // Show a temporary indicator
+        const badge = document.createElement('div');
+        badge.className = 'cache-indicator';
+        badge.textContent = '已載入現有分析紀錄';
+        document.body.appendChild(badge);
+        setTimeout(() => badge.remove(), 3000);
+      }
+    }
+  } catch (err) {
+    console.error('Cache check failed:', err);
   }
 }
 
@@ -182,6 +262,13 @@ els.btnAnalyze.addEventListener('click', async () => {
     return;
   }
   
+  if (runMark && state.issues.length > 0) {
+    if (!confirm('本章已存在校對紀錄，確定要清除並重新啟動 AI 分析嗎？')) return;
+  }
+  if (runAnalyze && state.aiData) {
+     if (!confirm('本章已存在分析紀錄，確定要重新啟動 AI 分析嗎？')) return;
+  }
+  
   els.btnAnalyze.disabled = true;
   els.btnAnalyze.textContent = 'AI 分析中...';
   
@@ -201,12 +288,24 @@ els.btnAnalyze.addEventListener('click', async () => {
       })
     });
     
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({ error: '伺服器錯誤' }));
+      throw new Error(errData.details || errData.error || '分析過程中發生錯誤');
+    }
+    
     const data = await res.json();
     
+    // Check for internal task errors
+    if (data.mark && data.mark.error) {
+       throw new Error(`校對失敗: ${data.mark.error}`);
+    }
+
     if (data.mark) {
-      // Add unique IDs to issues
       state.issues = (data.mark.issues || []).map((issue, idx) => ({ ...issue, id: `i_${idx}` }));
       state.decisions = {};
+      if (state.issues.length === 0 && !data.mark.error) {
+          console.log('未發現任何建議修改項');
+      }
     }
     
     if (runAnalyze) {
@@ -217,13 +316,14 @@ els.btnAnalyze.addEventListener('click', async () => {
         novel: state.currentNovel.name
       };
       console.log('角色與劇情分析完成');
+      renderAnalysis();
     }
     
     renderEditor();
     renderIssues();
   } catch (err) {
-    console.error(err);
-    alert('分析失敗');
+    console.error('Analysis Error:', err);
+    alert('分析失敗：' + err.message);
   } finally {
     els.btnAnalyze.disabled = false;
     els.btnAnalyze.textContent = '啟動 AI 分析';
@@ -289,74 +389,59 @@ function getProcessedText() {
 
 // ── Rendering Editor & Issues ──
 function renderEditor() {
-  if (!state.issues.length) {
-    els.editor.textContent = state.originalText;
+  if (!state.originalText) {
+    els.editor.innerHTML = '<div class="empty-text">請選擇章節</div>';
     return;
   }
   
-  // Sort issues in reverse order to not mess up indices during insertion
-  const sorted = [...state.issues].sort((a, b) => b.start - a.start);
-  let html = escapeHTML(state.originalText);
+  // Create a copy and sort by start ascending
+  const sortedIssues = [...state.issues].sort((a, b) => a.start - b.start);
   
-  for (const issue of sorted) {
+  let html = '';
+  let lastIdx = 0;
+  
+  for (const issue of sortedIssues) {
+    // Avoid overlap
+    if (issue.start < lastIdx) continue;
+    
+    // Text before the mark
+    html += escapeHTML(state.originalText.slice(lastIdx, issue.start));
+    
     const dec = state.decisions[issue.id];
-    let actionClass = '';
+    let actionClass = dec ? `hl-${dec.action}` : `hl-${issue.type}`;
+    
+    // What text to show in the mark
     let displayStr = issue.original;
+    if (dec?.action === 'accept') displayStr = issue.suggestion;
+    else if (dec?.action === 'manual') displayStr = dec.manualText;
     
-    if (dec) {
-      actionClass = `hl-${dec.action}`;
-      if (dec.action === 'accept') displayStr = issue.suggestion;
-      else if (dec.action === 'manual') displayStr = dec.manualText;
-    } else {
-      actionClass = `hl-${issue.type}`;
-    }
-    
-    const markHtml = `<mark class="hl ${actionClass}" data-id="${issue.id}" title="${issue.reason}">${escapeHTML(displayStr)}</mark>`;
-    const origBytes = new TextEncoder().encode(state.originalText);
-    
-    // Note: Python string indices might be character-based, not byte-based.
-    // The previous implementation used JS string slicing which matches Python's unicode char indices.
-    const before = state.originalText.slice(0, issue.start);
-    const after = state.originalText.slice(issue.end);
-    
-    // Rebuild text with markers
-    // Since we are replacing backwards, we must use the original string slice indices,
-    // but wait, html is being built by escaping... 
-    // It's safer to build fragments.
+    html += `<mark class="hl ${actionClass}" data-id="${issue.id}" title="${escapeHTML(issue.reason)}">${escapeHTML(displayStr)}</mark>`;
+    lastIdx = issue.end;
   }
   
-  // Better approach: build DOM nodes or fragments to avoid index shift with HTML entities.
-  let currentIdx = 0;
-  const fragments = [];
-  const fSorted = [...state.issues].sort((a, b) => a.start - b.start);
+  // Remaining text
+  html += escapeHTML(state.originalText.slice(lastIdx));
   
-  for (const issue of fSorted) {
-    if (issue.start >= currentIdx) {
-      fragments.push(escapeHTML(state.originalText.slice(currentIdx, issue.start)));
-      
-      const dec = state.decisions[issue.id];
-      let actionClass = dec ? `hl-${dec.action}` : `hl-${issue.type}`;
-      let displayStr = issue.original;
-      if (dec?.action === 'accept') displayStr = issue.suggestion;
-      if (dec?.action === 'manual') displayStr = dec.manualText;
-      
-      fragments.push(`<mark class="hl ${actionClass}" data-id="${issue.id}" title="${issue.reason}">${escapeHTML(displayStr)}</mark>`);
-      currentIdx = issue.end;
-    }
-  }
-  fragments.push(escapeHTML(state.originalText.slice(currentIdx)));
-  els.editor.innerHTML = fragments.join('');
+  els.editor.innerHTML = html;
   
-  // Bind clicks
+  // Bind events
   els.editor.querySelectorAll('mark.hl').forEach(mark => {
+    const id = mark.dataset.id;
+    const card = document.getElementById(`card-${id}`);
+    
     mark.addEventListener('click', () => {
-      const id = mark.dataset.id;
-      const card = document.getElementById(`card-${id}`);
       if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         document.querySelectorAll('.issue-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
       }
+    });
+
+    mark.addEventListener('mouseenter', () => {
+      if (card) card.classList.add('hover-sync');
+    });
+    mark.addEventListener('mouseleave', () => {
+      if (card) card.classList.remove('hover-sync');
     });
   });
 }
@@ -373,34 +458,97 @@ function renderIssues(filterType = 'all') {
     els.issueList.innerHTML = '<div class="empty-text">目前沒有待處理的問題</div>';
     return;
   }
-  
+
+  // Grouping logic: group by type + original + suggestion
+  const groups = [];
+  const groupMap = new Map();
+
   filtered.forEach(issue => {
-    const dec = state.decisions[issue.id];
+    const key = `${issue.type}|${issue.original}|${issue.suggestion}`;
+    if (!groupMap.has(key)) {
+      const group = {
+        key,
+        type: issue.type,
+        original: issue.original,
+        suggestion: issue.suggestion,
+        reason: issue.reason,
+        items: []
+      };
+      groupMap.set(key, group);
+      groups.push(group);
+    }
+    groupMap.get(key).items.push(issue);
+  });
+  
+  groups.forEach(group => {
+    const firstIssue = group.items[0];
+    const dec = state.decisions[firstIssue.id];
     let cardClass = 'issue-card';
     if (dec) cardClass += ` i-${dec.action}`;
+    if (group.items.length > 1) cardClass += ' is-group';
     
     const card = document.createElement('div');
     card.className = cardClass;
-    card.id = `card-${issue.id}`;
+    card.id = `card-${firstIssue.id}`;
+    
+    const isGroup = group.items.length > 1;
+    const countBadge = isGroup ? `<span class="count-badge">${group.items.length} 處</span>` : '';
+    const accLabel = isGroup ? '全部接受' : '接受';
+    const ignLabel = isGroup ? '全部忽略' : '忽略';
+    
     card.innerHTML = `
       <div class="issue-top">
-        <span class="type-badge ${issue.type}">${issue.type}</span>
-        <span class="issue-orig">${escapeHTML(issue.original)}</span>
+        <span class="type-badge ${group.type}">${group.type}</span>
+        ${countBadge}
+        <span class="issue-orig">${escapeHTML(group.original)}</span>
         <span style="color:#aaa">➔</span>
-        <span class="issue-suggest">${escapeHTML(issue.suggestion)}</span>
+        <span class="issue-suggest">${escapeHTML(group.suggestion)}</span>
       </div>
-      <div class="issue-reason">${escapeHTML(issue.reason)}</div>
+      <div class="issue-reason">${escapeHTML(group.reason)}</div>
       <div class="issue-actions">
-        <button class="btn-acc" data-act="accept">接受</button>
-        <button class="btn-ign" data-act="ignore">忽略</button>
+        <button class="btn-acc" data-act="accept">${accLabel}</button>
+        <button class="btn-ign" data-act="ignore">${ignLabel}</button>
         <button class="btn-man" data-act="manual">手動</button>
       </div>
     `;
+
+    // Scroll to mark on click
+    card.addEventListener('click', () => {
+      const firstMark = els.editor.querySelector(`mark[data-id="${firstIssue.id}"]`);
+      if (firstMark) {
+        firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Add a temporary highlight effect to the mark
+        firstMark.classList.add('flash-highlight');
+        setTimeout(() => firstMark.classList.remove('flash-highlight'), 1500);
+      }
+    });
+
+    // Hover sync: highlight all marks in this group
+    card.addEventListener('mouseenter', () => {
+      group.items.forEach(issue => {
+        const marks = els.editor.querySelectorAll(`mark[data-id="${issue.id}"]`);
+        marks.forEach(m => m.classList.add('hover-sync'));
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      group.items.forEach(issue => {
+        const marks = els.editor.querySelectorAll(`mark[data-id="${issue.id}"]`);
+        marks.forEach(m => m.classList.remove('hover-sync'));
+      });
+    });
     
     card.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        handleDecision(issue, btn.dataset.act);
+        const action = btn.dataset.act;
+        if (action === 'manual') {
+          openModal(group.items); // Special case for group manual edit
+        } else {
+          group.items.forEach(issue => {
+            state.decisions[issue.id] = { action };
+          });
+          updateAfterDecision();
+        }
       });
     });
     
@@ -434,30 +582,32 @@ function updateAfterDecision() {
 }
 
 // ── Manual Edit Modal ──
-let activeIssueForModal = null;
+let activeIssuesForModal = [];
 
-function openModal(issue) {
-  activeIssueForModal = issue;
-  els.modalInput.value = issue.original;
+function openModal(issues) {
+  activeIssuesForModal = Array.isArray(issues) ? issues : [issues];
+  els.modalInput.value = activeIssuesForModal[0].original;
   els.modal.style.display = 'flex';
   els.modalInput.focus();
 }
 
 els.modalCancel.addEventListener('click', () => {
   els.modal.style.display = 'none';
-  activeIssueForModal = null;
+  activeIssuesForModal = [];
 });
 
 els.modalConfirm.addEventListener('click', () => {
-  if (activeIssueForModal) {
+  if (activeIssuesForModal.length > 0) {
     const val = els.modalInput.value.trim();
     if (val) {
-      state.decisions[activeIssueForModal.id] = { action: 'manual', manualText: val };
+      activeIssuesForModal.forEach(issue => {
+        state.decisions[issue.id] = { action: 'manual', manualText: val };
+      });
       updateAfterDecision();
     }
   }
   els.modal.style.display = 'none';
-  activeIssueForModal = null;
+  activeIssuesForModal = [];
 });
 
 // ── Apply & Export ──
@@ -614,6 +764,76 @@ els.btnBatchStart.addEventListener('click', async () => {
   }
 });
 
+// ── Rendering Analysis ──
+function renderAnalysis() {
+  const containerSummary = document.getElementById('analysis-summary');
+  const containerChars = document.getElementById('analysis-characters');
+  const containerTimeline = document.getElementById('analysis-timeline');
+  
+  if (!state.aiData) {
+    containerSummary.textContent = '尚未分析';
+    containerChars.innerHTML = '';
+    containerTimeline.innerHTML = '';
+    return;
+  }
+  
+  // Summary
+  containerSummary.textContent = state.aiData.summary || '無大綱資料';
+  
+  // Characters
+  containerChars.innerHTML = '';
+  if (state.aiData.characters.length === 0) {
+    containerChars.innerHTML = '<div class="empty-text">未偵測到角色</div>';
+  } else {
+    state.aiData.characters.forEach(char => {
+      const card = document.createElement('div');
+      card.className = 'char-card';
+      
+      const name = escapeHTML(char['角色名稱'] || '未知');
+      const aliases = char['別名'] && char['別名'].length > 0 
+        ? `<span class="char-aliases">(${escapeHTML(char['別名'].join(', '))})</span>` 
+        : '';
+      const faction = escapeHTML(char['身份'] || '');
+      const desc = escapeHTML(char['角色描述'] || '');
+      
+      card.innerHTML = `
+        <div class="char-name">
+          ${name} ${aliases}
+        </div>
+        <div class="char-faction">${faction}</div>
+        <div class="char-desc">${desc}</div>
+      `;
+      containerChars.appendChild(card);
+    });
+  }
+  
+  // Timeline
+  containerTimeline.innerHTML = '';
+  if (state.aiData.timeline.length === 0) {
+    containerTimeline.innerHTML = '<div class="empty-state">未偵測到事件</div>';
+  } else {
+    state.aiData.timeline.forEach(ev => {
+      const item = document.createElement('div');
+      item.className = 'timeline-item';
+      item.innerHTML = `
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <span class="timeline-title">${escapeHTML(ev['事件名稱'] || '未知事件')}</span>
+            <span class="timeline-chapter">${escapeHTML(ev['章節'] || '')}</span>
+          </div>
+          <div class="timeline-desc">${escapeHTML(ev['事件描述'] || '')}</div>
+          <div class="timeline-tags">
+            ${(ev['涉及角色'] || []).map(c => `<span class="tag">${escapeHTML(c)}</span>`).join('')}
+            <span class="tag" style="background:#fffcf0; border-color:#d4c4a8;">重要性: ${escapeHTML(ev['重要性'] || '中')}</span>
+          </div>
+        </div>
+      `;
+      containerTimeline.appendChild(item);
+    });
+  }
+}
+
 // ── Utils ──
 function escapeHTML(str) {
   if (!str) return '';
@@ -627,6 +847,90 @@ function escapeHTML(str) {
     }[tag] || tag)
   );
 }
+
+// ── Global Batch Processing ──
+els.btnGlobalBatch.addEventListener('click', async () => {
+  if (state.isGlobalBatching) return;
+  state.isGlobalBatching = true;
+  els.btnGlobalBatch.disabled = true;
+  els.btnGlobalBatch.textContent = '批次處理運行中...';
+  els.globalBatchUI.style.display = 'block';
+
+  try {
+    const novelRes = await fetch(`${API_BASE}/fs/novels`);
+    const novelData = await novelRes.json();
+    const novels = novelData.novels;
+
+    let totalChapters = 0;
+    let completedChapters = 0;
+    const startTime = Date.now();
+
+    // First, count total chapters
+    const chaptersByNovel = [];
+    for (const novel of novels) {
+      const cRes = await fetch(`${API_BASE}/fs/chapters?novel_path=${encodeURIComponent(novel.path)}`);
+      const cData = await cRes.json();
+      totalChapters += cData.chapters.length;
+      chaptersByNovel.push({ novel, chapters: cData.chapters });
+    }
+
+    if (totalChapters === 0) {
+      els.globalBatchLabel.textContent = '庫中沒有可處理的章節';
+      return;
+    }
+
+    // Process each novel
+    for (const item of chaptersByNovel) {
+      els.globalBatchLabel.textContent = `正在處理: ${item.novel.name}`;
+      
+      // Start batch for this novel
+      await fetch(`${API_BASE}/batch/scan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ novel_id: item.novel.name })
+      });
+      
+      // Poll status for this novel
+      let isDone = false;
+      while (!isDone) {
+        const statusRes = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(item.novel.name)}`);
+        const statusData = await statusRes.json();
+        
+        if (statusData.status === 'done' || statusData.status === 'idle') {
+          isDone = true;
+        } else {
+          // Update progress
+          const currentProgress = completedChapters + statusData.current;
+          const pct = Math.min(100, (currentProgress / totalChapters) * 100);
+          els.globalBatchProgress.style.width = `${pct}%`;
+          els.globalBatchDetails.textContent = `當前進度: ${currentProgress} / ${totalChapters} (${item.novel.name})`;
+          
+          // ETA Calculation
+          const elapsed = (Date.now() - startTime) / 1000;
+          if (currentProgress > 0) {
+            const totalSec = (elapsed / currentProgress) * totalChapters;
+            const remaining = Math.max(0, totalSec - elapsed);
+            const m = Math.floor(remaining / 60);
+            const s = Math.floor(remaining % 60);
+            els.globalBatchETA.textContent = `預計剩餘時間：${m}分 ${s}秒`;
+          }
+        }
+        await new Promise(r => setTimeout(r, 2000));
+      }
+      completedChapters += item.chapters.length;
+    }
+
+    els.globalBatchLabel.textContent = '全庫自動掃描完成！';
+    els.globalBatchProgress.style.width = '100%';
+    els.btnGlobalBatch.textContent = '掃描完成';
+  } catch (err) {
+    console.error(err);
+    els.globalBatchLabel.textContent = '批次處理出錯';
+  } finally {
+    state.isGlobalBatching = false;
+    els.btnGlobalBatch.disabled = false;
+  }
+});
 
 // Start app
 init();
