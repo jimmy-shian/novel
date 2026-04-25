@@ -3,3 +3,8 @@
 /1_content_html_grab_or_fix - 複製 (2).ipynb
 /1Model
 __pycache__
+.env
+*.pyc
+chroma/
+cache/
+logs/

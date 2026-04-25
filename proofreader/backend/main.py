@@ -56,6 +56,7 @@ class BatchMarkRequest(BaseModel):
 
 class BatchScanRequest(BaseModel):
     novel_id: str
+    use_cache: bool = True
     tasks: List[str] = ["mark"] # ["mark", "chars", "events", "summary"]
 
 class Decision(BaseModel):
@@ -245,21 +246,21 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 
                 # Execute requested tasks
                 if "mark" in req.tasks:
-                    await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=True)
+                    await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=req.use_cache)
                 
                 if "chars" in req.tasks:
-                    c_list = await tasks.run_extract_characters(novel_id, content, use_cache=True)
+                    c_list = await tasks.run_extract_characters(novel_id, content, use_cache=req.use_cache)
                     if c_list: all_chars.extend(c_list)
                 
                 if "events" in req.tasks:
-                    evs = await tasks.run_extract_events(novel_id, f_path.name, content, use_cache=True)
+                    evs = await tasks.run_extract_events(novel_id, f_path.name, content, use_cache=req.use_cache)
                     if evs: all_events.extend(evs)
                 
                 if "summary" in req.tasks:
                     # Only summarize first/middle/last if too many? 
                     # For batch, maybe just first 3 chapters or so
                     if i < 5:
-                        s = await tasks.run_extract_summary(novel_id, [content[:3000]], use_cache=True)
+                        s = await tasks.run_extract_summary(novel_id, [content[:3000]], use_cache=req.use_cache)
                         if s: all_summaries.append(s)
 
                 batch_status[novel_id]["current"] = i + 1
@@ -362,6 +363,7 @@ class FullAnalyzeRequest(BaseModel):
     novel_id: str
     chapter: str
     text: str
+    use_cache: bool = True
     tasks: List[str] # ["mark", "chars", "events", "summary"]
 
 @app.post("/api/analyze/full")
@@ -370,14 +372,14 @@ async def api_full_analysis(req: FullAnalyzeRequest):
     tasks_to_run = req.tasks
     
     async def run_task(t):
-        if t == "mark": results["mark"] = await tasks.run_mark_errors(req.novel_id, req.chapter, req.text)
-        elif t == "chars": results["chars"] = await tasks.run_extract_characters(req.novel_id, req.text)
+        if t == "mark": results["mark"] = await tasks.run_mark_errors(req.novel_id, req.chapter, req.text, req.use_cache)
+        elif t == "chars": results["chars"] = await tasks.run_extract_characters(req.novel_id, req.text, req.use_cache)
         elif t == "events": 
-            evs = await tasks.run_extract_events(req.novel_id, req.chapter, req.text)
+            evs = await tasks.run_extract_events(req.novel_id, req.chapter, req.text, req.use_cache)
             results["events"] = evs
             results["timeline"] = await tasks.run_build_timeline(req.novel_id, evs)
         elif t == "summary": 
-            results["summary"] = await tasks.run_extract_summary(req.novel_id, [req.text[:3000]])
+            results["summary"] = await tasks.run_extract_summary(req.novel_id, [req.text[:3000]], req.use_cache)
 
     if USE_LOCAL_VLLM:
         await asyncio.gather(*(run_task(t) for t in tasks_to_run))

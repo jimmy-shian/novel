@@ -461,9 +461,27 @@ async function checkAndLoadCache() {
         existingChars.forEach(c => charMap.set(c['角色名稱'], c));
         newChars.forEach(c => charMap.set(c['角色名稱'], c));
 
+        // Merge Timeline events
+        const existingEvents = state.aiData?.timeline || [];
+        const newEvents = data.events || [];
+        
+        // Use event name + chapter as a simple key for deduplication
+        const eventMap = new Map();
+        existingEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
+        newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
+        
+        // Sort timeline by chapter number if possible
+        const sortedTimeline = Array.from(eventMap.values()).sort((a, b) => {
+            const getNum = s => {
+                const m = String(s).match(/\d+/);
+                return m ? parseInt(m[0]) : 0;
+            };
+            return getNum(a['章節']) - getNum(b['章節']);
+        });
+
         state.aiData = {
           characters: Array.from(charMap.values()),
-          timeline: data.events || state.aiData?.timeline || [], 
+          timeline: sortedTimeline, 
           summary: data.summary || state.aiData?.summary || '', 
           novel: state.currentNovel.name
         };
@@ -552,6 +570,7 @@ els.btnAnalyze.addEventListener('click', async () => {
         novel_id: state.currentNovel.name,
         chapter: state.currentChapter.name,
         text: state.originalText,
+        use_cache: document.getElementById('chk-use-cache').checked,
         tasks: tasks
       })
     });
@@ -578,12 +597,34 @@ els.btnAnalyze.addEventListener('click', async () => {
     }
     
     if (runAnalyze) {
+      // Merge with existing data
+      const existingChars = state.aiData?.characters || [];
+      const newChars = data.chars || [];
+      const charMap = new Map();
+      existingChars.forEach(c => charMap.set(c['角色名稱'], c));
+      newChars.forEach(c => charMap.set(c['角色名稱'], c));
+
+      const existingEvents = state.aiData?.timeline || [];
+      const newEvents = data.timeline || data.events || [];
+      const eventMap = new Map();
+      existingEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
+      newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
+
+      const sortedTimeline = Array.from(eventMap.values()).sort((a, b) => {
+          const getNum = s => {
+              const m = String(s).match(/\d+/);
+              return m ? parseInt(m[0]) : 0;
+          };
+          return getNum(a['章節']) - getNum(b['章節']);
+      });
+
       state.aiData = {
-        characters: data.chars || [],
-        timeline: data.timeline || [],
-        summary: data.summary || '',
+        characters: Array.from(charMap.values()),
+        timeline: sortedTimeline,
+        summary: data.summary || state.aiData?.summary || '',
         novel: state.currentNovel.name
       };
+      
       console.log('角色與劇情分析完成');
       renderAnalysis();
       // Save globally
@@ -986,25 +1027,50 @@ els.btnBatchStart.addEventListener('click', async () => {
   els.batchList.innerHTML = '<div class="loading-text">正在讀取所有檔案內容...</div>';
   
   try {
-    const filesData = [];
-    for (const chap of state.chapters) {
-      const res = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(chap.path)}`);
-      const data = await res.json();
-      filesData.push({
-        filename: chap.name,
-        chapter: chap.name,
-        content: data.content
+    const requestedTasks = [];
+    if (document.getElementById('chk-mark').checked) requestedTasks.push('mark');
+    if (document.getElementById('chk-analyze').checked) {
+      requestedTasks.push('chars');
+      requestedTasks.push('events');
+      requestedTasks.push('summary');
+    }
+    if (requestedTasks.length === 0) requestedTasks.push('mark');
+
+    const startBody = requestedTasks.length === 1 && requestedTasks[0] === 'mark'
+      ? { novel_id: state.currentNovel.name, files: [] }
+      : { novel_id: state.currentNovel.name, use_cache: document.getElementById('chk-use-cache').checked, tasks: requestedTasks };
+
+    const endpoint = requestedTasks.length === 1 && requestedTasks[0] === 'mark'
+      ? `${API_BASE}/batch/mark`
+      : `${API_BASE}/batch/scan`;
+
+    let startRes;
+    if (endpoint.endsWith('/batch/mark')) {
+      const filesData = [];
+      for (const chap of state.chapters) {
+        const res = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(chap.path)}`);
+        const data = await res.json();
+        filesData.push({
+          filename: chap.name,
+          chapter: chap.name,
+          content: data.content
+        });
+      }
+      startRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          novel_id: state.currentNovel.name,
+          files: filesData
+        })
+      });
+    } else {
+      startRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(startBody)
       });
     }
-    
-    const startRes = await fetch(`${API_BASE}/batch/mark`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        novel_id: state.currentNovel.name,
-        files: filesData
-      })
-    });
     if (!startRes.ok) throw new Error(`批次啟動失敗：${startRes.status}`);
 
     saveActiveBatchNovel(state.currentNovel.name);
@@ -1380,6 +1446,7 @@ els.btnGlobalBatch.addEventListener('click', async () => {
         if (document.getElementById('chk-mark').checked) requestedTasks.push('mark');
         if (document.getElementById('chk-analyze').checked) {
           requestedTasks.push('chars');
+          requestedTasks.push('events');
           requestedTasks.push('summary');
         }
 
@@ -1389,6 +1456,7 @@ els.btnGlobalBatch.addEventListener('click', async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             novel_id: item.novel.name,
+            use_cache: document.getElementById('chk-use-cache').checked,
             tasks: requestedTasks.length > 0 ? requestedTasks : ['mark']
           })
         });
