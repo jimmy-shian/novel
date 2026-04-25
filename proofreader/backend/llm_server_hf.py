@@ -117,7 +117,7 @@ def chat_completions():
                 "model": NVIDIA_MODEL_NAME,
                 "messages": messages,
                 "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 0.9),
+                "temperature": data.get("temperature", 1.0),
                 "top_p": data.get("top_p", 1.0),
                 "stream": stream
             }
@@ -220,6 +220,196 @@ def chat_completions():
         except Exception as e:
             print(f"!!! Proxy Error: {e}")
             return jsonify({"error": str(e)}), 500
+
+@app.route("/")
+def home():
+    return f"""
+    <!DOCTYPE html>
+    <html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>LLM Proxy 伺服器控制台</title>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root {{
+                --bg: #0a0a0c;
+                --card-bg: #141417;
+                --accent: #c8a96e;
+                --text: #e0e0e0;
+                --text-dim: #a0a0a0;
+                --code-bg: #1d1d21;
+            }}
+            body {{
+                font-family: 'Outfit', sans-serif;
+                background-color: var(--bg);
+                color: var(--text);
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                padding: 40px 20px;
+                line-height: 1.6;
+            }}
+            .container {{
+                max-width: 900px;
+                width: 100%;
+            }}
+            header {{
+                text-align: center;
+                margin-bottom: 60px;
+            }}
+            h1 {{
+                font-size: 3rem;
+                font-weight: 700;
+                margin-bottom: 10px;
+                background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }}
+            .status-badge {{
+                display: inline-block;
+                padding: 6px 16px;
+                background: rgba(200, 169, 110, 0.1);
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                border-radius: 999px;
+                font-size: 0.9rem;
+                font-weight: 600;
+            }}
+            .card {{
+                background: var(--card-bg);
+                border-radius: 24px;
+                padding: 40px;
+                margin-bottom: 30px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                border: 1px solid rgba(255,255,255,0.05);
+            }}
+            h2 {{
+                font-size: 1.5rem;
+                color: var(--accent);
+                margin-top: 0;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+            }}
+            h2::before {{
+                content: '';
+                display: inline-block;
+                width: 4px;
+                height: 24px;
+                background: var(--accent);
+                margin-right: 12px;
+                border-radius: 2px;
+            }}
+            pre {{
+                background: var(--code-bg);
+                padding: 24px;
+                border-radius: 16px;
+                overflow-x: auto;
+                font-family: 'Fira Code', monospace;
+                font-size: 0.95rem;
+                border: 1px solid rgba(255,255,255,0.05);
+                color: #d1d1d1;
+            }}
+            .endpoint-tag {{
+                background: #2e7d32;
+                color: #fff;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                margin-right: 8px;
+                font-weight: 700;
+            }}
+            code {{
+                background: rgba(255,255,255,0.1);
+                padding: 2px 6px;
+                border-radius: 4px;
+                color: var(--accent);
+            }}
+            .grid {{
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }}
+            .stat-item {{
+                background: rgba(255,255,255,0.03);
+                padding: 20px;
+                border-radius: 16px;
+                text-align: center;
+            }}
+            .stat-value {{
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: #fff;
+            }}
+            .stat-label {{
+                font-size: 0.85rem;
+                color: var(--text-dim);
+                margin-top: 4px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>LLM Proxy Console</h1>
+                <div class="status-badge">伺服器運行中 (Port: {PORT})</div>
+            </header>
+
+            <div class="card">
+                <h2>系統資訊</h2>
+                <div class="grid">
+                    <div class="stat-item">
+                        <div class="stat-value">{'LOCAL HF' if USE_LOCAL_VLLM else 'NVIDIA API'}</div>
+                        <div class="stat-label">處理模式</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{NVIDIA_MODEL_NAME}</div>
+                        <div class="stat-label">當前模型</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">120.0s</div>
+                        <div class="stat-label">連線逾時</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>API 端點</h2>
+                <p>本伺服器提供符合 OpenAI 標準的 API 接口：</p>
+                <p><code><span class="endpoint-tag">POST</span> http://127.0.0.1:{PORT}/v1/chat/completions</code></p>
+                <p>您可以直接在閱讀助手或校對系統中將 API Base URL 設為 <code>http://127.0.0.1:{PORT}/v1</code>。</p>
+            </div>
+
+            <div class="card">
+                <h2>使用範例 (Python)</h2>
+                <pre>import openai
+
+client = openai.OpenAI(
+    base_url="http://127.0.0.1:{PORT}/v1",
+    api_key="anything"
+)
+
+response = client.chat.completions.create(
+    model="{NVIDIA_MODEL_NAME}",
+    messages=[{{"role": "user", "content": "你好"}}],
+    stream=True
+)
+
+for chunk in response:
+    print(chunk.choices[0].delta.content or "", end="")</pre>
+            </div>
+            
+            <div class="card" style="border: 1px solid rgba(200, 169, 110, 0.2);">
+                <h2>開發者備註</h2>
+                <p style="color: var(--text-dim); font-size: 0.95rem;">
+                    本伺服器作為 NVIDIA API 或本地 HuggingFace 模型的中轉站，主要處理<b>繁簡體轉換校對</b>任務的特殊需求（如：串流輸出、超長內容處理與自動重試邏輯）。
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
 if __name__ == "__main__":
     print(f"Mode: {'LOCAL HF' if USE_LOCAL_VLLM else 'NVIDIA API'}")

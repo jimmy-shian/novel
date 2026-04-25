@@ -62,6 +62,53 @@ function clearGlobalBatchState() {
   state.activeBatchNovel = null;
 }
 
+function saveUIState() {
+  const markEl = document.getElementById('chk-mark');
+  const analyzeEl = document.getElementById('chk-analyze');
+  const cacheEl = document.getElementById('chk-use-cache');
+  const settings = {
+    mark: markEl ? markEl.checked : false,
+    analyze: analyzeEl ? analyzeEl.checked : false,
+    useCache: cacheEl ? cacheEl.checked : false,
+    selectedNovels: Array.from(state.selectedNovels)
+  };
+  localStorage.setItem('proofreader.uiSettings', JSON.stringify(settings));
+}
+
+function loadUIState() {
+  const raw = localStorage.getItem('proofreader.uiSettings');
+  if (!raw) return;
+  try {
+    const settings = JSON.parse(raw);
+    const map = {
+      'chk-mark': settings.mark,
+      'chk-analyze': settings.analyze,
+      'chk-use-cache': settings.useCache
+    };
+    for (const [id, val] of Object.entries(map)) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined) el.checked = val;
+    }
+    if (settings.selectedNovels) {
+      state.selectedNovels = new Set(settings.selectedNovels);
+    }
+  } catch(e) {
+    console.error('Failed to load UI state', e);
+  }
+}
+
+function saveSelectedChapter(name) {
+  if (name) {
+    localStorage.setItem('proofreader.currentChapter', name);
+  } else {
+    localStorage.removeItem('proofreader.currentChapter');
+  }
+}
+
+function loadSelectedChapter() {
+  return localStorage.getItem('proofreader.currentChapter');
+}
+
 // ── DOM Elements ──
 const els = {
   status: document.getElementById('api-status'),
@@ -99,11 +146,21 @@ const els = {
   globalBatchProgress: document.getElementById('global-batch-progress'),
   globalBatchLabel: document.getElementById('global-batch-label'),
   globalBatchETA: document.getElementById('global-batch-eta'),
-  globalBatchDetails: document.getElementById('global-batch-details')
+  globalBatchDetails: document.getElementById('global-batch-details'),
+  btnGlobalStop: document.getElementById('btn-global-stop')
 };
 
 // ── Initialization ──
 async function init() {
+  // Load UI settings first
+  loadUIState();
+  
+  // Set listeners for settings changes
+  ['chk-mark', 'chk-analyze', 'chk-use-cache'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', saveUIState);
+  });
+
   try {
     const res = await fetch(`${API_BASE}/health`);
     if (res.ok) {
@@ -138,7 +195,11 @@ async function loadNovels() {
     if (activeBatch === '__GLOBAL__') {
       const batchState = loadGlobalBatchState();
       if (batchState && batchState.status === 'processing') {
-        resumeGlobalBatchState(batchState);
+        if (confirm('偵測到上次中斷的「全庫自動掃描」任務，是否要繼續執行？')) {
+          resumeGlobalBatchState(batchState);
+        } else {
+          clearGlobalBatchState();
+        }
       } else {
         clearGlobalBatchState();
       }
@@ -179,6 +240,7 @@ function renderNovels() {
       e.stopPropagation();
       if (chk.checked) state.selectedNovels.add(novel.name);
       else state.selectedNovels.delete(novel.name);
+      saveUIState();
     };
 
     const btn = document.createElement('button');
@@ -214,6 +276,7 @@ async function selectNovel(novel, btnEl) {
   state.chapters = [];
   state.warnings = [];
   saveSelectedNovel(novel.name);
+  saveSelectedChapter(null); // Clear chapter when novel changes
   
   els.chapterList.innerHTML = '<div class="loading-text">載入中...</div>';
   els.chapterCount.textContent = '';
@@ -224,6 +287,16 @@ async function selectNovel(novel, btnEl) {
     const data = await res.json();
     state.chapters = data.chapters;
     renderChapters();
+
+    // Auto-select chapter if saved
+    const savedChapter = loadSelectedChapter();
+    if (savedChapter) {
+      const matched = state.chapters.find(c => c.name === savedChapter);
+      if (matched) {
+        const btn = [...document.querySelectorAll('#chapter-list .list-item')].find(el => el.textContent.includes(matched.name));
+        if (btn) selectChapter(matched, btn);
+      }
+    }
 
     // Load novel-level analysis results
     await fetchNovelResults(novel.name);
@@ -310,14 +383,29 @@ async function selectChapter(chap, btnEl) {
 
   btnEl.classList.add('active');
   state.currentChapter = chap;
+  saveSelectedChapter(chap.name);
   els.currentInfo.textContent = `${state.currentNovel.display_name || state.currentNovel.name} / ${chap.name}`;
   
   // Show workspace
   els.emptyState.style.display = 'none';
   els.actions.style.display = 'flex';
   els.tabs.style.display = 'flex';
+
+  // Maintain active tab or default to proofread
+  let activeTab = 'proofread';
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (activeBtn) {
+    activeTab = activeBtn.dataset.tab;
+  } else {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.dataset.tab === 'proofread') b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
+
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-  document.getElementById('tab-proofread').style.display = 'block';
+  const activeContent = document.getElementById(`tab-${activeTab}`);
+  if (activeContent) activeContent.style.display = 'block';
   
   els.editor.innerHTML = '載入中...';
   
@@ -327,7 +415,7 @@ async function selectChapter(chap, btnEl) {
     state.originalText = data.content;
     state.issues = [];
     state.decisions = {};
-    state.aiData = null;
+    // state.aiData is preserved (novel-wide)
     renderEditor();
     renderIssues();
     renderAnalysis(); 
@@ -363,7 +451,7 @@ async function checkAndLoadCache() {
         hasCache = true;
       }
       
-      if (data.chars || data.events) {
+      if (data.chars || data.events || data.summary) {
         // Merge with existing global data if any
         const existingChars = state.aiData?.characters || [];
         const newChars = data.chars || [];
@@ -376,7 +464,7 @@ async function checkAndLoadCache() {
         state.aiData = {
           characters: Array.from(charMap.values()),
           timeline: data.events || state.aiData?.timeline || [], 
-          summary: state.aiData?.summary || '', 
+          summary: data.summary || state.aiData?.summary || '', 
           novel: state.currentNovel.name
         };
         hasCache = true;
@@ -417,8 +505,10 @@ function renderWarnings() {
   if (!container) return;
   if (!state.warnings || state.warnings.length === 0) {
     container.innerHTML = '';
+    container.style.display = 'none';
     return;
   }
+  container.style.display = 'block';
   container.innerHTML = state.warnings.map(w => `
     <div class="warning-item">
       <strong>快取/解析提醒：</strong>
@@ -978,6 +1068,8 @@ async function startBatchStatusPolling(novelName) {
           <div class="batch-item">已處理：${executed} / ${data.total}</div>
           ${data.failed ? `<div class="batch-item warning-text">失敗章節：${data.failed}</div>` : ''}
         `;
+        // Refresh analysis data immediately
+        fetchNovelResults(novelName);
       }
     } catch (pollErr) {
       console.error('Batch status poll failed:', pollErr);
@@ -1007,7 +1099,11 @@ function renderAnalysis() {
   }
   
   // Summary
-  containerSummary.textContent = state.aiData.summary || '無大綱資料';
+  if (state.aiData.summary) {
+    containerSummary.innerHTML = marked.parse(state.aiData.summary);
+  } else {
+    containerSummary.textContent = '無大綱資料';
+  }
   
   // Characters
   containerChars.innerHTML = '';
@@ -1127,6 +1223,7 @@ function finalizeGlobalBatch(batchState) {
   els.batchList.innerHTML = `<div class="batch-item done-text">全庫自動掃描完成！</div>`;
   els.btnGlobalBatch.textContent = '掃描完成';
   els.btnGlobalBatch.disabled = false;
+  if (els.btnGlobalStop) els.btnGlobalStop.style.display = 'none';
   state.isGlobalBatching = false;
   clearGlobalBatchState();
 }
@@ -1142,6 +1239,7 @@ async function resumeGlobalBatchState(batchState) {
   saveActiveBatchNovel('__GLOBAL__');
   els.btnGlobalBatch.disabled = true;
   els.btnGlobalBatch.textContent = '批次處理運行中...';
+  if (els.btnGlobalStop) els.btnGlobalStop.style.display = 'inline-block';
   renderGlobalBatchView(batchState);
   await pollGlobalBatchForCurrentGlobalState(batchState);
 }
@@ -1209,6 +1307,7 @@ els.btnGlobalBatch.addEventListener('click', async () => {
   saveActiveBatchNovel('__GLOBAL__');
   els.btnGlobalBatch.disabled = true;
   els.btnGlobalBatch.textContent = '批次處理運行中...';
+  if (els.btnGlobalStop) els.btnGlobalStop.style.display = 'inline-block';
   els.globalBatchUI.style.display = 'block';
 
   try {
@@ -1276,11 +1375,22 @@ els.btnGlobalBatch.addEventListener('click', async () => {
       els.globalBatchLabel.textContent = `正在處理: ${item.novel.name}`;
       
       try {
+        // Gather selected tasks
+        const requestedTasks = [];
+        if (document.getElementById('chk-mark').checked) requestedTasks.push('mark');
+        if (document.getElementById('chk-analyze').checked) {
+          requestedTasks.push('chars');
+          requestedTasks.push('summary');
+        }
+
         // Start batch for this novel
         const startRes = await fetch(`${API_BASE}/batch/scan`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ novel_id: item.novel.name })
+          body: JSON.stringify({ 
+            novel_id: item.novel.name,
+            tasks: requestedTasks.length > 0 ? requestedTasks : ['mark']
+          })
         });
         
         if (!startRes.ok) throw new Error(`HTTP ${startRes.status}`);
@@ -1329,6 +1439,25 @@ els.btnGlobalBatch.addEventListener('click', async () => {
   } finally {
     state.isGlobalBatching = false;
     els.btnGlobalBatch.disabled = false;
+    if (els.btnGlobalStop) els.btnGlobalStop.style.display = 'none';
+  }
+});
+
+els.btnGlobalStop?.addEventListener('click', async () => {
+  if (confirm('確定要停止當前的全庫自動掃描嗎？這將清除目前的進度。')) {
+    // Notify backend to stop the background task
+    const novelId = state.activeBatchNovel || state.currentNovel?.name;
+    if (novelId) {
+      try {
+        await fetch(`${API_BASE}/batch/stop/${encodeURIComponent(novelId)}`, { method: 'POST' });
+      } catch (err) {
+        console.error('Failed to stop backend batch:', err);
+      }
+    }
+    
+    state.isGlobalBatching = false;
+    clearGlobalBatchState();
+    location.reload(); // Hard reset to stop all frontend loops
   }
 });
 

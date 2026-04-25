@@ -41,6 +41,7 @@
       <div id="actions" style="display:none;">
         <label class="chk-label"><input type="checkbox" id="chk-mark" checked> 標記錯誤</label>
         <label class="chk-label"><input type="checkbox" id="chk-analyze" checked> 角色/劇情分析</label>
+        <label class="chk-label"><input type="checkbox" id="chk-use-cache" checked> 使用快取</label>
         <button id="btn-analyze" class="btn primary">啟動 AI 分析</button>
         <button id="btn-edit-mode" class="btn outline">進入手動編輯</button>
         <button id="btn-apply" class="btn success">儲存至檔案</button>
@@ -79,7 +80,10 @@
               <div id="global-batch-details" class="batch-details"></div>
             </div>
 
-            <button id="btn-global-batch" class="btn primary large">啟動全庫自動掃描</button>
+            <div class="batch-controls">
+              <button id="btn-global-batch" class="btn primary large">啟動全庫自動掃描</button>
+              <button id="btn-global-stop" class="btn outline large" style="display:none;">停止掃描</button>
+            </div>
           </div>
         </div>
       </div>
@@ -159,6 +163,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

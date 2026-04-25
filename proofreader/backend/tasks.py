@@ -25,40 +25,67 @@ log = logging.getLogger(__name__)
 
 # ── Helpers ─────────────────────────────────────────────────────────────────────
 
-def get_cache_tag(category: str, novel_id: str, chapter: str) -> str:
-    return f"{category}:{novel_id}:{chapter}"
+def get_cache_path(category: str, novel_id: str, chapter: str) -> Path:
+    """Returns a structured path: data/cache/{novel_id}/{chapter}.{category}.json"""
+    # Sanitize chapter name just in case
+    safe_chapter = re.sub(r'[\\/:*?"<>|]', '_', chapter)
+    folder = CACHE_DIR / novel_id
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder / f"{safe_chapter}.{category}.json"
 
+def calculate_text_hash(text: str) -> str:
+    """Stable hash for text content validation."""
+    norm_text = text.replace('\r\n', '\n').strip()
+    return hashlib.sha256(norm_text.encode()).hexdigest()[:16]
 
-def cache_key(tag: str, text: str) -> str:
-    return hashlib.sha256(f"{tag}:{text}".encode()).hexdigest()[:16]
-
-
-def load_cache(tag: str, text: str) -> dict | list | None:
-    p = CACHE_DIR / f"{cache_key(tag, text)}.json"
+def load_cache(category: str, novel_id: str, chapter: str, text: str) -> dict | list | None:
+    p = get_cache_path(category, novel_id, chapter)
     if p.exists():
         try:
             data = json.loads(p.read_text("utf-8"))
             if not data: return None
-            if isinstance(data, dict):
-                if "raw_error" in data: return None
-                if tag.startswith("mark:") and "issues" not in data: return None
             
-            # Auto-fix offsets for older cache files or AI failures
-            if tag.startswith("mark:") and isinstance(data, dict) and "issues" in data:
-                fixed_issues, warnings = _fix_offsets(text, data["issues"])
-                data["issues"] = fixed_issues
+            # Verify text hash to ensure cache is still valid for this version of the text
+            current_hash = calculate_text_hash(text)
+            saved_hash = data.get("_text_hash") if isinstance(data, dict) else None
+            
+            # For 'global' entries (novel-wide analysis), we skip the hash check 
+            # as it was likely generated from a different chapter's text.
+            if chapter == "global":
+                pass
+            elif isinstance(data, dict) and saved_hash and saved_hash != current_hash:
+                return None # Stale
+            
+            # Handle list-based results (like characters)
+            actual_data = data.get("data") if (isinstance(data, dict) and "data" in data) else data
+
+            if isinstance(actual_data, dict):
+                if "raw_error" in actual_data: return None
+                if category == "mark" and "issues" not in actual_data: return None
+            
+            # Auto-fix offsets for mark errors
+            if category == "mark" and isinstance(actual_data, dict) and "issues" in actual_data:
+                fixed_issues, warnings = _fix_offsets(text, actual_data["issues"])
+                actual_data["issues"] = fixed_issues
                 if warnings:
-                    data["warnings"] = warnings
+                    actual_data["warnings"] = warnings
             
-            return data
+            return actual_data
         except Exception:
             pass
     return None
 
-
-def save_cache(tag: str, text: str, data: dict | list) -> None:
-    p = CACHE_DIR / f"{cache_key(tag, text)}.json"
-    p.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
+def save_cache(category: str, novel_id: str, chapter: str, text: str, data: dict | list) -> None:
+    p = get_cache_path(category, novel_id, chapter)
+    # Wrap with hash for validation
+    wrapper = {
+        "_text_hash": calculate_text_hash(text),
+        "data": data,
+        "novel": novel_id,
+        "chapter": chapter,
+        "type": category
+    }
+    p.write_text(json.dumps(wrapper, ensure_ascii=False, indent=2), "utf-8")
 
 
 def _parse_json(raw: str) -> dict | list:
@@ -89,46 +116,91 @@ def _fix_offsets(text: str, issues: list[dict]) -> tuple[list[dict], list[dict]]
     """
     fixed = []
     warnings = []
+    
+    # Pre-compiled tag/space pattern
+    TAG_SEP = r"\s*(?:<[^>]+>|&nbsp;|&emsp;)*\s*"
+    
     for issue in issues:
         orig = issue.get("original")
         context = issue.get("context", "")
-        if not orig:
-            continue
+        if not orig: continue
 
         matched = False
-        if context and orig in context:
-            escaped_context = re.escape(context)
-            pattern = escaped_context.replace(r"\ ", r"\s*(?:<[^>]+>|&nbsp;|&emsp;)*\s*")
+        if context:
+            # Create a lenient regex pattern from context
+            # We allow tags/spaces between any character in the context
+            # To avoid regex performance issues, we only do this for characters near the 'orig' part
+            # or just escape the whole thing but allow tags between words.
+            
+            # Escape each char and join with optional tag separator
+            # Only do character-level lenient for short-to-medium contexts to avoid explosion
+            if len(context) < 100:
+                pattern = TAG_SEP.join([re.escape(c) for c in context])
+            else:
+                pattern = re.escape(context).replace(r"\ ", TAG_SEP)
+
             try:
-                match = re.search(pattern, text)
+                # Use DOTALL so . matches newlines if any
+                match = re.search(pattern, text, re.DOTALL)
                 if match:
                     match_text = match.group(0)
                     match_start = match.start()
-                    inner_idx = match_text.find(orig)
-                    if inner_idx != -1:
-                        start = match_start + inner_idx
-                        end = start + len(orig)
+                    
+                    # Map characters in match_text to their original indices (ignoring tags)
+                    clean_match = ""
+                    mapping = [] # mapping[clean_idx] = original_idx_in_match_text
+                    
+                    i = 0
+                    while i < len(match_text):
+                        if match_text[i] == '<':
+                            end_tag = match_text.find('>', i)
+                            if end_tag != -1:
+                                i = end_tag + 1
+                                continue
+                        if match_text.startswith('&nbsp;', i):
+                            i += 6
+                            continue
+                        if match_text.startswith('&emsp;', i):
+                            i += 6
+                            continue
+                        
+                        clean_match += match_text[i]
+                        mapping.append(i)
+                        i += 1
+                    
+                    # Try to find 'orig' in clean_match (logical text)
+                    c_idx = clean_match.find(orig)
+                    
+                    # If not found (due to S2T mismatch), use position in the 'context' string
+                    # Since clean_match corresponds to the context
+                    if c_idx == -1 and orig in context:
+                        c_idx = context.find(orig)
+                    
+                    if c_idx != -1 and c_idx < len(mapping):
+                        start_in_match = mapping[c_idx]
+                        # Find end index based on character length
+                        end_clean_idx = min(c_idx + len(orig) - 1, len(mapping) - 1)
+                        end_in_match = mapping[end_clean_idx] + 1
+                        
+                        found_orig = match_text[start_in_match:end_in_match]
+                        
                         new_issue = issue.copy()
-                        new_issue["start"] = start
-                        new_issue["end"] = end
+                        new_issue["original"] = found_orig
+                        new_issue["start"] = match_start + start_in_match
+                        new_issue["end"] = match_start + end_in_match
                         fixed.append(new_issue)
                         matched = True
             except Exception as e:
                 log.debug(f"Regex match failed: {e}")
 
         if not matched:
-            start_search = 0
-            while True:
-                idx = text.find(orig, start_search)
-                if idx == -1:
-                    break
-                if len(orig) < 2 and not context:
-                    break
+            # Fallback: exact match in full text
+            idx = text.find(orig)
+            if idx != -1:
                 new_issue = issue.copy()
                 new_issue["start"] = idx
                 new_issue["end"] = idx + len(orig)
                 fixed.append(new_issue)
-                start_search = idx + len(orig)
                 matched = True
 
         if not matched:
@@ -158,9 +230,8 @@ async def run_mark_errors(
     text: str,
     use_cache: bool = True,
 ) -> dict:
-    cache_tag = f"mark:{novel_id}:{chapter}"
     if use_cache:
-        cached = load_cache(cache_tag, text)
+        cached = load_cache("mark", novel_id, chapter, text)
         if cached is not None:
             log.info("Cache hit for mark_errors %s/%s", novel_id, chapter)
             return cached
@@ -182,7 +253,7 @@ async def run_mark_errors(
                 result["warnings"] = warnings
             
         if use_cache:
-            save_cache(cache_tag, text, result)
+            save_cache("mark", novel_id, chapter, text, result)
     except Exception as e:
         log.error("JSON parse failed for mark_errors: %s", e)
         result = {"issues": [], "raw_error": str(e), "raw_response": raw}
@@ -243,9 +314,9 @@ async def run_extract_characters(
     text: str,
     use_cache: bool = True,
 ) -> list:
-    cache_tag = get_cache_tag("chars", novel_id, "global")
     if use_cache:
-        cached = load_cache(cache_tag, text)
+        # Use a special 'global' chapter name for novel-wide extractions done on specific text
+        cached = load_cache("chars", novel_id, "global", text)
         if cached is not None:
             return cached
 
@@ -261,7 +332,7 @@ async def run_extract_characters(
             for char in result:
                 rag.add_character(novel_id, char)
             if use_cache:
-                save_cache(cache_tag, text, result)
+                save_cache("chars", novel_id, "global", text, result)
         else:
             result = []
     except Exception:
@@ -278,9 +349,8 @@ async def run_extract_events(
     text: str,
     use_cache: bool = True,
 ) -> list:
-    cache_tag = get_cache_tag("events", novel_id, chapter)
     if use_cache:
-        cached = load_cache(cache_tag, text)
+        cached = load_cache("events", novel_id, chapter, text)
         if cached is not None:
             return cached
 
@@ -297,7 +367,7 @@ async def run_extract_events(
                 ev["章節"] = ev.get("章節") or chapter
                 rag.add_event(novel_id, ev)
             if use_cache:
-                save_cache(cache_tag, text, result)
+                save_cache("events", novel_id, chapter, text, result)
         else:
             result = []
     except Exception:
@@ -320,10 +390,20 @@ async def run_build_timeline(novel_id: str, all_events: list) -> list:
 
 # ── 6. Story Summary ────────────────────────────────────────────────────────────
 
-async def run_extract_summary(novel_id: str, text_chunks: list[str]) -> str:
+async def run_extract_summary(novel_id: str, text_chunks: list[str], use_cache: bool = True) -> str:
+    # Use the combined text as the basis for the cache key
+    combined_text = "".join(text_chunks)
+    if use_cache:
+        cached = load_cache("summary", novel_id, "global", combined_text)
+        if cached: return cached
+
     messages = story_summary_prompt(text_chunks)
     raw = await chat(messages, max_tokens=2048)
-    return raw.strip()
+    res = raw.strip()
+    
+    if use_cache:
+        save_cache("summary", novel_id, "global", combined_text, res)
+    return res
 
 
 # ── 7. Export to Assistant ───────────────────────────────────────────────────────

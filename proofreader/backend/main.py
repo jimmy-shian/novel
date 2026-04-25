@@ -56,6 +56,7 @@ class BatchMarkRequest(BaseModel):
 
 class BatchScanRequest(BaseModel):
     novel_id: str
+    tasks: List[str] = ["mark"] # ["mark", "chars", "events", "summary"]
 
 class Decision(BaseModel):
     id: str
@@ -148,14 +149,11 @@ async def list_chapters(novel_path: str, include_cache: bool = False):
                     "path": str(entry.relative_to(NOVEL_BASE_DIR)).replace("\\", "/")
                 }
                 if include_cache:
-                    try:
-                        content = _read_file_content(entry)
-                        item["cache"] = {
-                            "mark": tasks.load_cache(tasks.get_cache_tag("mark", novel_path, entry.name), content) is not None,
-                            "events": tasks.load_cache(tasks.get_cache_tag("events", novel_path, entry.name), content) is not None,
-                        }
-                    except Exception:
-                        item["cache"] = {"mark": False, "events": False}
+                    # Quick path-based check for existence, much faster than hashing content
+                    item["cache"] = {
+                        "mark": tasks.get_cache_path("mark", novel_path, entry.name).exists(),
+                        "events": tasks.get_cache_path("events", novel_path, entry.name).exists(),
+                    }
                 items.append(item)
     except Exception as e:
         log.error(f"FS List Chapter error: {e}")
@@ -186,16 +184,20 @@ async def read_file(path: str):
 async def check_cache(req: AnalyzeRequest):
     """Checks if analysis cache exists for the given content."""
     res = {}
-    tags = {
-        "mark": tasks.get_cache_tag("mark", req.novel_id, req.chapter),
-        "chars": tasks.get_cache_tag("chars", req.novel_id, "global"),
-        "events": tasks.get_cache_tag("events", req.novel_id, req.chapter)
-    }
     
-    for key, tag in tags.items():
-        cached = tasks.load_cache(tag, req.text)
-        if cached is not None:
-            res[key] = cached
+    # Check each type using new path-based load_cache
+    m = tasks.load_cache("mark", req.novel_id, req.chapter, req.text)
+    if m: res["mark"] = m
+    
+    c = tasks.load_cache("chars", req.novel_id, "global", req.text)
+    if c: res["chars"] = c
+    
+    e = tasks.load_cache("events", req.novel_id, req.chapter, req.text)
+    if e: res["events"] = e
+    
+    s = tasks.load_cache("summary", req.novel_id, "global", req.text)
+    if s: res["summary"] = s
+    
     return res
 
 # --- Processing Endpoints ---
@@ -221,25 +223,102 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     novel_dir = NOVEL_BASE_DIR / novel_id
     if not novel_dir.exists():
         raise HTTPException(404, "Novel not found")
-        
-    files = sorted(list(novel_dir.glob("*.txt")), key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
+
+    # Get all .txt files except table.txt
+    files = [f for f in novel_dir.glob("*.txt") if f.name.lower() != "table.txt"]
+    files = sorted(files, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
     batch_status[novel_id] = _create_batch_status(len(files))
     
     async def process_all():
+        all_chars = []
+        all_summaries = []
+        all_events = []
+        
         for i, f_path in enumerate(files):
+            # Check if user requested to stop
+            if batch_status.get(novel_id, {}).get("status") == "stopped":
+                log.info(f"Stopping batch scan for {novel_id}")
+                return
+
             try:
                 content = f_path.read_text("utf-8", errors="ignore")
-                await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=True)
+                
+                # Execute requested tasks
+                if "mark" in req.tasks:
+                    await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=True)
+                
+                if "chars" in req.tasks:
+                    c_list = await tasks.run_extract_characters(novel_id, content, use_cache=True)
+                    if c_list: all_chars.extend(c_list)
+                
+                if "events" in req.tasks:
+                    evs = await tasks.run_extract_events(novel_id, f_path.name, content, use_cache=True)
+                    if evs: all_events.extend(evs)
+                
+                if "summary" in req.tasks:
+                    # Only summarize first/middle/last if too many? 
+                    # For batch, maybe just first 3 chapters or so
+                    if i < 5:
+                        s = await tasks.run_extract_summary(novel_id, [content[:3000]], use_cache=True)
+                        if s: all_summaries.append(s)
+
                 batch_status[novel_id]["current"] = i + 1
             except Exception as e:
                 log.error(f"Scan batch error for {f_path.name}: {e}")
                 batch_status[novel_id]["failed"] += 1
                 batch_status[novel_id]["failed_files"].append(f_path.name)
                 batch_status[novel_id]["current"] = i + 1
+        
+        # After all chapters, update global novel results if chars or summary were requested
+        if all_chars or all_summaries or all_events:
+            # Build timeline if events were collected
+            timeline = []
+            if all_events:
+                timeline = await tasks.run_build_timeline(novel_id, all_events)
+                
+            _update_novel_results_from_batch(novel_id, all_chars, all_summaries, timeline)
+            
         batch_status[novel_id]["status"] = "done"
 
     background_tasks.add_task(process_all)
     return {"message": "Scan started", "total": len(files)}
+
+@app.post("/api/batch/stop/{novel_id}")
+async def api_batch_stop(novel_id: str):
+    if novel_id in batch_status:
+        batch_status[novel_id]["status"] = "stopped"
+        return {"success": True}
+    return {"success": False, "message": "Not running"}
+
+def _update_novel_results_from_batch(novel_id, chars, summaries, timeline):
+    res_path = RESULTS_DIR / f"{novel_id}.json"
+    data = {"characters": [], "summary": "", "timeline": [], "novel": novel_id}
+    if res_path.exists():
+        try: data = json.loads(res_path.read_text("utf-8"))
+        except: pass
+        
+    if chars:
+        # Deduplicate and merge characters
+        existing = {c.get('角色名稱'): c for c in data.get("characters", []) if c.get('角色名稱')}
+        for c in chars:
+            name = c.get("角色名稱")
+            if not name: continue
+            if name not in existing:
+                existing[name] = c
+            else:
+                # Merge description if missing
+                if not existing[name].get("角色描述") and c.get("角色描述"):
+                    existing[name]["角色描述"] = c["角色描述"]
+        data["characters"] = list(existing.values())
+        
+    if summaries and not data.get("summary"):
+        # Just use the first one found or join them
+        data["summary"] = summaries[0]
+    
+    if timeline:
+        data["timeline"] = timeline
+    
+    res_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
 
 @app.post("/api/batch/mark")
 async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTasks):
