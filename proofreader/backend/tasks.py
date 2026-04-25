@@ -45,8 +45,11 @@ def load_cache(tag: str, text: str) -> dict | list | None:
             
             # Auto-fix offsets for older cache files or AI failures
             if tag.startswith("mark:") and isinstance(data, dict) and "issues" in data:
-                data["issues"] = _fix_offsets(text, data["issues"])
-                
+                fixed_issues, warnings = _fix_offsets(text, data["issues"])
+                data["issues"] = fixed_issues
+                if warnings:
+                    data["warnings"] = warnings
+            
             return data
         except Exception:
             pass
@@ -78,78 +81,65 @@ def _save_name_dict(d: dict) -> None:
     NAMES_DICT_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=2), "utf-8")
 
 
-def _fix_offsets(text: str, issues: list[dict]) -> list[dict]:
+def _fix_offsets(text: str, issues: list[dict]) -> tuple[list[dict], list[dict]]:
     """
     Finds the correct start/end offsets for issues.
     Uses regex for robust context matching (ignoring extra spaces/tags).
+    Returns fixed issue list and warnings for any unmatched original terms.
     """
     fixed = []
+    warnings = []
     for issue in issues:
         orig = issue.get("original")
         context = issue.get("context", "")
-        if not orig: continue
-        
-        # Scenario A: AI provided a context string
+        if not orig:
+            continue
+
+        matched = False
         if context and orig in context:
-            # Create a regex from context that allows for flexible whitespace/tags between chars
-            # We escape the context and then replace 'gaps' with a pattern that matches tags/whitespace
             escaped_context = re.escape(context)
-            # Allow for optional HTML tags or whitespace between characters in the context
-            # (only between characters, not inside the 'original' word itself if possible, 
-            # but AI usually provides context with the word inside)
-            
-            # Simplified robust pattern: replace any escaped space with \s* 
-            # and insert a tag-ignoring pattern between characters if needed.
-            # But let's start with a simpler approach: 
-            # Replace spaces in context with \s*(?:<[^>]+>)*\s*
             pattern = escaped_context.replace(r"\ ", r"\s*(?:<[^>]+>|&nbsp;|&emsp;)*\s*")
-            
             try:
                 match = re.search(pattern, text)
                 if match:
-                    # We found the context block! 
-                    # Now we need the exact offset of 'orig' within this match.
-                    # This is tricky because the match might have tags inside.
-                    # We'll search for 'orig' within the matched substring.
                     match_text = match.group(0)
                     match_start = match.start()
-                    
-                    # Search for 'orig' in the match text
-                    # (Usually 'orig' itself won't have tags inside it)
                     inner_idx = match_text.find(orig)
                     if inner_idx != -1:
                         start = match_start + inner_idx
                         end = start + len(orig)
-                        
                         new_issue = issue.copy()
                         new_issue["start"] = start
                         new_issue["end"] = end
                         fixed.append(new_issue)
-                        continue
+                        matched = True
             except Exception as e:
                 log.debug(f"Regex match failed: {e}")
 
-        # Scenario B: Fallback to global search (same as before)
-        start_search = 0
-        found_any = False
-        while True:
-            idx = text.find(orig, start_search)
-            if idx == -1: break
-            
-            if len(orig) < 2 and not context:
-                break
+        if not matched:
+            start_search = 0
+            while True:
+                idx = text.find(orig, start_search)
+                if idx == -1:
+                    break
+                if len(orig) < 2 and not context:
+                    break
+                new_issue = issue.copy()
+                new_issue["start"] = idx
+                new_issue["end"] = idx + len(orig)
+                fixed.append(new_issue)
+                start_search = idx + len(orig)
+                matched = True
 
-            new_issue = issue.copy()
-            new_issue["start"] = idx
-            new_issue["end"] = idx + len(orig)
-            fixed.append(new_issue)
-            start_search = idx + len(orig)
-            found_any = True
-        
-        if not found_any:
+        if not matched:
             log.warning(f"Could not locate '{orig}' in text (Context: {context})")
-            
-    return fixed
+            warnings.append({
+                "original": orig,
+                "context": context,
+                "message": f"無法定位原文：{orig}",
+            })
+
+    return fixed, warnings
 
 
 def _log_issues(novel_id: str, chapter: str, issues: list) -> None:
@@ -186,8 +176,10 @@ async def run_mark_errors(
     try:
         result = _parse_json(raw)
         if isinstance(result, dict) and "issues" in result:
-            # Fix offsets before saving to cache
-            result["issues"] = _fix_offsets(text, result["issues"])
+            fixed_issues, warnings = _fix_offsets(text, result["issues"])
+            result["issues"] = fixed_issues
+            if warnings:
+                result["warnings"] = warnings
             
         if use_cache:
             save_cache(cache_tag, text, result)

@@ -7,6 +7,7 @@ import logging
 import sys
 import asyncio
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 import re
@@ -20,7 +21,7 @@ from pydantic import BaseModel
 
 import rag
 import tasks
-from config import DATA_DIR, RESULTS_DIR, NAMES_DICT_PATH, LOGS_DIR, USE_LOCAL_VLLM
+from config import DATA_DIR, RESULTS_DIR, NAMES_DICT_PATH, NOVEL_NAMES_PATH, LOGS_DIR, USE_LOCAL_VLLM
 
 logging.basicConfig(
     level=logging.INFO,
@@ -102,6 +103,12 @@ NOVEL_BASE_DIR = Path("c:/Users/user/Downloads/novel")
 @app.get("/api/fs/novels")
 async def list_novels():
     """Lists directories in the novel base directory that contain table.txt."""
+    mapping = {}
+    if NOVEL_NAMES_PATH.exists():
+        try:
+            mapping = json.loads(NOVEL_NAMES_PATH.read_text("utf-8"))
+        except: pass
+        
     items = []
     try:
         for entry in NOVEL_BASE_DIR.iterdir():
@@ -109,14 +116,24 @@ async def list_novels():
                 if (entry / "table.txt").exists():
                     items.append({
                         "name": entry.name,
+                        "display_name": mapping.get(entry.name, entry.name),
                         "path": entry.name
                     })
     except Exception as e:
         log.error(f"FS List Novel error: {e}")
-    return {"novels": sorted(items, key=lambda x: x["name"])}
+    return {"novels": sorted(items, key=lambda x: x["display_name"])}
+
+def _read_file_content(path: Path) -> str:
+    """Helper to read text with robust encoding detection."""
+    content_bytes = path.read_bytes()
+    for enc in ("utf-8", "utf-8-sig", "gbk", "big5", "utf-16"):
+        try:
+            return content_bytes.decode(enc)
+        except: continue
+    return content_bytes.decode("utf-8", errors="ignore")
 
 @app.get("/api/fs/chapters")
-async def list_chapters(novel_path: str):
+async def list_chapters(novel_path: str, include_cache: bool = False):
     """Lists .txt files within a novel directory, excluding table.txt."""
     target = (NOVEL_BASE_DIR / novel_path).resolve()
     if not str(target).startswith(str(NOVEL_BASE_DIR.resolve())):
@@ -126,10 +143,20 @@ async def list_chapters(novel_path: str):
     try:
         for entry in target.iterdir():
             if entry.is_file() and entry.suffix.lower() == ".txt" and entry.name.lower() != "table.txt":
-                items.append({
+                item = {
                     "name": entry.name,
                     "path": str(entry.relative_to(NOVEL_BASE_DIR)).replace("\\", "/")
-                })
+                }
+                if include_cache:
+                    try:
+                        content = _read_file_content(entry)
+                        item["cache"] = {
+                            "mark": tasks.load_cache(tasks.get_cache_tag("mark", novel_path, entry.name), content) is not None,
+                            "events": tasks.load_cache(tasks.get_cache_tag("events", novel_path, entry.name), content) is not None,
+                        }
+                    except Exception:
+                        item["cache"] = {"mark": False, "events": False}
+                items.append(item)
     except Exception as e:
         log.error(f"FS List Chapter error: {e}")
         
@@ -149,12 +176,11 @@ async def read_file(path: str):
     if not target.is_file():
         raise HTTPException(404, "File not found")
         
-    content_bytes = target.read_bytes()
-    for enc in ("utf-8", "utf-8-sig", "gbk", "big5"):
-        try:
-            return {"content": content_bytes.decode(enc), "filename": target.name}
-        except: continue
-    raise HTTPException(400, "Encoding not supported")
+    try:
+        content = _read_file_content(target)
+        return {"content": content, "filename": target.name}
+    except Exception as e:
+        raise HTTPException(400, f"Read error: {e}")
     
 @app.post("/api/cache/check")
 async def check_cache(req: AnalyzeRequest):
@@ -174,6 +200,16 @@ async def check_cache(req: AnalyzeRequest):
 
 # --- Processing Endpoints ---
 
+def _create_batch_status(total: int) -> dict:
+    return {
+        "total": total,
+        "current": 0,
+        "failed": 0,
+        "failed_files": [],
+        "status": "processing",
+        "start_time": datetime.now(timezone.utc).isoformat()
+    }
+
 @app.post("/api/mark")
 async def api_mark_errors(req: MarkRequest):
     result = await tasks.run_mark_errors(req.novel_id, req.chapter, req.text, req.use_cache)
@@ -187,18 +223,19 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
         raise HTTPException(404, "Novel not found")
         
     files = sorted(list(novel_dir.glob("*.txt")), key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
-    
-    batch_status[novel_id] = {"total": len(files), "current": 0, "status": "processing"}
+    batch_status[novel_id] = _create_batch_status(len(files))
     
     async def process_all():
         for i, f_path in enumerate(files):
             try:
-                # Read content
                 content = f_path.read_text("utf-8", errors="ignore")
                 await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=True)
                 batch_status[novel_id]["current"] = i + 1
             except Exception as e:
                 log.error(f"Scan batch error for {f_path.name}: {e}")
+                batch_status[novel_id]["failed"] += 1
+                batch_status[novel_id]["failed_files"].append(f_path.name)
+                batch_status[novel_id]["current"] = i + 1
         batch_status[novel_id]["status"] = "done"
 
     background_tasks.add_task(process_all)
@@ -207,7 +244,7 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
 @app.post("/api/batch/mark")
 async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTasks):
     novel_id = req.novel_id
-    batch_status[novel_id] = {"total": len(req.files), "current": 0, "status": "processing"}
+    batch_status[novel_id] = _create_batch_status(len(req.files))
     
     async def process_batch():
         for i, f in enumerate(req.files):
@@ -216,6 +253,9 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
                 batch_status[novel_id]["current"] = i + 1
             except Exception as e:
                 log.error(f"Batch process error for {f['filename']}: {e}")
+                batch_status[novel_id]["failed"] += 1
+                batch_status[novel_id]["failed_files"].append(f["filename"])
+                batch_status[novel_id]["current"] = i + 1
         batch_status[novel_id]["status"] = "done"
 
     background_tasks.add_task(process_batch)
@@ -223,7 +263,7 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
 
 @app.get("/api/batch/status/{novel_id}")
 async def get_batch_status(novel_id: str):
-    return batch_status.get(novel_id, {"status": "not_found"})
+    return batch_status.get(novel_id, {"status": "not_found", "total": 0, "current": 0, "failed": 0, "failed_files": [], "start_time": None})
 
 @app.post("/api/apply")
 async def api_apply_corrections(req: ApplyRequest):

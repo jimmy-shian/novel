@@ -117,7 +117,7 @@ def chat_completions():
                 "model": NVIDIA_MODEL_NAME,
                 "messages": messages,
                 "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 1.0),
+                "temperature": data.get("temperature", 0.9),
                 "top_p": data.get("top_p", 1.0),
                 "stream": stream
             }

@@ -8,9 +8,59 @@ const state = {
   currentChapter: null,
   originalText: '',
   issues: [],
+  warnings: [],
   decisions: {}, // issue.id -> { action: 'accept'|'ignore'|'manual', manualText?: '' }
-  aiData: null // { chars, events, summary, timeline }
+  aiData: null, // { chars, events, summary, timeline }
+  activeBatchNovel: null,
+  isGlobalBatching: false,
+  selectedNovels: new Set() // Selected for global batch
 };
+
+function saveSelectedNovel(name) {
+  if (name) {
+    localStorage.setItem('proofreader.currentNovel', name);
+  } else {
+    localStorage.removeItem('proofreader.currentNovel');
+  }
+}
+
+function loadSelectedNovel() {
+  return localStorage.getItem('proofreader.currentNovel');
+}
+
+function saveActiveBatchNovel(name) {
+  if (name) {
+    localStorage.setItem('proofreader.activeBatchNovel', name);
+  } else {
+    localStorage.removeItem('proofreader.activeBatchNovel');
+  }
+}
+
+function loadActiveBatchNovel() {
+  return localStorage.getItem('proofreader.activeBatchNovel');
+}
+
+const GLOBAL_BATCH_STORAGE_KEY = 'proofreader.globalBatchState';
+function saveGlobalBatchState(batchState) {
+  localStorage.setItem(GLOBAL_BATCH_STORAGE_KEY, JSON.stringify(batchState));
+}
+
+function loadGlobalBatchState() {
+  const raw = localStorage.getItem(GLOBAL_BATCH_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error('Failed to parse saved global batch state', err);
+    return null;
+  }
+}
+
+function clearGlobalBatchState() {
+  localStorage.removeItem(GLOBAL_BATCH_STORAGE_KEY);
+  saveActiveBatchNovel(null);
+  state.activeBatchNovel = null;
+}
 
 // ── DOM Elements ──
 const els = {
@@ -74,6 +124,34 @@ async function loadNovels() {
     const data = await res.json();
     state.novels = data.novels;
     renderNovels();
+
+    const savedNovel = loadSelectedNovel();
+    if (savedNovel) {
+      const matched = state.novels.find(n => n.name === savedNovel);
+      if (matched) {
+        const btn = [...document.querySelectorAll('#novel-list .list-item')].find(el => el.textContent === matched.name);
+        if (btn) selectNovel(matched, btn);
+      }
+    }
+
+    const activeBatch = loadActiveBatchNovel();
+    if (activeBatch === '__GLOBAL__') {
+      const batchState = loadGlobalBatchState();
+      if (batchState && batchState.status === 'processing') {
+        resumeGlobalBatchState(batchState);
+      } else {
+        clearGlobalBatchState();
+      }
+    } else if (activeBatch) {
+      const matched = state.novels.find(n => n.name === activeBatch);
+      if (matched) {
+        const btn = [...document.querySelectorAll('#novel-list .list-item')].find(el => el.textContent === matched.name);
+        if (btn) {
+          selectNovel(matched, btn);
+          startBatchStatusPolling(activeBatch);
+        }
+      }
+    }
   } catch (err) {
     console.error('Failed to load novels:', err);
     els.novelList.innerHTML = '<div class="error-text">無法載入小說清單</div>';
@@ -90,11 +168,30 @@ function renderNovels() {
   }
   
   state.novels.forEach(novel => {
+    const container = document.createElement('div');
+    container.className = 'list-item-container';
+
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.className = 'novel-selector';
+    chk.checked = state.selectedNovels.has(novel.name);
+    chk.onclick = (e) => {
+      e.stopPropagation();
+      if (chk.checked) state.selectedNovels.add(novel.name);
+      else state.selectedNovels.delete(novel.name);
+    };
+
     const btn = document.createElement('button');
     btn.className = 'list-item';
-    btn.textContent = novel.name;
+    btn.textContent = novel.display_name || novel.name;
+    if (state.currentNovel && state.currentNovel.name === novel.name) {
+      btn.classList.add('active');
+    }
     btn.onclick = () => selectNovel(novel, btn);
-    els.novelList.appendChild(btn);
+    
+    container.appendChild(chk);
+    container.appendChild(btn);
+    els.novelList.appendChild(container);
   });
 }
 
@@ -115,19 +212,59 @@ async function selectNovel(novel, btnEl) {
   state.currentNovel = novel;
   state.currentChapter = null;
   state.chapters = [];
+  state.warnings = [];
+  saveSelectedNovel(novel.name);
   
   els.chapterList.innerHTML = '<div class="loading-text">載入中...</div>';
   els.chapterCount.textContent = '';
   resetWorkspace();
   
   try {
-    const res = await fetch(`${API_BASE}/fs/chapters?novel_path=${encodeURIComponent(novel.path)}`);
+    const res = await fetch(`${API_BASE}/fs/chapters?novel_path=${encodeURIComponent(novel.path)}&include_cache=true`);
     const data = await res.json();
     state.chapters = data.chapters;
     renderChapters();
+
+    // Load novel-level analysis results
+    await fetchNovelResults(novel.name);
   } catch (err) {
     console.error('Failed to load chapters:', err);
     els.chapterList.innerHTML = '<div class="error-text">無法載入章節清單</div>';
+  }
+}
+
+async function fetchNovelResults(novelId) {
+  try {
+    const res = await fetch(`${API_BASE}/results/${encodeURIComponent(novelId)}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.characters || data.summary || data.timeline)) {
+        state.aiData = {
+          characters: data.characters || [],
+          summary: data.summary || '',
+          timeline: data.timeline || [],
+          novel: novelId
+        };
+        renderAnalysis();
+        console.log('已載入小說全域分析資料');
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to fetch novel results:', err);
+  }
+}
+
+async function saveNovelResults() {
+  if (!state.currentNovel || !state.aiData) return;
+  try {
+    await fetch(`${API_BASE}/results/${encodeURIComponent(state.currentNovel.name)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state.aiData)
+    });
+    console.log('已儲存小說全域分析資料');
+  } catch (err) {
+    console.error('Failed to save novel results:', err);
   }
 }
 
@@ -143,8 +280,20 @@ function renderChapters() {
   state.chapters.forEach(chap => {
     const btn = document.createElement('button');
     btn.className = 'list-item';
-    btn.textContent = chap.name;
     btn.onclick = () => selectChapter(chap, btn);
+
+    const nameWrapper = document.createElement('span');
+    nameWrapper.textContent = chap.name;
+    btn.appendChild(nameWrapper);
+
+    if (chap.cache && (chap.cache.mark || chap.cache.events)) {
+      const badge = document.createElement('span');
+      badge.className = 'cache-badge';
+      badge.textContent = '快取';
+      badge.title = '此章節已有快取資料';
+      btn.appendChild(badge);
+    }
+
     els.chapterList.appendChild(btn);
   });
 }
@@ -161,7 +310,7 @@ async function selectChapter(chap, btnEl) {
 
   btnEl.classList.add('active');
   state.currentChapter = chap;
-  els.currentInfo.textContent = `${state.currentNovel.name} / ${chap.name}`;
+  els.currentInfo.textContent = `${state.currentNovel.display_name || state.currentNovel.name} / ${chap.name}`;
   
   // Show workspace
   els.emptyState.style.display = 'none';
@@ -210,14 +359,24 @@ async function checkAndLoadCache() {
       if (data.mark) {
         state.issues = (data.mark.issues || []).map((issue, idx) => ({ ...issue, id: `i_${idx}` }));
         state.decisions = {};
+        state.warnings = data.mark.warnings || [];
         hasCache = true;
       }
       
       if (data.chars || data.events) {
+        // Merge with existing global data if any
+        const existingChars = state.aiData?.characters || [];
+        const newChars = data.chars || [];
+        
+        // Simple deduplication by name
+        const charMap = new Map();
+        existingChars.forEach(c => charMap.set(c['角色名稱'], c));
+        newChars.forEach(c => charMap.set(c['角色名稱'], c));
+
         state.aiData = {
-          characters: data.chars || [],
-          timeline: data.events || [], // Note: cache check returns 'events' key
-          summary: '', // Summary is not per-chapter cached yet
+          characters: Array.from(charMap.values()),
+          timeline: data.events || state.aiData?.timeline || [], 
+          summary: state.aiData?.summary || '', 
           novel: state.currentNovel.name
         };
         hasCache = true;
@@ -227,6 +386,7 @@ async function checkAndLoadCache() {
         console.log('載入快取資料完成');
         renderEditor();
         renderIssues();
+        renderWarnings();
         renderAnalysis();
         
         // Show a temporary indicator
@@ -248,6 +408,24 @@ function resetWorkspace() {
   els.tabs.style.display = 'none';
   els.emptyState.style.display = 'flex';
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  state.warnings = [];
+  renderWarnings();
+}
+
+function renderWarnings() {
+  const container = document.getElementById('issue-warnings');
+  if (!container) return;
+  if (!state.warnings || state.warnings.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = state.warnings.map(w => `
+    <div class="warning-item">
+      <strong>快取/解析提醒：</strong>
+      <div>${escapeHTML(w.message || '無法定位錯誤片段')}</div>
+      <div class="warning-context">${escapeHTML(w.context || '')}</div>
+    </div>
+  `).join('');
 }
 
 // ── AI Processing ──
@@ -303,6 +481,7 @@ els.btnAnalyze.addEventListener('click', async () => {
     if (data.mark) {
       state.issues = (data.mark.issues || []).map((issue, idx) => ({ ...issue, id: `i_${idx}` }));
       state.decisions = {};
+      state.warnings = data.mark.warnings || [];
       if (state.issues.length === 0 && !data.mark.error) {
           console.log('未發現任何建議修改項');
       }
@@ -317,6 +496,8 @@ els.btnAnalyze.addEventListener('click', async () => {
       };
       console.log('角色與劇情分析完成');
       renderAnalysis();
+      // Save globally
+      await saveNovelResults();
     }
     
     renderEditor();
@@ -415,7 +596,7 @@ function renderEditor() {
     if (dec?.action === 'accept') displayStr = issue.suggestion;
     else if (dec?.action === 'manual') displayStr = dec.manualText;
     
-    html += `<mark class="hl ${actionClass}" data-id="${issue.id}" title="${escapeHTML(issue.reason)}">${escapeHTML(displayStr)}</mark>`;
+    html += `<mark class="hl ${actionClass}" data-id="${issue.id}" data-tooltip="${escapeHTML(issue.reason || '')}">${escapeHTML(displayStr)}</mark>`;
     lastIdx = issue.end;
   }
   
@@ -579,6 +760,7 @@ function updateAfterDecision() {
   renderEditor();
   const filter = document.querySelector('.filter-btn.active').dataset.filter;
   renderIssues(filter);
+  renderWarnings();
 }
 
 // ── Manual Edit Modal ──
@@ -714,7 +896,6 @@ els.btnBatchStart.addEventListener('click', async () => {
   els.batchList.innerHTML = '<div class="loading-text">正在讀取所有檔案內容...</div>';
   
   try {
-    // Collect all files
     const filesData = [];
     for (const chap of state.chapters) {
       const res = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(chap.path)}`);
@@ -726,7 +907,7 @@ els.btnBatchStart.addEventListener('click', async () => {
       });
     }
     
-    await fetch(`${API_BASE}/batch/mark`, {
+    const startRes = await fetch(`${API_BASE}/batch/mark`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -734,35 +915,83 @@ els.btnBatchStart.addEventListener('click', async () => {
         files: filesData
       })
     });
-    
+    if (!startRes.ok) throw new Error(`批次啟動失敗：${startRes.status}`);
+
+    saveActiveBatchNovel(state.currentNovel.name);
+    state.activeBatchNovel = state.currentNovel.name;
     els.batchList.innerHTML = '<div class="loading-text">批次任務已啟動，請稍候...</div>';
-    
-    // Poll status
-    const timer = setInterval(async () => {
-      const res = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(state.currentNovel.name)}`);
-      const data = await res.json();
-      
-      if (data.status === 'processing') {
-        els.batchList.innerHTML = `<div class="batch-item">
-          <span>掃描進度</span>
-          <strong>${data.current} / ${data.total}</strong>
-        </div>`;
-      } else if (data.status === 'done') {
-        clearInterval(timer);
-        els.batchList.innerHTML = `<div class="batch-item">
-          <span style="color:#2e7d32; font-weight:bold;">批次掃描完成！</span>
-          <strong>${data.total} / ${data.total}</strong>
-        </div>`;
-        els.btnBatchStart.disabled = false;
-      }
-    }, 2000);
-    
+    startBatchStatusPolling(state.currentNovel.name);
   } catch (err) {
     console.error(err);
     alert('啟動批次任務失敗');
     els.btnBatchStart.disabled = false;
   }
 });
+
+async function startBatchStatusPolling(novelName) {
+  let timer = null;
+  const updateStatus = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(novelName)}`);
+      if (!res.ok) throw new Error('無法取得批次狀態');
+      const data = await res.json();
+      
+      if (data.status === 'not_found') {
+        els.batchList.innerHTML = '<div class="error-text">未找到批次任務狀態</div>';
+        saveActiveBatchNovel(null);
+        state.activeBatchNovel = null;
+        els.btnBatchStart.disabled = false;
+        clearInterval(timer);
+        return;
+      }
+
+      const done = data.status === 'done';
+      const executed = data.current || 0;
+      const remaining = Math.max(0, (data.total || 0) - executed);
+      const elapsedMs = data.start_time ? Date.now() - new Date(data.start_time).getTime() : 0;
+      const avgMsPerItem = executed > 0 ? elapsedMs / executed : 0;
+      const estimatedRemainingMs = Math.round(avgMsPerItem * remaining);
+      const elapsedLabel = formatDuration(elapsedMs);
+      const remainingLabel = formatDuration(estimatedRemainingMs);
+
+      els.batchList.innerHTML = `
+        <div class="batch-item">
+          <span>批次進度</span>
+          <strong>${executed} / ${data.total}</strong>
+        </div>
+        <div class="batch-item">
+          <span>已執行</span>
+          <strong>${elapsedLabel}</strong>
+          <span>剩餘</span>
+          <strong>${remainingLabel}</strong>
+        </div>
+        ${data.failed ? `<div class="batch-item warning-text">失敗：${data.failed} / ${data.total} 章節</div>` : ''}
+      `;
+
+      if (done) {
+        clearInterval(timer);
+        saveActiveBatchNovel(null);
+        state.activeBatchNovel = null;
+        els.btnBatchStart.disabled = false;
+        els.batchList.innerHTML = `
+          <div class="batch-item done-text">批次掃描完成！</div>
+          <div class="batch-item">已處理：${executed} / ${data.total}</div>
+          ${data.failed ? `<div class="batch-item warning-text">失敗章節：${data.failed}</div>` : ''}
+        `;
+      }
+    } catch (pollErr) {
+      console.error('Batch status poll failed:', pollErr);
+      clearInterval(timer);
+      els.batchList.innerHTML = '<div class="error-text">無法取得批次狀態，請稍後重試</div>';
+      saveActiveBatchNovel(null);
+      state.activeBatchNovel = null;
+      els.btnBatchStart.disabled = false;
+    }
+  };
+
+  await updateStatus();
+  timer = setInterval(updateStatus, 2000);
+}
 
 // ── Rendering Analysis ──
 function renderAnalysis() {
@@ -848,10 +1077,136 @@ function escapeHTML(str) {
   );
 }
 
+function formatDuration(ms) {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return [
+    String(days).padStart(2, '0'),
+    String(hours).padStart(2, '0'),
+    String(minutes).padStart(2, '0'),
+    String(seconds).padStart(2, '0')
+  ].join(':');
+}
+
+function getSavedBatchNovel() {
+  const active = loadActiveBatchNovel();
+  if (active) {
+    state.activeBatchNovel = active;
+  }
+  return active;
+}
+
+function renderGlobalBatchView(batchState, currentStatus = null) {
+  const executed = Math.min(
+    batchState.totalChapters,
+    batchState.completedChapters + (currentStatus?.current || 0)
+  );
+  const total = batchState.totalChapters;
+  const elapsedMs = batchState.startTime ? Date.now() - new Date(batchState.startTime).getTime() : 0;
+  const remaining = Math.max(0, total - executed);
+  const avgMsPerItem = executed > 0 ? elapsedMs / executed : 0;
+  const remainingMs = Math.round(avgMsPerItem * remaining);
+  const pct = total > 0 ? Math.min(100, (executed / total) * 100) : 0;
+  const currentNovelName = currentStatus?.novelName || batchState.currentNovel || '未知章節';
+
+  els.globalBatchUI.style.display = 'block';
+  els.globalBatchProgress.style.width = `${pct}%`;
+  els.globalBatchLabel.textContent = `正在處理: ${currentNovelName}`;
+  els.globalBatchDetails.textContent = `當前章節: ${currentNovelName}，剩餘章節: ${remaining}`;
+  els.globalBatchETA.textContent = `已執行 ${formatDuration(elapsedMs)} / 剩餘 ${formatDuration(remainingMs)}`;
+}
+
+function finalizeGlobalBatch(batchState) {
+  batchState.status = 'done';
+  saveGlobalBatchState(batchState);
+  els.globalBatchLabel.textContent = '全庫自動掃描完成！';
+  els.globalBatchProgress.style.width = '100%';
+  els.batchList.innerHTML = `<div class="batch-item done-text">全庫自動掃描完成！</div>`;
+  els.btnGlobalBatch.textContent = '掃描完成';
+  els.btnGlobalBatch.disabled = false;
+  state.isGlobalBatching = false;
+  clearGlobalBatchState();
+}
+
+async function resumeGlobalBatchState(batchState) {
+  if (!batchState || batchState.status !== 'processing') {
+    clearGlobalBatchState();
+    return;
+  }
+
+  state.isGlobalBatching = true;
+  state.activeBatchNovel = '__GLOBAL__';
+  saveActiveBatchNovel('__GLOBAL__');
+  els.btnGlobalBatch.disabled = true;
+  els.btnGlobalBatch.textContent = '批次處理運行中...';
+  renderGlobalBatchView(batchState);
+  await pollGlobalBatchForCurrentGlobalState(batchState);
+}
+
+async function pollGlobalBatchForCurrentGlobalState(batchState) {
+  let timer = null;
+
+  const step = async () => {
+    if (!batchState.novelPlan || batchState.currentNovelIndex >= batchState.novelPlan.length) {
+      finalizeGlobalBatch(batchState);
+      clearInterval(timer);
+      return;
+    }
+
+    const novelName = batchState.novelPlan[batchState.currentNovelIndex].name;
+    const statusRes = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(novelName)}`);
+    if (!statusRes.ok) {
+      console.error('無法取得 global batch 狀態');
+      return;
+    }
+    const statusData = await statusRes.json();
+    const currentStatus = {
+      current: statusData.current || 0,
+      novelName
+    };
+
+    if (statusData.status === 'processing') {
+      renderGlobalBatchView(batchState, currentStatus);
+      return;
+    }
+
+    if (statusData.status === 'done' || statusData.status === 'idle') {
+      const currentCount = batchState.novelPlan[batchState.currentNovelIndex].count;
+      if (batchState.completedChapters < batchState.totalChapters) {
+        batchState.completedChapters = Math.min(batchState.totalChapters, batchState.completedChapters + currentCount);
+      }
+      batchState.currentNovelIndex += 1;
+      batchState.currentNovel = batchState.novelPlan[batchState.currentNovelIndex]?.name || null;
+      saveGlobalBatchState(batchState);
+
+      if (batchState.currentNovelIndex >= batchState.novelPlan.length) {
+        finalizeGlobalBatch(batchState);
+        clearInterval(timer);
+        return;
+      }
+
+      renderGlobalBatchView(batchState, { current: 0, novelName: batchState.currentNovel });
+      return;
+    }
+
+    if (statusData.status === 'not_found') {
+      console.error('Global batch current novel status not found:', novelName);
+      renderGlobalBatchView(batchState, { current: 0, novelName });
+    }
+  };
+
+  await step();
+  timer = setInterval(step, 2000);
+}
+
 // ── Global Batch Processing ──
 els.btnGlobalBatch.addEventListener('click', async () => {
   if (state.isGlobalBatching) return;
   state.isGlobalBatching = true;
+  saveActiveBatchNovel('__GLOBAL__');
   els.btnGlobalBatch.disabled = true;
   els.btnGlobalBatch.textContent = '批次處理運行中...';
   els.globalBatchUI.style.display = 'block';
@@ -859,7 +1214,19 @@ els.btnGlobalBatch.addEventListener('click', async () => {
   try {
     const novelRes = await fetch(`${API_BASE}/fs/novels`);
     const novelData = await novelRes.json();
-    const novels = novelData.novels;
+    let novels = novelData.novels;
+
+    // Filter by selection
+    if (state.selectedNovels.size > 0) {
+      novels = novels.filter(n => state.selectedNovels.has(n.name));
+    } else {
+      if (!confirm('尚未勾選任何小說，是否要掃描「全庫」所有小說？')) {
+        state.isGlobalBatching = false;
+        els.btnGlobalBatch.disabled = false;
+        els.btnGlobalBatch.textContent = '全庫自動校對';
+        return;
+      }
+    }
 
     let totalChapters = 0;
     let completedChapters = 0;
@@ -874,13 +1241,38 @@ els.btnGlobalBatch.addEventListener('click', async () => {
       chaptersByNovel.push({ novel, chapters: cData.chapters });
     }
 
+    const novelPlan = chaptersByNovel.map(item => ({
+      name: item.novel.name,
+      count: item.chapters.length
+    }));
+
+    const globalBatchState = {
+      type: 'global',
+      totalChapters,
+      completedChapters: 0,
+      currentNovelIndex: 0,
+      currentNovel: novelPlan.length > 0 ? novelPlan[0].name : null,
+      novelPlan,
+      startTime: Date.now(),
+      status: 'processing'
+    };
+    saveActiveBatchNovel('__GLOBAL__');
+    saveGlobalBatchState(globalBatchState);
+
     if (totalChapters === 0) {
       els.globalBatchLabel.textContent = '庫中沒有可處理的章節';
+      clearGlobalBatchState();
+      state.isGlobalBatching = false;
+      els.btnGlobalBatch.disabled = false;
       return;
     }
 
     // Process each novel
-    for (const item of chaptersByNovel) {
+    for (let index = 0; index < chaptersByNovel.length; index++) {
+      const item = chaptersByNovel[index];
+      globalBatchState.currentNovelIndex = index;
+      globalBatchState.currentNovel = item.novel.name;
+      saveGlobalBatchState(globalBatchState);
       els.globalBatchLabel.textContent = `正在處理: ${item.novel.name}`;
       
       try {
@@ -904,23 +1296,17 @@ els.btnGlobalBatch.addEventListener('click', async () => {
           if (statusData.status === 'done' || statusData.status === 'idle') {
             isDone = true;
           } else {
-            // Update progress
             const novelCurrent = statusData.current || 0;
             const currentProgress = completedChapters + novelCurrent;
             const pct = Math.min(100, (currentProgress / totalChapters) * 100);
+            const elapsedMs = Date.now() - startTime;
+            const remainingChunks = Math.max(0, totalChapters - currentProgress);
+            const avgMsPerChapter = currentProgress > 0 ? elapsedMs / currentProgress : 0;
+            const estimatedRemainingMs = Math.round(avgMsPerChapter * remainingChunks);
             
             els.globalBatchProgress.style.width = `${pct}%`;
             els.globalBatchDetails.textContent = `當前進度: ${currentProgress} / ${totalChapters} (${item.novel.name})`;
-            
-            // ETA Calculation
-            const elapsed = (Date.now() - startTime) / 1000;
-            if (currentProgress > 0) {
-              const totalSec = (elapsed / currentProgress) * totalChapters;
-              const remaining = Math.max(0, totalSec - elapsed);
-              const m = Math.floor(remaining / 60);
-              const s = Math.floor(remaining % 60);
-              els.globalBatchETA.textContent = `預計剩餘時間：${m}分 ${s}秒`;
-            }
+            els.globalBatchETA.textContent = `已執行 ${formatDuration(elapsedMs)} / 剩餘 ${formatDuration(estimatedRemainingMs)}`;
           }
           await new Promise(r => setTimeout(r, 2000));
         }
@@ -928,14 +1314,18 @@ els.btnGlobalBatch.addEventListener('click', async () => {
         console.error(`Error processing ${item.novel.name}:`, novelErr);
       }
       completedChapters += item.chapters.length;
+      globalBatchState.completedChapters = completedChapters;
+      saveGlobalBatchState(globalBatchState);
     }
 
     els.globalBatchLabel.textContent = '全庫自動掃描完成！';
     els.globalBatchProgress.style.width = '100%';
     els.btnGlobalBatch.textContent = '掃描完成';
+    clearGlobalBatchState();
   } catch (err) {
     console.error(err);
     els.globalBatchLabel.textContent = '批次處理出錯';
+    clearGlobalBatchState();
   } finally {
     state.isGlobalBatching = false;
     els.btnGlobalBatch.disabled = false;

@@ -55,6 +55,19 @@ LOGS_DIR: Path = DATA_DIR / "logs"
 CACHE_DIR: Path = DATA_DIR / "cache"
 NAMES_DICT_PATH: Path = DATA_DIR / "name_dict.json"
 RESULTS_DIR: Path = DATA_DIR / "results"
+NOVEL_NAMES_PATH: Path = DATA_DIR / "novel_names.json"
 
-for _d in [DATA_DIR, CHROMA_DIR, LOGS_DIR, CACHE_DIR, RESULTS_DIR]:
+# Ensure all directories exist
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+for _d in [LOGS_DIR, CACHE_DIR, RESULTS_DIR, CHROMA_DIR]:
     _d.mkdir(parents=True, exist_ok=True)
+
+# Ensure essential files exist
+if not NAMES_DICT_PATH.exists():
+    NAMES_DICT_PATH.write_text("{}", "utf-8")
+if not NOVEL_NAMES_PATH.exists():
+    # Example mapping: folder_name -> display_name
+    NOVEL_NAMES_PATH.write_text(
+        '{"bailianchengxian-huanyu": "百鍊成仙", "doupocangqiong-tiancantudou": "鬥破蒼穹"}', 
+        "utf-8"
+    )
