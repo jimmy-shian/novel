@@ -128,7 +128,7 @@ def chat_completions():
             payload.update({
                 "temperature": 1.0,
                 "top_p": 0.95,
-                "chat_template_kwargs": {"enable_thinking": True},
+                "chat_template_kwargs": {"enable_thinking": False},
                 "reasoning_budget": 16384
             })
         elif "mistral" in m_lower or "nvidia" in m_lower:
@@ -141,15 +141,7 @@ def chat_completions():
                 "top_p": 0.95,
                 "chat_template_kwargs": {"enable_thinking": True}
             })
-        elif "gpt-oss" not in m_lower:
-            # Default for Qwen or others
-            payload.update({
-                "temperature": 0.6,
-                "top_p": 0.95,
-                "top_k": 20,
-                "chat_template_kwargs": {"enable_thinking": True}
-            })
-
+            
         invoke_url = f"{NVIDIA_API_URL}/chat/completions"
         print(f">>> Sending request to: {invoke_url}")
         print(f">>> Model: {NVIDIA_MODEL_NAME}")

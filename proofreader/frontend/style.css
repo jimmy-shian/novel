@@ -174,10 +174,28 @@ body {
   gap: 4px;
 }
 
+.badge-mark.checked {
+  background: #fff8e1;
+  color: #8b6914;
+  border-color: #ffe0b2;
+}
+
 .badge-mark.done {
   background: #e8f5e9;
   color: #2e7d32;
   border-color: #a5d6a7;
+}
+
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(200, 169, 110, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 169, 110, 0); }
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(46, 125, 50, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
 }
 
 .meta-badges {

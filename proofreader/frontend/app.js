@@ -310,17 +310,31 @@ async function selectNovel(novel, btnEl) {
 /**
  * Real-time update for chapter cache badge in the sidebar
  */
-function updateChapterCacheBadge(chapterName) {
+function updateChapterCacheBadge(chapterName, status = 'mark') {
   const chapterItems = els.chapterList.querySelectorAll('.chapter-item');
   for (const item of chapterItems) {
     if (item.dataset.name === chapterName) {
       const badgesContainer = item.querySelector('.meta-badges');
-      if (badgesContainer && !badgesContainer.querySelector('.badge-mark')) {
-        const badge = document.createElement('span');
-        badge.className = 'badge-mark';
-        badge.innerHTML = '<i class="fas fa-microchip"></i> 快取';
-        badgesContainer.appendChild(badge);
-        badge.style.animation = 'pulse-gold 2s ease-out';
+      if (badgesContainer) {
+        // Clear existing mark badges if updating to applied
+        if (status === 'applied') {
+           const existing = badgesContainer.querySelectorAll('.badge-mark');
+           existing.forEach(e => e.remove());
+        }
+
+        if (status === 'applied') {
+          const badge = document.createElement('span');
+          badge.className = 'badge-mark done';
+          badge.innerHTML = '<i class="fas fa-check-double"></i> 已完成';
+          badgesContainer.appendChild(badge);
+          badge.style.animation = 'pulse-green 2s ease-out';
+        } else if (!badgesContainer.querySelector('.badge-mark.checked') && !badgesContainer.querySelector('.badge-mark.done')) {
+          const badge = document.createElement('span');
+          badge.className = 'badge-mark checked';
+          badge.innerHTML = '<i class="fas fa-check-circle"></i> 已校對';
+          badgesContainer.appendChild(badge);
+          badge.style.animation = 'pulse-gold 2s ease-out';
+        }
       }
       break;
     }
@@ -386,12 +400,18 @@ function renderChapters() {
     meta.className = 'meta-badges';
     btn.appendChild(meta);
 
-    if (chap.cache && chap.cache.done) {
+    // Strict priority: Applied (Finished) > Mark (Analyzed) > Events (Cached)
+    if (chap.cache && chap.cache.applied) {
       const badge = document.createElement('span');
       badge.className = 'badge-mark done';
+      badge.innerHTML = '<i class="fas fa-check-double"></i> 已完成';
+      meta.appendChild(badge);
+    } else if (chap.cache && chap.cache.mark) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-mark checked';
       badge.innerHTML = '<i class="fas fa-check-circle"></i> 已校對';
       meta.appendChild(badge);
-    } else if (chap.cache && (chap.cache.mark || chap.cache.events)) {
+    } else if (chap.cache && chap.cache.events) {
       const badge = document.createElement('span');
       badge.className = 'badge-mark';
       badge.innerHTML = '<i class="fas fa-microchip"></i> 快取';
@@ -996,6 +1016,7 @@ els.btnApply.addEventListener('click', async () => {
     state.decisions = {};
     renderEditor();
     renderIssues();
+    updateChapterCacheBadge(state.currentChapter.name, 'applied');
     
   } catch (err) {
     console.error(err);

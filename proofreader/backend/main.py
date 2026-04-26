@@ -155,10 +155,12 @@ async def list_chapters(novel_path: str, include_cache: bool = False):
                     # Quick path-based check for existence, much faster than hashing content
                     mark_exists = tasks.get_cache_path("mark", novel_path, entry.name).exists()
                     events_exists = tasks.get_cache_path("events", novel_path, entry.name).exists()
+                    applied_exists = tasks.get_cache_path("mark", novel_path, entry.name).with_suffix(".applied").exists()
                     item["cache"] = {
                         "mark": mark_exists,
                         "events": events_exists,
-                        "done": mark_exists # Primary indicator
+                        "applied": applied_exists,
+                        "done": mark_exists or applied_exists
                     }
                 items.append(item)
     except Exception as e:
@@ -251,36 +253,57 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
             try:
                 content = f_path.read_text("utf-8", errors="ignore")
                 
-                # Execute requested tasks
+                # 1. Check for skips if use_cache is on
+                if req.use_cache:
+                    has_mark = tasks.get_cache_path("mark", novel_id, f_path.name).exists()
+                    has_chars = tasks.get_cache_path("chars", novel_id, f_path.name).exists()
+                    # If all requested tasks already have cache, skip this file entirely
+                    all_done = True
+                    for t in req.tasks:
+                        if t == "mark" and not has_mark: all_done = False
+                        if t == "chars" and not has_chars: all_done = False
+                        if t == "summary" and not tasks.get_cache_path("summary", novel_id, f_path.name).exists(): all_done = False
+                    
+                    if all_done:
+                        # Even if skipped, we should load existing cache into memory for global update
+                        if "chars" in req.tasks:
+                            c_cached = tasks.load_cache("chars", novel_id, f_path.name, content)
+                            if c_cached: all_chars.extend(c_cached)
+                        if "summary" in req.tasks:
+                            s_cached = tasks.load_cache("summary", novel_id, f_path.name, content)
+                            if s_cached: all_summaries.append(f"### {f_path.name}\n{s_cached}")
+                        
+                        batch_status[novel_id]["current"] = i + 1
+                        continue
+
+                # 2. Execute requested tasks (only if not skipped)
                 if "mark" in req.tasks:
                     await tasks.run_mark_errors(novel_id, f_path.name, content, use_cache=req.use_cache)
                 
                 if "chars" in req.tasks:
-                    c_list = await tasks.run_extract_characters(novel_id, content, use_cache=req.use_cache)
-                    if c_list: all_chars.extend(c_list)
+                    c_list = await tasks.run_extract_characters(novel_id, f_path.name, content, use_cache=req.use_cache)
+                    if isinstance(c_list, list) and c_list:
+                        all_chars.extend(c_list)
                 
                 if "events" in req.tasks:
                     evs = await tasks.run_extract_events(novel_id, f_path.name, content, use_cache=req.use_cache)
                     if evs: all_events.extend(evs)
                 
                 if "summary" in req.tasks:
-                    # Only summarize first/middle/last if too many? 
-                    # For batch, maybe just first 3 chapters or so
-                    if i < 5:
-                        s = await tasks.run_extract_summary(novel_id, [content[:3000]], use_cache=req.use_cache)
-                        if s: all_summaries.append(s)
+                    s = await tasks.run_extract_summary(novel_id, f_path.name, [content[:4000]], use_cache=req.use_cache)
+                    if s: all_summaries.append(f"### {f_path.name}\n{s}")
 
                 batch_status[novel_id]["current"] = i + 1
                 batch_status[novel_id]["last_chapter"] = f_path.name
                 
-                # INCREMENTAL SAVE: Save global state every chapter to handle page refreshes
-                if all_chars or all_summaries or all_events:
-                    timeline = []
-                    if all_events:
-                        # Simple non-AI consolidation for incremental updates
-                        timeline = sorted(all_events, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.get("章節", ""))])
+                # INCREMENTAL SAVE: Only pass the NEW items found in THIS chapter
+                if ( "mark" not in req.tasks or True ): # Always check if we have something to save
+                    new_chars = c_list if "chars" in req.tasks and 'c_list' in locals() else []
+                    new_summaries = [f"### {f_path.name}\n{s}"] if "summary" in req.tasks and 's' in locals() else []
+                    new_events = evs if "events" in req.tasks and 'evs' in locals() else []
                     
-                    _update_novel_results_from_batch(novel_id, all_chars, all_summaries, timeline)
+                    if new_chars or new_summaries or new_events:
+                        _update_novel_results_from_batch(novel_id, new_chars, new_summaries, new_events)
 
             except Exception as e:
                 log.error(f"Scan batch error for {f_path.name}: {e}")
@@ -307,29 +330,94 @@ def _update_novel_results_from_batch(novel_id, chars, summaries, timeline):
     res_path = RESULTS_DIR / f"{novel_id}.json"
     data = {"characters": [], "summary": "", "timeline": [], "novel": novel_id}
     if res_path.exists():
-        try: data = json.loads(res_path.read_text("utf-8"))
-        except: pass
+        try: 
+            content = res_path.read_text("utf-8").strip()
+            if content:
+                data = json.loads(content)
+        except Exception as e:
+            log.error(f"Failed to load existing results: {e}")
         
     if chars:
-        # Deduplicate and merge characters
-        existing = {c.get('角色名稱'): c for c in data.get("characters", []) if c.get('角色名稱')}
-        for c in chars:
-            name = c.get("角色名稱")
-            if not name: continue
-            if name not in existing:
-                existing[name] = c
-            else:
-                # Merge description if missing
-                if not existing[name].get("角色描述") and c.get("角色描述"):
-                    existing[name]["角色描述"] = c["角色描述"]
-        data["characters"] = list(existing.values())
+        # Deduplicate and merge characters with alias awareness
+        existing_chars = data.get("characters", [])
         
-    if summaries and not data.get("summary"):
-        # Just use the first one found or join them
-        data["summary"] = summaries[0]
+        # Build a map of Name -> Canonical Character AND Alias -> Canonical Character
+        name_to_char = {}
+        alias_to_canonical = {}
+        for c in existing_chars:
+            main_name = c.get('角色名稱')
+            if not main_name: continue
+            name_to_char[main_name] = c
+            alias_to_canonical[main_name] = main_name
+            for alias in c.get('別名', []):
+                alias_to_canonical[alias] = main_name
+        
+        for c in chars:
+            new_name = c.get("角色名稱")
+            if not new_name: continue
+            
+            # Check if this name is actually an alias of an existing character
+            canonical_name = alias_to_canonical.get(new_name)
+            
+            if canonical_name and canonical_name in name_to_char:
+                # Merge into existing canonical character
+                target = name_to_char[canonical_name]
+                for key, value in c.items():
+                    if key == "角色名稱": continue
+                    if key == "別名":
+                        # Merge aliases
+                        existing_aliases = set(target.get("別名", []))
+                        if isinstance(value, list):
+                            for v in value: existing_aliases.add(v)
+                        else:
+                            existing_aliases.add(value)
+                        # Remove the canonical name from aliases if it sneaked in
+                        if canonical_name in existing_aliases: existing_aliases.remove(canonical_name)
+                        target["別名"] = list(existing_aliases)
+                    elif key == "角色描述":
+                        # Always trust the new synthesized description if it's substantial
+                        if value and len(value) > len(target.get(key, "")):
+                            target[key] = value
+                    elif not target.get(key) and value:
+                        target[key] = value
+            else:
+                # Truly a new character
+                name_to_char[new_name] = c
+                alias_to_canonical[new_name] = new_name
+                for alias in c.get('別名', []):
+                    alias_to_canonical[alias] = new_name
+                    
+        data["characters"] = list(name_to_char.values())
+        
+    if summaries:
+        existing_summary = data.get("summary", "")
+        # Append new summaries if they aren't already in the text (simple check)
+        for s in summaries:
+            # Check if this chapter's summary (or title) is already present
+            # We used "### ChapterName" as header
+            chapter_header = s.split('\n')[0] 
+            if chapter_header not in existing_summary:
+                if existing_summary:
+                    existing_summary += "\n\n" + s
+                else:
+                    existing_summary = s
+        data["summary"] = existing_summary
     
     if timeline:
-        data["timeline"] = timeline
+        existing_timeline = data.get("timeline", [])
+        # Deduplicate based on Event Name and Chapter (case-insensitive)
+        seen = set()
+        unique_timeline = []
+        
+        # Combine both existing and new
+        for ev in existing_timeline + timeline:
+            key = (ev.get("事件名稱", "").strip().lower(), ev.get("章節", "").strip().lower())
+            if key not in seen:
+                seen.add(key)
+                unique_timeline.append(ev)
+        
+        # Re-sort by chapter name (numeric-aware)
+        data["timeline"] = sorted(unique_timeline, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.get("章節", ""))])
     
     res_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
 
@@ -384,6 +472,13 @@ async def api_apply_corrections(req: ApplyRequest):
             f.write(new_text)
         log.info(f"Overwritten file: {original_path}")
     
+    # Create an .applied marker file to indicate this chapter is finished by human
+    applied_marker = tasks.get_cache_path("mark", req.novel_id, req.chapter).with_suffix(".applied")
+    try:
+        applied_marker.touch()
+    except:
+        pass
+
     return {"text": new_text, "changes": log_entries, "saved_to": str(original_path)}
 
 class FullAnalyzeRequest(BaseModel):
@@ -400,13 +495,18 @@ async def api_full_analysis(req: FullAnalyzeRequest):
     
     async def run_task(t):
         if t == "mark": results["mark"] = await tasks.run_mark_errors(req.novel_id, req.chapter, req.text, req.use_cache)
-        elif t == "chars": results["chars"] = await tasks.run_extract_characters(req.novel_id, req.text, req.use_cache)
+        elif t == "chars": 
+            res = await tasks.run_extract_characters(req.novel_id, req.chapter, req.text, req.use_cache)
+            if isinstance(res, list):
+                for char in res:
+                    rag.add_character(req.novel_id, char)
+            results["chars"] = res
         elif t == "events": 
             evs = await tasks.run_extract_events(req.novel_id, req.chapter, req.text, req.use_cache)
             results["events"] = evs
             results["timeline"] = await tasks.run_build_timeline(req.novel_id, evs)
         elif t == "summary": 
-            results["summary"] = await tasks.run_extract_summary(req.novel_id, [req.text[:3000]], req.use_cache)
+            results["summary"] = await tasks.run_extract_summary(req.novel_id, req.chapter, [req.text[:3000]], req.use_cache)
 
     if USE_LOCAL_VLLM:
         await asyncio.gather(*(run_task(t) for t in tasks_to_run))
@@ -419,7 +519,10 @@ async def api_full_analysis(req: FullAnalyzeRequest):
 
 @app.post("/api/analyze/characters")
 async def api_extract_characters(req: AnalyzeRequest):
-    result = await tasks.run_extract_characters(req.novel_id, req.text, req.use_cache)
+    result = await tasks.run_extract_characters(req.novel_id, req.chapter, req.text, req.use_cache)
+    if isinstance(result, list):
+        for char in result:
+            rag.add_character(req.novel_id, char)
     return {"characters": result}
 
 @app.post("/api/analyze/events")
@@ -434,7 +537,9 @@ async def api_build_timeline(req: TimelineRequest):
 
 @app.post("/api/analyze/summary")
 async def api_extract_summary(req: SummaryRequest):
-    result = await tasks.run_extract_summary(req.novel_id, req.chunks)
+    # Use chapter if available, otherwise 'global'
+    chapter = req.chapter if hasattr(req, 'chapter') and req.chapter else "global"
+    result = await tasks.run_extract_summary(req.novel_id, chapter, req.chunks, True)
     return {"summary": result}
 
 @app.post("/api/export/assistant")
@@ -451,7 +556,16 @@ async def get_name_dict():
 @app.get("/api/results/{novel_id}")
 async def get_results(novel_id: str):
     p = RESULTS_DIR / f"{novel_id}.json"
-    return json.loads(p.read_text("utf-8")) if p.exists() else {}
+    if not p.exists():
+        return {}
+    try:
+        content = p.read_text("utf-8").strip()
+        if not content:
+            return {}
+        return json.loads(content)
+    except Exception as e:
+        log.error(f"Error reading results for {novel_id}: {e}")
+        return {}
 
 @app.post("/api/results/{novel_id}")
 async def save_results(novel_id: str, data: dict):

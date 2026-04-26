@@ -337,16 +337,39 @@ def apply_corrections(
 
 async def run_extract_characters(
     novel_id: str,
+    chapter: str,
     text: str,
     use_cache: bool = True,
 ) -> list:
     if use_cache:
-        # Use a special 'global' chapter name for novel-wide extractions done on specific text
-        cached = load_cache("chars", novel_id, "global", text)
+        cached = load_cache("chars", novel_id, chapter, text)
         if cached is not None:
             return cached
 
-    rag_ctx = rag.build_rag_context(novel_id, "character", text[:500])
+    # Hybrid RAG: Index all names, but only provide descriptions for characters in the current text
+    existing_list = []
+    res_path = RESULTS_DIR / f"{novel_id}.json"
+    if res_path.exists():
+        try:
+            data = json.loads(res_path.read_text("utf-8"))
+            for c in data.get("characters", []):
+                name = c.get("角色名稱")
+                aliases = c.get("別名", [])
+                
+                # Check if this character appears in current text
+                is_present = (name in text) or any(a in text for a in aliases)
+                
+                if is_present:
+                    # Provide full info to maintain consistency
+                    desc = c.get("角色描述", "暫無描述")
+                    existing_list.append(f"● {name} (別名: {', '.join(aliases)}) - 已有描述: {desc}")
+                else:
+                    # Just name to prevent duplicates
+                    existing_list.append(f"● {name} (別名: {', '.join(aliases)})")
+        except:
+            pass
+    
+    rag_ctx = "【已知角色參考字典】：\n" + "\n".join(existing_list) if existing_list else ""
     messages = extract_characters_prompt(text, rag_ctx)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
     if raw.startswith("錯誤："):
@@ -357,8 +380,8 @@ async def run_extract_characters(
         if isinstance(result, list) and result:
             for char in result:
                 rag.add_character(novel_id, char)
-            # Always save to cache
-            save_cache("chars", novel_id, "global", text, result)
+            # Always save to cache using the correct chapter name
+            save_cache("chars", novel_id, chapter, text, result)
         else:
             result = []
     except Exception:
@@ -380,7 +403,8 @@ async def run_extract_events(
         if cached is not None:
             return cached
 
-    rag_ctx = rag.build_rag_context(novel_id, "plot", text[:500])
+    # Use a smaller window for event context to prevent AI from summarizing too much history
+    rag_ctx = rag.build_rag_context(novel_id, "event", text[:2000])
     messages = extract_events_prompt(text, chapter, rag_ctx)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
     if raw.startswith("錯誤："):
@@ -416,19 +440,19 @@ async def run_build_timeline(novel_id: str, all_events: list) -> list:
 
 # ── 6. Story Summary ────────────────────────────────────────────────────────────
 
-async def run_extract_summary(novel_id: str, text_chunks: list[str], use_cache: bool = True) -> str:
+async def run_extract_summary(novel_id: str, chapter: str, text_chunks: list[str], use_cache: bool = True) -> str:
     # Use the combined text as the basis for the cache key
     combined_text = "".join(text_chunks)
     if use_cache:
-        cached = load_cache("summary", novel_id, "global", combined_text)
+        cached = load_cache("summary", novel_id, chapter, combined_text)
         if cached: return cached
 
     messages = story_summary_prompt(text_chunks)
     raw = await chat(messages, max_tokens=2048)
     res = raw.strip()
     
-    # Always save to cache
-    save_cache("summary", novel_id, "global", combined_text, res)
+    # Always save to cache using the correct chapter name
+    save_cache("summary", novel_id, chapter, combined_text, res)
     return res
 
 
