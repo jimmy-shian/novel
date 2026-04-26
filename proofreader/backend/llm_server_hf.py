@@ -112,49 +112,43 @@ def chat_completions():
         }
 
         # Parameters for different NVIDIA models
-        if "mistral" in NVIDIA_MODEL_NAME.lower():
-            # Mistral Small with high reasoning effort
-            payload = {
-                "model": NVIDIA_MODEL_NAME,
-                "messages": messages,
-                "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 0.1),
-                "top_p": data.get("top_p", 1.0),
-                "stream": stream,
+        # Base payload with defaults
+        payload = {
+            "model": NVIDIA_MODEL_NAME,
+            "messages": messages,
+            "max_tokens": data.get("max_tokens", 16384),
+            "temperature": data.get("temperature", 1.0),
+            "top_p": data.get("top_p", 1.0),
+            "stream": stream
+        }
+
+        # Model-specific overrides
+        m_lower = NVIDIA_MODEL_NAME.lower()
+        if "nemotron" in m_lower:
+            payload.update({
+                "temperature": 1.0,
+                "top_p": 0.95,
+                "chat_template_kwargs": {"enable_thinking": True},
+                "reasoning_budget": 16384
+            })
+        elif "mistral" in m_lower or "nvidia" in m_lower:
+            payload.update({
+                "temperature": 0.1,
                 "reasoning_effort": "high"
-            }
-        elif "gpt-oss" in NVIDIA_MODEL_NAME:
-            payload = {
-                "model": NVIDIA_MODEL_NAME,
-                "messages": messages,
-                "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 1.0),
-                "top_p": data.get("top_p", 1.0),
-                "stream": stream
-            }
-        elif "gemma" in NVIDIA_MODEL_NAME.lower():
-            # Google Gemma 4-31b-it with thinking
-            payload = {
-                "model": NVIDIA_MODEL_NAME,
-                "messages": messages,
-                "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 1.0),
-                "top_p": data.get("top_p", 0.95),
-                "stream": stream,
-                "chat_template_kwargs": {"enable_thinking": True},
-            }
-        else:
-            # Qwen or other model settings
-            payload = {
-                "model": NVIDIA_MODEL_NAME,
-                "messages": messages,
-                "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 0.6),
-                "top_p": data.get("top_p", 0.95),
+            })
+        elif "gemma" in m_lower:
+            payload.update({
+                "top_p": 0.95,
+                "chat_template_kwargs": {"enable_thinking": True}
+            })
+        elif "gpt-oss" not in m_lower:
+            # Default for Qwen or others
+            payload.update({
+                "temperature": 0.6,
+                "top_p": 0.95,
                 "top_k": 20,
-                "stream": stream,
-                "chat_template_kwargs": {"enable_thinking": True},
-            }
+                "chat_template_kwargs": {"enable_thinking": True}
+            })
 
         invoke_url = f"{NVIDIA_API_URL}/chat/completions"
         print(f">>> Sending request to: {invoke_url}")

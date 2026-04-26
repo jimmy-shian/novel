@@ -17,8 +17,8 @@ VLLM_BASE_URL: str = os.getenv("VLLM_BASE_URL", "http://127.0.0.1:8000/v1")
 NVIDIA_API_KEY: str = os.getenv("NVIDIA_API_KEY", "")
 GPTOSS_API_KEY: str = os.getenv("GPTOSS", "")
 NVIDIA_API_URL: str = "https://integrate.api.nvidia.com/v1"
-NVIDIA_MODEL_NAME: str = "mistralai/mistral-small-4-119b-2603"
-# NVIDIA_MODEL_NAME: str = "openai/gpt-oss-120b", mistralai/mistral-small-4-119b-2603 ,"qwen/qwen3.5-122b-a10b",
+NVIDIA_MODEL_NAME: str = "qwen/qwen3.5-122b-a10b"
+# NVIDIA_MODEL_NAME: str = "openai/gpt-oss-120b", mistralai/mistral-small-4-119b-2603 ,"qwen/qwen3.5-122b-a10b", "nvidia/nemotron-3-super-120b-a12b"
 
 # Use project-relative paths to avoid encoding/path issues
 BASE_DIR = Path(__file__).resolve().parent.parent
