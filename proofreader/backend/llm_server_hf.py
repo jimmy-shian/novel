@@ -111,8 +111,19 @@ def chat_completions():
             "Content-Type": "application/json"
         }
 
-        # Parameters for GPT-OSS-120B based on user snippet
-        if "gpt-oss" in NVIDIA_MODEL_NAME:
+        # Parameters for different NVIDIA models
+        if "mistral" in NVIDIA_MODEL_NAME.lower():
+            # Mistral Small with high reasoning effort
+            payload = {
+                "model": NVIDIA_MODEL_NAME,
+                "messages": messages,
+                "max_tokens": data.get("max_tokens", 16384),
+                "temperature": data.get("temperature", 0.1),
+                "top_p": data.get("top_p", 1.0),
+                "stream": stream,
+                "reasoning_effort": "high"
+            }
+        elif "gpt-oss" in NVIDIA_MODEL_NAME:
             payload = {
                 "model": NVIDIA_MODEL_NAME,
                 "messages": messages,
@@ -121,17 +132,26 @@ def chat_completions():
                 "top_p": data.get("top_p", 1.0),
                 "stream": stream
             }
+        elif "gemma" in NVIDIA_MODEL_NAME.lower():
+            # Google Gemma 4-31b-it with thinking
+            payload = {
+                "model": NVIDIA_MODEL_NAME,
+                "messages": messages,
+                "max_tokens": data.get("max_tokens", 16384),
+                "temperature": data.get("temperature", 1.0),
+                "top_p": data.get("top_p", 0.95),
+                "stream": stream,
+                "chat_template_kwargs": {"enable_thinking": True},
+            }
         else:
             # Qwen or other model settings
             payload = {
                 "model": NVIDIA_MODEL_NAME,
                 "messages": messages,
                 "max_tokens": data.get("max_tokens", 16384),
-                "temperature": data.get("temperature", 0.60),
+                "temperature": data.get("temperature", 0.6),
                 "top_p": data.get("top_p", 0.95),
                 "top_k": 20,
-                "presence_penalty": 0,
-                "repetition_penalty": 1,
                 "stream": stream,
                 "chat_template_kwargs": {"enable_thinking": True},
             }

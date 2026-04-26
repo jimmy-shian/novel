@@ -17,8 +17,8 @@ VLLM_BASE_URL: str = os.getenv("VLLM_BASE_URL", "http://127.0.0.1:8000/v1")
 NVIDIA_API_KEY: str = os.getenv("NVIDIA_API_KEY", "")
 GPTOSS_API_KEY: str = os.getenv("GPTOSS", "")
 NVIDIA_API_URL: str = "https://integrate.api.nvidia.com/v1"
-NVIDIA_MODEL_NAME: str = "openai/gpt-oss-120b" # Switched to gpt-oss-120b as requested
-# NVIDIA_MODEL_NAME: str = "qwen/qwen3.5-397b-a17b"
+NVIDIA_MODEL_NAME: str = "mistralai/mistral-small-4-119b-2603"
+# NVIDIA_MODEL_NAME: str = "openai/gpt-oss-120b", mistralai/mistral-small-4-119b-2603 ,"qwen/qwen3.5-122b-a10b",
 
 # Use project-relative paths to avoid encoding/path issues
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +37,7 @@ else:
     # API allows much larger context/outputs
     MAX_TOKENS_MARK: int = 16384
     MAX_TOKENS_ANALYSIS: int = 16384
-    TEMPERATURE: float = 0.6
+    TEMPERATURE: float = 1.0
     TOP_P: float = 0.95
 
 # ── RAG (Chroma) ───────────────────────────────────────────────────────────────

@@ -19,6 +19,7 @@ from prompts import (
     normalize_names_prompt, story_summary_prompt
 )
 import rag
+import local_checker
 
 log = logging.getLogger(__name__)
 
@@ -76,16 +77,20 @@ def load_cache(category: str, novel_id: str, chapter: str, text: str) -> dict | 
     return None
 
 def save_cache(category: str, novel_id: str, chapter: str, text: str, data: dict | list) -> None:
-    p = get_cache_path(category, novel_id, chapter)
-    # Wrap with hash for validation
-    wrapper = {
-        "_text_hash": calculate_text_hash(text),
-        "data": data,
-        "novel": novel_id,
-        "chapter": chapter,
-        "type": category
-    }
-    p.write_text(json.dumps(wrapper, ensure_ascii=False, indent=2), "utf-8")
+    try:
+        p = get_cache_path(category, novel_id, chapter)
+        # Wrap with hash for validation
+        wrapper = {
+            "_text_hash": calculate_text_hash(text),
+            "data": data,
+            "novel": novel_id,
+            "chapter": chapter,
+            "type": category
+        }
+        p.write_text(json.dumps(wrapper, ensure_ascii=False, indent=2), "utf-8")
+        log.debug(f"Saved cache: {p}")
+    except Exception as e:
+        log.error(f"Failed to save cache for {novel_id}/{chapter}: {e}")
 
 
 def _parse_json(raw: str) -> dict | list:
@@ -239,21 +244,42 @@ async def run_mark_errors(
     rag_ctx = rag.build_rag_context(novel_id, "mark", text[:500])
     messages = mark_errors_prompt(text, rag_ctx)
 
+    # RUN LOCAL CHECKS FIRST
+    local_issues = local_checker.run_local_checks(text)
+    
     raw = await chat(messages, max_tokens=MAX_TOKENS_MARK)
     
     if raw.startswith("錯誤："):
-        return {"issues": [], "error": raw}
+        return {"issues": local_issues, "error": raw}
 
     try:
         result = _parse_json(raw)
+        llm_issues = []
         if isinstance(result, dict) and "issues" in result:
-            fixed_issues, warnings = _fix_offsets(text, result["issues"])
-            result["issues"] = fixed_issues
+            llm_issues, warnings = _fix_offsets(text, result["issues"])
             if warnings:
                 result["warnings"] = warnings
+        
+        # Merge local and LLM issues
+        # Simple deduplication: if they overlap, prefer LLM for now as it's smarter,
+        # but keep local ones for pure SC/TC conversion.
+        merged_issues = local_issues.copy()
+        
+        # Avoid adding LLM issues that exactly match local ones' range
+        local_ranges = set((iss["start"], iss["end"]) for iss in local_issues)
+        for iss in llm_issues:
+            if (iss["start"], iss["end"]) not in local_ranges:
+                merged_issues.append(iss)
+        
+        # Re-sort and re-ID
+        merged_issues.sort(key=lambda x: x["start"])
+        for idx, iss in enumerate(merged_issues):
+            iss["id"] = f"M{idx+1:03d}"
             
-        if use_cache:
-            save_cache("mark", novel_id, chapter, text, result)
+        result["issues"] = merged_issues
+            
+        # Always save to cache if analysis succeeded, regardless of use_cache (which only controls loading)
+        save_cache("mark", novel_id, chapter, text, result)
     except Exception as e:
         log.error("JSON parse failed for mark_errors: %s", e)
         result = {"issues": [], "raw_error": str(e), "raw_response": raw}
@@ -331,8 +357,8 @@ async def run_extract_characters(
         if isinstance(result, list) and result:
             for char in result:
                 rag.add_character(novel_id, char)
-            if use_cache:
-                save_cache("chars", novel_id, "global", text, result)
+            # Always save to cache
+            save_cache("chars", novel_id, "global", text, result)
         else:
             result = []
     except Exception:
@@ -366,8 +392,8 @@ async def run_extract_events(
             for ev in result:
                 ev["章節"] = ev.get("章節") or chapter
                 rag.add_event(novel_id, ev)
-            if use_cache:
-                save_cache("events", novel_id, chapter, text, result)
+            # Always save to cache
+            save_cache("events", novel_id, chapter, text, result)
         else:
             result = []
     except Exception:
@@ -401,8 +427,8 @@ async def run_extract_summary(novel_id: str, text_chunks: list[str], use_cache: 
     raw = await chat(messages, max_tokens=2048)
     res = raw.strip()
     
-    if use_cache:
-        save_cache("summary", novel_id, "global", combined_text, res)
+    # Always save to cache
+    save_cache("summary", novel_id, "global", combined_text, res)
     return res
 
 

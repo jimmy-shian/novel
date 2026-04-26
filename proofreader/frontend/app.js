@@ -132,6 +132,7 @@ const els = {
   btnApply: document.getElementById('btn-apply'),
   btnExport: document.getElementById('btn-export'),
   btnBatchStart: document.getElementById('btn-batch-start'),
+  btnBatchStop: document.getElementById('btn-batch-stop'),
   btnAcceptAll: document.getElementById('btn-accept-all'),
   
   // Modal
@@ -306,6 +307,26 @@ async function selectNovel(novel, btnEl) {
   }
 }
 
+/**
+ * Real-time update for chapter cache badge in the sidebar
+ */
+function updateChapterCacheBadge(chapterName) {
+  const chapterItems = els.chapterList.querySelectorAll('.chapter-item');
+  for (const item of chapterItems) {
+    if (item.dataset.name === chapterName) {
+      const badgesContainer = item.querySelector('.meta-badges');
+      if (badgesContainer && !badgesContainer.querySelector('.badge-mark')) {
+        const badge = document.createElement('span');
+        badge.className = 'badge-mark';
+        badge.innerHTML = '<i class="fas fa-microchip"></i> 快取';
+        badgesContainer.appendChild(badge);
+        badge.style.animation = 'pulse-gold 2s ease-out';
+      }
+      break;
+    }
+  }
+}
+
 async function fetchNovelResults(novelId) {
   try {
     const res = await fetch(`${API_BASE}/results/${encodeURIComponent(novelId)}`);
@@ -352,19 +373,29 @@ function renderChapters() {
   
   state.chapters.forEach(chap => {
     const btn = document.createElement('button');
-    btn.className = 'list-item';
+    btn.className = 'list-item chapter-item';
+    btn.dataset.name = chap.name;
     btn.onclick = () => selectChapter(chap, btn);
 
     const nameWrapper = document.createElement('span');
     nameWrapper.textContent = chap.name;
     btn.appendChild(nameWrapper);
 
-    if (chap.cache && (chap.cache.mark || chap.cache.events)) {
+    // Meta badges container (for cache, etc.)
+    const meta = document.createElement('div');
+    meta.className = 'meta-badges';
+    btn.appendChild(meta);
+
+    if (chap.cache && chap.cache.done) {
       const badge = document.createElement('span');
-      badge.className = 'cache-badge';
-      badge.textContent = '快取';
-      badge.title = '此章節已有快取資料';
-      btn.appendChild(badge);
+      badge.className = 'badge-mark done';
+      badge.innerHTML = '<i class="fas fa-check-circle"></i> 已校對';
+      meta.appendChild(badge);
+    } else if (chap.cache && (chap.cache.mark || chap.cache.events)) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-mark';
+      badge.innerHTML = '<i class="fas fa-microchip"></i> 快取';
+      meta.appendChild(badge);
     }
 
     els.chapterList.appendChild(btn);
@@ -1024,6 +1055,8 @@ els.btnBatchStart.addEventListener('click', async () => {
   if (!confirm(`確定要批次掃描 ${state.currentNovel.name} 的 ${state.chapters.length} 個章節嗎？這可能需要一段時間。`)) return;
   
   els.btnBatchStart.disabled = true;
+  els.btnBatchStop.style.display = 'inline-block';
+  state.isBatching = true;
   els.batchList.innerHTML = '<div class="loading-text">正在讀取所有檔案內容...</div>';
   
   try {
@@ -1037,7 +1070,7 @@ els.btnBatchStart.addEventListener('click', async () => {
     if (requestedTasks.length === 0) requestedTasks.push('mark');
 
     const startBody = requestedTasks.length === 1 && requestedTasks[0] === 'mark'
-      ? { novel_id: state.currentNovel.name, files: [] }
+      ? { novel_id: state.currentNovel.name, files: [], use_cache: document.getElementById('chk-use-cache').checked }
       : { novel_id: state.currentNovel.name, use_cache: document.getElementById('chk-use-cache').checked, tasks: requestedTasks };
 
     const endpoint = requestedTasks.length === 1 && requestedTasks[0] === 'mark'
@@ -1059,10 +1092,7 @@ els.btnBatchStart.addEventListener('click', async () => {
       startRes = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          novel_id: state.currentNovel.name,
-          files: filesData
-        })
+        body: JSON.stringify({ ...startBody, files: filesData })
       });
     } else {
       startRes = await fetch(endpoint, {
@@ -1084,7 +1114,26 @@ els.btnBatchStart.addEventListener('click', async () => {
   }
 });
 
-async function startBatchStatusPolling(novelName) {
+// Batch Stop
+els.btnBatchStop.addEventListener('click', async () => {
+  if (!state.currentNovel) return;
+  if (!confirm(`確定要停止 ${state.currentNovel.name} 的批次處理嗎？`)) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/batch/stop/${encodeURIComponent(state.currentNovel.name)}`, {
+      method: 'POST'
+    });
+    if (res.ok) {
+      state.isBatching = false;
+      els.btnBatchStart.disabled = false;
+      els.btnBatchStop.style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Stop batch error:', err);
+  }
+});
+
+function startBatchStatusPolling(novelName) {
   let timer = null;
   const updateStatus = async () => {
     try {
@@ -1097,49 +1146,31 @@ async function startBatchStatusPolling(novelName) {
         saveActiveBatchNovel(null);
         state.activeBatchNovel = null;
         els.btnBatchStart.disabled = false;
-        clearInterval(timer);
+        els.btnBatchStop.style.display = 'none';
+        state.isBatching = false;
+        if (timer) clearTimeout(timer);
         return;
       }
-
-      const done = data.status === 'done';
-      const executed = data.current || 0;
-      const remaining = Math.max(0, (data.total || 0) - executed);
-      const elapsedMs = data.start_time ? Date.now() - new Date(data.start_time).getTime() : 0;
-      const avgMsPerItem = executed > 0 ? elapsedMs / executed : 0;
-      const estimatedRemainingMs = Math.round(avgMsPerItem * remaining);
-      const elapsedLabel = formatDuration(elapsedMs);
-      const remainingLabel = formatDuration(estimatedRemainingMs);
-
-      els.batchList.innerHTML = `
-        <div class="batch-item">
-          <span>批次進度</span>
-          <strong>${executed} / ${data.total}</strong>
-        </div>
-        <div class="batch-item">
-          <span>已執行</span>
-          <strong>${elapsedLabel}</strong>
-          <span>剩餘</span>
-          <strong>${remainingLabel}</strong>
-        </div>
-        ${data.failed ? `<div class="batch-item warning-text">失敗：${data.failed} / ${data.total} 章節</div>` : ''}
-      `;
-
-      if (done) {
-        clearInterval(timer);
+      
+      if (data.status === 'done' || data.status === 'idle') {
+        renderBatchStatus(data);
         saveActiveBatchNovel(null);
         state.activeBatchNovel = null;
         els.btnBatchStart.disabled = false;
-        els.batchList.innerHTML = `
-          <div class="batch-item done-text">批次掃描完成！</div>
-          <div class="batch-item">已處理：${executed} / ${data.total}</div>
-          ${data.failed ? `<div class="batch-item warning-text">失敗章節：${data.failed}</div>` : ''}
-        `;
-        // Refresh analysis data immediately
-        fetchNovelResults(novelName);
+        els.btnBatchStop.style.display = 'none';
+        state.isBatching = false;
+        if (timer) clearTimeout(timer);
+        return;
       }
+
+      if (data.last_chapter) {
+        updateChapterCacheBadge(data.last_chapter);
+      }
+
+      renderBatchStatus(data);
     } catch (pollErr) {
       console.error('Batch status poll failed:', pollErr);
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
       els.batchList.innerHTML = '<div class="error-text">無法取得批次狀態，請稍後重試</div>';
       saveActiveBatchNovel(null);
       state.activeBatchNovel = null;
@@ -1147,7 +1178,30 @@ async function startBatchStatusPolling(novelName) {
     }
   };
 
-  await updateStatus();
+  function renderBatchStatus(data) {
+    const executed = data.current || 0;
+    const total = data.total || 0;
+    const remaining = Math.max(0, total - executed);
+    const elapsedMs = data.start_time ? Date.now() - new Date(data.start_time).getTime() : 0;
+    const avgMsPerItem = executed > 0 ? elapsedMs / executed : 0;
+    const estimatedRemainingMs = Math.round(avgMsPerItem * remaining);
+    
+    els.batchList.innerHTML = `
+      <div class="batch-item">
+        <span>批次進度</span>
+        <strong>${executed} / ${total}</strong>
+      </div>
+      <div class="batch-item">
+        <span>已執行</span>
+        <strong>${formatDuration(elapsedMs)}</strong>
+        <span>剩餘</span>
+        <strong>${formatDuration(estimatedRemainingMs)}</strong>
+      </div>
+      ${data.failed ? `<div class="batch-item warning-text">失敗：${data.failed}</div>` : ''}
+    `;
+  }
+
+  updateStatus();
   timer = setInterval(updateStatus, 2000);
 }
 
@@ -1477,6 +1531,11 @@ els.btnGlobalBatch.addEventListener('click', async () => {
             const novelCurrent = statusData.current || 0;
             const currentProgress = completedChapters + novelCurrent;
             const pct = Math.min(100, (currentProgress / totalChapters) * 100);
+            
+            if (statusData.last_chapter) {
+              updateChapterCacheBadge(statusData.last_chapter);
+            }
+
             const elapsedMs = Date.now() - startTime;
             const remainingChunks = Math.max(0, totalChapters - currentProgress);
             const avgMsPerChapter = currentProgress > 0 ? elapsedMs / currentProgress : 0;

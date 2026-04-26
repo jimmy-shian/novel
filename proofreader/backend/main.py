@@ -9,7 +9,7 @@ import asyncio
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 import re
 
 import uvicorn
@@ -41,6 +41,7 @@ app.add_middleware(
 
 # ── Global Batch State ─────────────────────────────────────────────────────────
 batch_status: Dict[str, dict] = {} # novel_id -> {total, current, status}
+stop_requested: Set[str] = set()
 
 # ── Pydantic models ─────────────────────────────────────────────────────────────
 
@@ -53,6 +54,7 @@ class MarkRequest(BaseModel):
 class BatchMarkRequest(BaseModel):
     novel_id: str
     files: List[dict] # {filename, content, chapter}
+    use_cache: bool = True
 
 class BatchScanRequest(BaseModel):
     novel_id: str
@@ -151,9 +153,12 @@ async def list_chapters(novel_path: str, include_cache: bool = False):
                 }
                 if include_cache:
                     # Quick path-based check for existence, much faster than hashing content
+                    mark_exists = tasks.get_cache_path("mark", novel_path, entry.name).exists()
+                    events_exists = tasks.get_cache_path("events", novel_path, entry.name).exists()
                     item["cache"] = {
-                        "mark": tasks.get_cache_path("mark", novel_path, entry.name).exists(),
-                        "events": tasks.get_cache_path("events", novel_path, entry.name).exists(),
+                        "mark": mark_exists,
+                        "events": events_exists,
+                        "done": mark_exists # Primary indicator
                     }
                 items.append(item)
     except Exception as e:
@@ -209,6 +214,7 @@ def _create_batch_status(total: int) -> dict:
         "current": 0,
         "failed": 0,
         "failed_files": [],
+        "last_chapter": None,
         "status": "processing",
         "start_time": datetime.now(timezone.utc).isoformat()
     }
@@ -236,11 +242,12 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
         all_events = []
         
         for i, f_path in enumerate(files):
-            # Check if user requested to stop
-            if batch_status.get(novel_id, {}).get("status") == "stopped":
-                log.info(f"Stopping batch scan for {novel_id}")
-                return
-
+            if novel_id in stop_requested:
+                log.info(f"Stop requested for {novel_id}, terminating batch scan.")
+                batch_status[novel_id]["status"] = "stopped"
+                stop_requested.remove(novel_id)
+                return # Exit immediately
+                
             try:
                 content = f_path.read_text("utf-8", errors="ignore")
                 
@@ -264,6 +271,17 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                         if s: all_summaries.append(s)
 
                 batch_status[novel_id]["current"] = i + 1
+                batch_status[novel_id]["last_chapter"] = f_path.name
+                
+                # INCREMENTAL SAVE: Save global state every chapter to handle page refreshes
+                if all_chars or all_summaries or all_events:
+                    timeline = []
+                    if all_events:
+                        # Simple non-AI consolidation for incremental updates
+                        timeline = sorted(all_events, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.get("章節", ""))])
+                    
+                    _update_novel_results_from_batch(novel_id, all_chars, all_summaries, timeline)
+
             except Exception as e:
                 log.error(f"Scan batch error for {f_path.name}: {e}")
                 batch_status[novel_id]["failed"] += 1
@@ -284,12 +302,6 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     background_tasks.add_task(process_all)
     return {"message": "Scan started", "total": len(files)}
 
-@app.post("/api/batch/stop/{novel_id}")
-async def api_batch_stop(novel_id: str):
-    if novel_id in batch_status:
-        batch_status[novel_id]["status"] = "stopped"
-        return {"success": True}
-    return {"success": False, "message": "Not running"}
 
 def _update_novel_results_from_batch(novel_id, chars, summaries, timeline):
     res_path = RESULTS_DIR / f"{novel_id}.json"
@@ -328,6 +340,12 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
     
     async def process_batch():
         for i, f in enumerate(req.files):
+            if novel_id in stop_requested:
+                log.info(f"Stop requested for batch mark {novel_id}")
+                batch_status[novel_id]["status"] = "stopped"
+                stop_requested.remove(novel_id)
+                return
+                
             try:
                 await tasks.run_mark_errors(novel_id, f["chapter"], f["content"], use_cache=True)
                 batch_status[novel_id]["current"] = i + 1
@@ -336,10 +354,19 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
                 batch_status[novel_id]["failed"] += 1
                 batch_status[novel_id]["failed_files"].append(f["filename"])
                 batch_status[novel_id]["current"] = i + 1
-        batch_status[novel_id]["status"] = "done"
+        
+        if batch_status[novel_id]["status"] == "processing":
+            batch_status[novel_id]["status"] = "done"
 
     background_tasks.add_task(process_batch)
     return {"message": "Batch started", "total": len(req.files)}
+
+@app.post("/api/batch/stop/{novel_id}")
+async def api_stop_batch(novel_id: str):
+    if novel_id in batch_status and batch_status[novel_id]["status"] == "processing":
+        stop_requested.add(novel_id)
+        return {"success": True, "message": "Stop requested"}
+    return {"success": False, "message": "Not running"}
 
 @app.get("/api/batch/status/{novel_id}")
 async def get_batch_status(novel_id: str):
