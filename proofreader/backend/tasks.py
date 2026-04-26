@@ -10,7 +10,7 @@ from pathlib import Path
 
 from config import (
     MAX_TOKENS_MARK, MAX_TOKENS_ANALYSIS, CACHE_DIR, NAMES_DICT_PATH,
-    LOGS_DIR
+    LOGS_DIR, RESULTS_DIR
 )
 from llm_client import chat
 from prompts import (
