@@ -7,7 +7,7 @@ from config import USE_LOCAL_VLLM, NVIDIA_API_KEY, GPTOSS_API_KEY, NVIDIA_API_UR
 
 # CONFIG
 MODEL_PATH = r"C:\Users\user\Downloads\novel\Model"
-PORT = 8000
+PORT = int(os.getenv("LLM_SERVER_PORT", os.getenv("PORT", "8000")))
 
 app = Flask(__name__)
 

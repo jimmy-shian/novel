@@ -105,6 +105,7 @@ def extract_events_prompt(text: str, chapter: str = "", rag_context: str = "") -
     system = dedent("""
         你是一位精通小說敘事結構的分析助手。
         你的任務是從「最新章節」中抽取關鍵劇情事件，並確保這些事件能銜接「已知的歷史時間線」。
+        如果沒有重要事件，例如一整章都在講述角色的日常生活，或者沒有任何情節推進，則不需紀錄，直接輸出一個空的 JSON 陣列。
 
         抽取準則：
         1. 聚焦於：角色關係的重大轉變（如：結仇、和解、結盟、背叛）、重要對話、境界提升、新地標出現、關鍵物品獲得。
@@ -114,7 +115,7 @@ def extract_events_prompt(text: str, chapter: str = "", rag_context: str = "") -
         [
           {
             "事件名稱": "核心動作（請用繁體中文）",
-            "事件描述": "詳細描述該事件的起因、經過與結果（約 50-200 字，請用繁體中文）",
+            "事件描述": "極簡描述（約 20-100 字，請用繁體中文）",
             "涉及角色": ["角色A", "角色B"],
             "章節": "章節名稱",
             "重要性": "高 | 中 | 低"
@@ -124,6 +125,8 @@ def extract_events_prompt(text: str, chapter: str = "", rag_context: str = "") -
         規則：
         - **全繁體中文**：所有輸出內容必須使用繁體中文。
         - **絕對禁令：禁止重複！** 只准輸出「最新章節」中發生的新事件。提供的「已知歷史」僅供參考銜接，**絕對不可**將其包含在輸出的 JSON 陣列中。
+        - **順序必須正確**：請依照事件在章節中發生的先後順序輸出（越早發生的事件越前面）。
+        - **章節欄位一致**：每個事件物件中的「章節」必須等於本次輸入的章節名稱（不要自行改寫或省略）。
         - **細節捕捉**：捕捉所有具備轉折意義的對話、動作或環境變化。
         - **合併同類項**：如果多個角色共同參與同一個行動（如：多人圍攻、共同對話），請將其合併為一個事件對象。
         - **敘事連續性**：確保事件描述能夠構成一個連貫的敘事流。
@@ -139,35 +142,6 @@ def extract_events_prompt(text: str, chapter: str = "", rag_context: str = "") -
     return [
         {"role": "system", "content": system},
         {"role": "user", "content": "\n".join(user_parts)},
-    ]
-
-
-# ── 4. Timeline consolidation ────────────────────────────────────────────────────
-
-def build_timeline_prompt(events_json: str, rag_context: str = "") -> list[dict]:
-    system = dedent("""
-        你是一位專業的中文小說分析助手。請整理以下劇情事件，建立完整時間線。
-
-        輸出格式必須是合法 JSON 陣列，依劇情順序排列：
-        [
-          {
-            "順序": 1,
-            "事件名稱": "事件名稱",
-            "關聯角色": ["角色1", "角色2"],
-            "前後關係": "與前後事件的因果或時序關係說明"
-          }
-        ]
-
-        只輸出 JSON，不要有任何前言。
-    """).strip()
-
-    user = f"請整理以下所有事件為時間線：\n\n{events_json}"
-    if rag_context:
-        user += "\n" + rag_context
-
-    return [
-        {"role": "system", "content": system},
-        {"role": "user", "content": user},
     ]
 
 
@@ -222,6 +196,31 @@ def story_summary_prompt(text_chunks: list[str], rag_context: str = "") -> list[
     user = "以下是小說的各個片段：\n\n" + "\n\n---\n\n".join(text_chunks)
     if rag_context:
         user += "\n" + rag_context
+    return [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+
+
+# ── 7. Aggregate Novel Summary ──────────────────────────────────────────────────
+
+def aggregate_summary_prompt(text_chunks: list[str], existing_summary: str = "") -> list[dict]:
+    """
+    Consolidate multiple chapter summaries into a single novel-level summary.
+    If an existing aggregate summary is provided, update it rather than starting fresh.
+    """
+    system = dedent("""
+        你是一位小說摘要整合助手。
+        請將以下章節摘要整合成一份小說級的綜合摘要，保持劇情脈絡與角色關係。
+        如果已有現存的小說整合摘要，請基於它更新成最新版本。
+        只輸出最終整合摘要，不要新增任何 JSON、標題或註解。
+        使用繁體中文，純文字輸出。
+    """).strip()
+
+    user = "以下是本書章節摘要：\n\n" + "\n\n".join(text_chunks)
+    if existing_summary:
+        user += "\n\n已存在小說整合摘要：\n" + existing_summary
+
     return [
         {"role": "system", "content": system},
         {"role": "user", "content": user},

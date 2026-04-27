@@ -10,10 +10,12 @@ const state = {
   issues: [],
   warnings: [],
   decisions: {}, // issue.id -> { action: 'accept'|'ignore'|'manual', manualText?: '' }
-  aiData: null, // { chars, events, summary, timeline }
+  aiData: null, // { chars, events, summary, timeline, aggregate_summary, aggregate_characters, aggregate_timeline }
   activeBatchNovel: null,
   isGlobalBatching: false,
-  selectedNovels: new Set() // Selected for global batch
+  selectedNovels: new Set(), // Selected for global batch
+  scopeSummary: 'global',   // 'chapter' | 'global'
+  scopeChars:   'global'    // 'chapter' | 'global'
 };
 
 function saveSelectedNovel(name) {
@@ -148,7 +150,14 @@ const els = {
   globalBatchLabel: document.getElementById('global-batch-label'),
   globalBatchETA: document.getElementById('global-batch-eta'),
   globalBatchDetails: document.getElementById('global-batch-details'),
-  btnGlobalStop: document.getElementById('btn-global-stop')
+  btnGlobalStop: document.getElementById('btn-global-stop'),
+
+  // Scope toggles & consolidate
+  btnConsolidate: document.getElementById('btn-consolidate'),
+  scopeSummaryChapter: document.getElementById('scope-summary-chapter'),
+  scopeSummaryGlobal: document.getElementById('scope-summary-global'),
+  scopeCharsChapter: document.getElementById('scope-chars-chapter'),
+  scopeCharsGlobal: document.getElementById('scope-chars-global')
 };
 
 // ── Initialization ──
@@ -348,9 +357,16 @@ async function fetchNovelResults(novelId) {
       const data = await res.json();
       if (data && (data.characters || data.summary || data.timeline)) {
         state.aiData = {
+          // Per-chapter fields (empty until a chapter is analysed)
+          chars: [],
+          events: [],
+          summary: '',
+          // Global / novel-level fields
           characters: data.characters || [],
-          summary: data.summary || '',
           timeline: data.timeline || [],
+          aggregate_summary: data.aggregate_summary || data.summary || '',
+          aggregate_characters: data.aggregate_characters || data.characters || [],
+          aggregate_timeline: data.timeline || [],
           novel: novelId
         };
         renderAnalysis();
@@ -503,25 +519,20 @@ async function checkAndLoadCache() {
       }
       
       if (data.chars || data.events || data.summary) {
-        // Merge with existing global data if any
-        const existingChars = state.aiData?.characters || [];
+        const existingChars = state.aiData?.aggregate_characters || state.aiData?.characters || [];
         const newChars = data.chars || [];
-        
-        // Simple deduplication by name
+
         const charMap = new Map();
         existingChars.forEach(c => charMap.set(c['角色名稱'], c));
         newChars.forEach(c => charMap.set(c['角色名稱'], c));
 
         // Merge Timeline events
-        const existingEvents = state.aiData?.timeline || [];
+        const existingEvents = state.aiData?.aggregate_timeline || state.aiData?.timeline || [];
         const newEvents = data.events || [];
-        
-        // Use event name + chapter as a simple key for deduplication
         const eventMap = new Map();
         existingEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
         newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
-        
-        // Sort timeline by chapter number if possible
+
         const sortedTimeline = Array.from(eventMap.values()).sort((a, b) => {
             const getNum = s => {
                 const m = String(s).match(/\d+/);
@@ -531,9 +542,16 @@ async function checkAndLoadCache() {
         });
 
         state.aiData = {
+          // Chapter-level (what was cached for this chapter)
+          chars: newChars,
+          events: newEvents,
+          summary: data.summary || '',
+          // Novel-level aggregate
           characters: Array.from(charMap.values()),
-          timeline: sortedTimeline, 
-          summary: data.summary || state.aiData?.summary || '', 
+          aggregate_characters: Array.from(charMap.values()),
+          timeline: sortedTimeline,
+          aggregate_timeline: sortedTimeline,
+          aggregate_summary: data.aggregate_summary || state.aiData?.aggregate_summary || '',
           novel: state.currentNovel.name
         };
         hasCache = true;
@@ -648,15 +666,14 @@ els.btnAnalyze.addEventListener('click', async () => {
     }
     
     if (runAnalyze) {
-      // Merge with existing data
-      const existingChars = state.aiData?.characters || [];
+      const existingAggChars = state.aiData?.aggregate_characters || state.aiData?.characters || [];
       const newChars = data.chars || [];
       const charMap = new Map();
-      existingChars.forEach(c => charMap.set(c['角色名稱'], c));
+      existingAggChars.forEach(c => charMap.set(c['角色名稱'], c));
       newChars.forEach(c => charMap.set(c['角色名稱'], c));
 
-      const existingEvents = state.aiData?.timeline || [];
-      const newEvents = data.timeline || data.events || [];
+      const existingEvents = state.aiData?.aggregate_timeline || state.aiData?.timeline || [];
+      const newEvents = data.aggregate_timeline || data.timeline || data.events || [];
       const eventMap = new Map();
       existingEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
       newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
@@ -669,17 +686,24 @@ els.btnAnalyze.addEventListener('click', async () => {
           return getNum(a['章節']) - getNum(b['章節']);
       });
 
+      const aggChars = data.aggregate_characters || Array.from(charMap.values());
+
       state.aiData = {
-        characters: Array.from(charMap.values()),
+        // Chapter-level (what the LLM returned for this chapter only)
+        chars: data.chars || [],
+        events: data.events || [],
+        summary: data.summary || '',
+        // Novel-level aggregate
+        characters: aggChars,
+        aggregate_characters: aggChars,
         timeline: sortedTimeline,
-        summary: data.summary || state.aiData?.summary || '',
+        aggregate_timeline: sortedTimeline,
+        aggregate_summary: data.aggregate_summary || state.aiData?.aggregate_summary || '',
         novel: state.currentNovel.name
       };
-      
+
       console.log('角色與劇情分析完成');
       renderAnalysis();
-      // Save globally
-      await saveNovelResults();
     }
     
     renderEditor();
@@ -1028,23 +1052,23 @@ els.btnApply.addEventListener('click', async () => {
 });
 
 els.btnExport.addEventListener('click', async () => {
-  if (!state.aiData || !state.currentNovel) {
-    alert('請先勾選「角色/劇情分析」並執行 AI 分析後，再進行匯出！');
+  if (!state.currentNovel) {
+    alert('請先選擇一個小說，再進行匯出！');
     return;
   }
-  
+
   try {
     const res = await fetch(`${API_BASE}/export/assistant`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         novel_id: state.currentNovel.name,
-        data: state.aiData
+        data: {}  // backend now always uses global results.json, this field is ignored
       })
     });
     const result = await res.json();
     if (result.success) {
-      alert('已成功匯出至閱讀助手資料夾：\n' + result.path);
+      alert('已成功匯出至閱讀助手資料夾（使用全書整合資料）：\n' + result.path);
     }
   } catch (err) {
     console.error(err);
@@ -1226,6 +1250,63 @@ function startBatchStatusPolling(novelName) {
   timer = setInterval(updateStatus, 2000);
 }
 
+// ── Scope Toggles & Consolidate ──
+function initScopeToggles() {
+  // Summary scope
+  [els.scopeSummaryChapter, els.scopeSummaryGlobal].forEach(btn => {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      state.scopeSummary = btn.dataset.scope;
+      els.scopeSummaryChapter.classList.toggle('active', state.scopeSummary === 'chapter');
+      els.scopeSummaryGlobal.classList.toggle('active', state.scopeSummary === 'global');
+      renderAnalysis();
+    });
+  });
+
+  // Characters scope
+  [els.scopeCharsChapter, els.scopeCharsGlobal].forEach(btn => {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      state.scopeChars = btn.dataset.scope;
+      els.scopeCharsChapter.classList.toggle('active', state.scopeChars === 'chapter');
+      els.scopeCharsGlobal.classList.toggle('active', state.scopeChars === 'global');
+      renderAnalysis();
+    });
+  });
+
+  // Consolidate button
+  if (els.btnConsolidate) {
+    els.btnConsolidate.addEventListener('click', async () => {
+      if (!state.currentNovel) { alert('請先選擇小說'); return; }
+      els.btnConsolidate.disabled = true;
+      els.btnConsolidate.textContent = '整合中...';
+      try {
+        const res = await fetch(`${API_BASE}/analyze/consolidate?novel_id=${encodeURIComponent(state.currentNovel.name)}`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (data.aggregate_summary && state.aiData) {
+          state.aiData.aggregate_summary = data.aggregate_summary;
+          // Also auto-switch to global view
+          state.scopeSummary = 'global';
+          if (els.scopeSummaryChapter) els.scopeSummaryChapter.classList.remove('active');
+          if (els.scopeSummaryGlobal) els.scopeSummaryGlobal.classList.add('active');
+          renderAnalysis();
+          alert('全書摘要整合完成！');
+        } else {
+          alert('整合完成，但摘要為空（請先執行章節分析）。');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('整合失敗：' + err.message);
+      } finally {
+        els.btnConsolidate.disabled = false;
+        els.btnConsolidate.textContent = '🔮 整合全書摘要';
+      }
+    });
+  }
+}
+
 // ── Rendering Analysis ──
 function renderAnalysis() {
   const containerSummary = document.getElementById('analysis-summary');
@@ -1238,20 +1319,33 @@ function renderAnalysis() {
     containerTimeline.innerHTML = '';
     return;
   }
-  
-  // Summary
-  if (state.aiData.summary) {
-    containerSummary.innerHTML = marked.parse(state.aiData.summary);
+
+  // ── Summary (scope-aware) ──
+  let summaryText = '';
+  if (state.scopeSummary === 'chapter') {
+    summaryText = state.aiData.summary || '';
   } else {
-    containerSummary.textContent = '無大綱資料';
+    summaryText = state.aiData.aggregate_summary || state.aiData.summary || '';
   }
-  
-  // Characters
-  containerChars.innerHTML = '';
-  if (state.aiData.characters.length === 0) {
-    containerChars.innerHTML = '<div class="empty-text">未偵測到角色</div>';
+  if (summaryText) {
+    containerSummary.innerHTML = marked.parse(summaryText);
   } else {
-    state.aiData.characters.forEach(char => {
+    containerSummary.textContent = state.scopeSummary === 'chapter' ? '本章尚無摘要資料' : '無大綱資料';
+  }
+
+  // ── Characters (scope-aware) ──
+  let charList = [];
+  if (state.scopeChars === 'chapter') {
+    charList = state.aiData.chars || [];
+  } else {
+    charList = state.aiData.aggregate_characters || state.aiData.characters || [];
+  }
+
+  containerChars.innerHTML = '';
+  if (charList.length === 0) {
+    containerChars.innerHTML = `<div class="empty-text">${state.scopeChars === 'chapter' ? '本章尚無角色資料' : '未偵測到角色'}</div>`;
+  } else {
+    charList.forEach(char => {
       const card = document.createElement('div');
       card.className = 'char-card';
       
@@ -1273,12 +1367,13 @@ function renderAnalysis() {
     });
   }
   
-  // Timeline
+  // ── Timeline (always global) ──
+  const timeline = state.aiData.aggregate_timeline || state.aiData.timeline || [];
   containerTimeline.innerHTML = '';
-  if (state.aiData.timeline.length === 0) {
+  if (timeline.length === 0) {
     containerTimeline.innerHTML = '<div class="empty-state">未偵測到事件</div>';
   } else {
-    state.aiData.timeline.forEach(ev => {
+    timeline.forEach(ev => {
       const item = document.createElement('div');
       item.className = 'timeline-item';
       item.innerHTML = `
@@ -1611,3 +1706,4 @@ els.btnGlobalStop?.addEventListener('click', async () => {
 
 // Start app
 init();
+initScopeToggles();

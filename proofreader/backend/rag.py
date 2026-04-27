@@ -144,11 +144,51 @@ def build_rag_context(novel_id: str, task: str, query_text: str) -> str:
                 except:
                     snippets.append(f"• {c_json}")
     
-    elif task in ("plot", "character"):
-        snippets += query("paragraphs", query_text, novel_id, k=3)
-        snippets += query("events", query_text, novel_id, k=2)
+    elif task in ("plot", "character", "event", "events"):
+        events = query("events", query_text, novel_id, k=5)
+        characters = query("characters", query_text, novel_id, k=5)
+
+        if events:
+            snippets.append("【已知事件（僅供銜接，請勿重複輸出）】：")
+            for ev_json in events:
+                try:
+                    ev = json.loads(ev_json)
+                    ch = ev.get("章節", "")
+                    name = ev.get("事件名稱", "未知事件")
+                    desc = ev.get("事件描述", "")
+                    roles = ev.get("涉及角色", []) or []
+                    roles_s = f"（涉及：{', '.join(roles)}）" if isinstance(roles, list) and roles else ""
+                    ch_s = f"[{ch}] " if ch else ""
+                    snippets.append(f"• {ch_s}{name}: {desc}{roles_s}".strip())
+                except Exception:
+                    snippets.append(f"• {ev_json}")
+
+        if characters:
+            snippets.append("\n【相關角色參考】：")
+            for c_json in characters:
+                try:
+                    c = json.loads(c_json)
+                    name = c.get("角色名稱", "未知")
+                    desc = c.get("角色描述", "") or c.get("身份", "")
+                    aliases = f" (別名: {', '.join(c.get('別名', []))})" if c.get("別名") else ""
+                    snippets.append(f"• {name}{aliases}: {desc}")
+                except Exception:
+                    snippets.append(f"• {c_json}")
+
     elif task == "timeline":
-        snippets += query("events", query_text, novel_id, k=RAG_TOP_K)
+        events = query("events", query_text, novel_id, k=RAG_TOP_K)
+        if events:
+            snippets.append("【已知事件（供時間線整理參考）】：")
+            for ev_json in events:
+                try:
+                    ev = json.loads(ev_json)
+                    ch = ev.get("章節", "")
+                    name = ev.get("事件名稱", "未知事件")
+                    desc = ev.get("事件描述", "")
+                    ch_s = f"[{ch}] " if ch else ""
+                    snippets.append(f"• {ch_s}{name}: {desc}".strip())
+                except Exception:
+                    snippets.append(f"• {ev_json}")
 
     if not snippets:
         return ""

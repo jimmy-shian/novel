@@ -122,11 +122,24 @@
         <div class="analysis-layout">
           <div class="analysis-sidebar">
             <div class="analysis-section">
-              <h4>故事大綱</h4>
+              <div class="analysis-section-header">
+                <h4>故事大綱</h4>
+                <div class="scope-toggle" id="scope-toggle-summary">
+                  <button class="scope-btn" data-scope="chapter" id="scope-summary-chapter">本章</button>
+                  <button class="scope-btn active" data-scope="global" id="scope-summary-global">全書</button>
+                </div>
+              </div>
               <div id="analysis-summary" class="summary-box">尚未進行分析</div>
+              <button id="btn-consolidate" class="btn outline small" style="margin-top:8px;" title="使用 AI 整合所有章節摘要為全書摘要">🔮 整合全書摘要</button>
             </div>
             <div class="analysis-section">
-              <h4>登場角色</h4>
+              <div class="analysis-section-header">
+                <h4>登場角色</h4>
+                <div class="scope-toggle" id="scope-toggle-chars">
+                  <button class="scope-btn" data-scope="chapter" id="scope-chars-chapter">本章</button>
+                  <button class="scope-btn active" data-scope="global" id="scope-chars-global">全書</button>
+                </div>
+              </div>
               <div id="analysis-characters" class="character-grid"></div>
             </div>
           </div>
