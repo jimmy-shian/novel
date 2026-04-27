@@ -1357,8 +1357,10 @@ function renderAnalysis() {
       card.className = 'char-card';
       
       const name = escapeHTML(char['角色名稱'] || '未知');
-      const aliases = char['別名'] && char['別名'].length > 0 
-        ? `<span class="char-aliases">(${escapeHTML(char['別名'].join(', '))})</span>` 
+      const aliasesRaw = char['別名'];
+      const hasAliases = Array.isArray(aliasesRaw) ? aliasesRaw.length > 0 : !!aliasesRaw;
+      const aliases = hasAliases 
+        ? `<span class="char-aliases">(${escapeHTML(aliasesRaw)})</span>` 
         : '';
       const faction = escapeHTML(char['身份'] || '');
       const desc = escapeHTML(char['角色描述'] || '');
@@ -1383,6 +1385,9 @@ function renderAnalysis() {
     timeline.forEach(ev => {
       const item = document.createElement('div');
       item.className = 'timeline-item';
+      const rolesRaw = ev['涉及角色'] || [];
+      const roles = Array.isArray(rolesRaw) ? rolesRaw : [rolesRaw];
+      
       item.innerHTML = `
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -1392,7 +1397,7 @@ function renderAnalysis() {
           </div>
           <div class="timeline-desc">${escapeHTML(ev['事件描述'] || '')}</div>
           <div class="timeline-tags">
-            ${(ev['涉及角色'] || []).map(c => `<span class="tag">${escapeHTML(c)}</span>`).join('')}
+            ${roles.map(c => `<span class="tag">${escapeHTML(c)}</span>`).join('')}
             <span class="tag" style="background:#fffcf0; border-color:#d4c4a8;">重要性: ${escapeHTML(ev['重要性'] || '中')}</span>
           </div>
         </div>
@@ -1417,7 +1422,10 @@ function naturalSort(a, b) {
 }
 
 function escapeHTML(str) {
-  if (!str) return '';
+  if (str === null || str === undefined) return '';
+  if (Array.isArray(str)) str = str.join(', ');
+  if (typeof str !== 'string') str = String(str);
+  
   return str.replace(/[&<>'"]/g, 
     tag => ({
       '&': '&amp;',
