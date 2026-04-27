@@ -6,6 +6,7 @@ import json
 import hashlib
 import logging
 import re
+import asyncio
 from pathlib import Path
 
 from config import (
@@ -15,7 +16,7 @@ from config import (
 from llm_client import chat
 from prompts import (
     mark_errors_prompt, extract_characters_prompt,
-    extract_events_prompt,
+    extract_events_prompt, merge_characters_prompt,
     normalize_names_prompt, story_summary_prompt,
     aggregate_summary_prompt
 )
@@ -114,6 +115,12 @@ def _load_name_dict() -> dict:
 
 def _save_name_dict(d: dict) -> None:
     NAMES_DICT_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=2), "utf-8")
+
+
+def _chapter_sort_key(chapter_name: str) -> list:
+    """Natural sort key for chapter names (e.g., 'Chapter 2' < 'Chapter 10')."""
+    return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', chapter_name or "")]
+
 
 
 def _fix_offsets(text: str, issues: list[dict]) -> tuple[list[dict], list[dict]]:
@@ -747,32 +754,37 @@ def _format_chapter_summary_block(chapter: str, summary_text: str) -> str:
 
 
 def _upsert_summary_block(existing_summary: str, chapter: str, summary_text: str) -> str:
-    block = _format_chapter_summary_block(chapter, summary_text)
-    if not block:
+    """
+    Upserts or replaces a chapter summary block and ensures all blocks are sorted.
+    Blocks are delimited by ### Header.
+    """
+    ch = (chapter or "").strip()
+    s = (summary_text or "").strip()
+    if not ch or not s:
         return (existing_summary or "").strip()
 
-    existing = (existing_summary or "").strip()
-    if not existing:
-        return block
+    # Split existing into blocks
+    blocks: dict[str, str] = {}
+    if existing_summary:
+        # Match ### Title\nContent
+        # Using a regex that captures the title and the content until the next header
+        pattern = re.compile(r"(?m)^###\s+(.+?)\s*$\n([\s\S]*?)(?=\n###\s+|$)", re.MULTILINE)
+        for match in pattern.finditer(existing_summary):
+            t, content = match.groups()
+            blocks[t.strip()] = content.strip()
 
-    header_re = re.compile(rf"(?m)^###\s+{re.escape(chapter)}\s*$")
-    m = header_re.search(existing)
-    if not m:
-        return (existing + "\n\n" + block).strip()
+    # Add/Update current
+    blocks[ch] = s
 
-    # Replace the whole chapter block (from its header until next header or EOF).
-    next_header = re.search(r"(?m)^###\s+", existing[m.end():])
-    end = (m.end() + next_header.start()) if next_header else len(existing)
+    # Sort keys naturally
+    sorted_titles = sorted(blocks.keys(), key=_chapter_sort_key)
 
-    before = existing[:m.start()].rstrip()
-    after = existing[end:].lstrip()
-    out = ""
-    if before:
-        out += before + "\n\n"
-    out += block
-    if after:
-        out += "\n\n" + after
-    return out.strip()
+    # Reconstruct
+    output = []
+    for title in sorted_titles:
+        output.append(f"### {title}\n{blocks[title]}")
+
+    return "\n\n".join(output).strip()
 
 
 def save_novel_results(novel_id: str, data: dict) -> Path:
@@ -781,7 +793,80 @@ def save_novel_results(novel_id: str, data: dict) -> Path:
     return res_path
 
 
-def update_novel_results(
+async def run_consolidate_characters(novel_id: str, new_characters: list) -> list:
+    """
+    Uses LLM to perform deep consolidation of new characters into the global list.
+    This handles description merging and filters out minor characters.
+    """
+    if not new_characters:
+        return []
+
+    data = load_novel_results(novel_id)
+    existing_chars = data.get("characters", [])
+    
+    if not existing_chars:
+        return new_characters
+
+    # RAG filtering: Only send existing characters that match the new characters
+    # (either by name or alias overlap) to prevent prompt overflow and focus the LLM.
+    new_names_and_aliases = set()
+    for nc in new_characters:
+        name = nc.get("角色名稱")
+        if name: new_names_and_aliases.add(name)
+        aliases = nc.get("別名", [])
+        if isinstance(aliases, list):
+            for a in aliases: new_names_and_aliases.add(a)
+    
+    relevant_existing = []
+    irrelevant_existing = []
+    
+    for ec in existing_chars:
+        name = ec.get("角色名稱")
+        aliases = ec.get("別名", [])
+        
+        is_relevant = (name in new_names_and_aliases)
+        if not is_relevant and isinstance(aliases, list):
+            is_relevant = any(a in new_names_and_aliases for a in aliases)
+            
+        if is_relevant:
+            relevant_existing.append(ec)
+        else:
+            irrelevant_existing.append(ec)
+
+    if not relevant_existing:
+        messages = merge_characters_prompt(
+            "[]", 
+            json.dumps(new_characters, ensure_ascii=False)
+        )
+    else:
+        messages = merge_characters_prompt(
+            json.dumps(relevant_existing, ensure_ascii=False),
+            json.dumps(new_characters, ensure_ascii=False)
+        )
+    
+    raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+    try:
+        merged_subset = _parse_json(raw)
+        if not isinstance(merged_subset, list):
+            return existing_chars
+            
+        # Reconstruct full list: irrelevant + merged_subset
+        final_map = {c.get("角色名稱"): c for c in irrelevant_existing if c.get("角色名稱")}
+        for mc in merged_subset:
+            name = mc.get("角色名稱")
+            if name:
+                final_map[name] = mc
+                
+        return list(final_map.values())
+    except Exception as e:
+        log.error(f"Failed to parse merged characters from LLM: {e}")
+        return _merge_characters(existing_chars, new_characters)
+
+
+
+_novel_locks: dict[str, asyncio.Lock] = {}
+
+async def update_novel_results(
     novel_id: str,
     characters: list[dict] | None = None,
     chapter_summaries: list[tuple[str, str]] | None = None,
@@ -789,41 +874,43 @@ def update_novel_results(
 ) -> dict:
     """
     Merge new chapter outputs into novel-level results.json.
-
-    - characters: extracted per-chapter character objects
-    - chapter_summaries: list of (chapter, summary_text)
-    - events: extracted per-chapter event objects (timeline schema)
-
-    The "aggregate_characters" field is kept in sync with the merged
-    character list (same data, exposed under a separate key so the
-    frontend can distinguish chapter vs. global views).
+    Two-phase: LLM call outside lock, then locked save.
+    aggregate_summary is NEVER touched here - only by run_consolidate_novel_summary.
     """
-    data = load_novel_results(novel_id)
+    if novel_id not in _novel_locks:
+        _novel_locks[novel_id] = asyncio.Lock()
+    lock = _novel_locks[novel_id]
 
+    # Phase 1 (slow, unlocked): run LLM character consolidation if needed
+    merged_chars = None
     if characters:
-        merged_chars = _merge_characters(data.get("characters", []), characters)
-        data["characters"] = merged_chars
-        # Keep aggregate_characters in sync
-        data["aggregate_characters"] = merged_chars
+        merged_chars = await run_consolidate_characters(novel_id, characters)
 
-    if chapter_summaries:
-        summary_text = data.get("summary", "")
-        for ch, s in chapter_summaries:
-            summary_text = _upsert_summary_block(summary_text, ch, s)
-        data["summary"] = summary_text
-        # aggregate_summary is updated explicitly via run_consolidate_novel_summary;
-        # we only touch it here if it has never been set.
-        if not data.get("aggregate_summary"):
-            data["aggregate_summary"] = summary_text
+    # Phase 2 (fast, locked): re-read fresh data and write atomically
+    async with lock:
+        data = load_novel_results(novel_id)
 
-    if events:
-        existing = data.get("timeline", []) or []
-        merged = consolidate_timeline_events(existing + events)
-        data["timeline"] = merged
+        if merged_chars is not None:
+            data["characters"] = merged_chars
+            data["aggregate_characters"] = merged_chars
 
-    data["novel"] = data.get("novel") or novel_id
-    save_novel_results(novel_id, data)
-    return data
+        if chapter_summaries:
+            summary_text = data.get("summary", "")
+            for ch, s in chapter_summaries:
+                summary_text = _upsert_summary_block(summary_text, ch, s)
+            data["summary"] = summary_text
+            # DO NOT touch aggregate_summary here.
+            # It is reserved for user-triggered LLM consolidation only.
+
+        if events:
+            existing = data.get("timeline", []) or []
+            merged = consolidate_timeline_events(existing + events)
+            data["timeline"] = merged
+
+        data["novel"] = data.get("novel") or novel_id
+        save_novel_results(novel_id, data)
+        return data
+
 
 
 async def run_consolidate_novel_summary(novel_id: str) -> str:

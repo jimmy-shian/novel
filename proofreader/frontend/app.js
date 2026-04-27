@@ -171,6 +171,8 @@ async function init() {
     if (el) el.addEventListener('change', saveUIState);
   });
 
+  initScopeToggles();
+
   try {
     const res = await fetch(`${API_BASE}/health`);
     if (res.ok) {
@@ -518,7 +520,7 @@ async function checkAndLoadCache() {
         hasCache = true;
       }
       
-      if (data.chars || data.events || data.summary) {
+      if (data.chars || data.events || data.summary || data.chapter_summary) {
         const existingChars = state.aiData?.aggregate_characters || state.aiData?.characters || [];
         const newChars = data.chars || [];
 
@@ -534,19 +536,16 @@ async function checkAndLoadCache() {
         newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
 
         const sortedTimeline = Array.from(eventMap.values()).sort((a, b) => {
-            const getNum = s => {
-                const m = String(s).match(/\d+/);
-                return m ? parseInt(m[0]) : 0;
-            };
-            return getNum(a['章節']) - getNum(b['章節']);
+            return naturalSort(a['章節'], b['章節']);
         });
 
         state.aiData = {
-          // Chapter-level (what was cached for this chapter)
+          // Chapter-level (what was cached for this chapter only)
           chars: newChars,
           events: newEvents,
-          summary: data.summary || '',
+          chapter_summary: data.chapter_summary || '',  // Single chapter summary text
           // Novel-level aggregate
+          summary: data.summary || '',                   // All chapters concatenated
           characters: Array.from(charMap.values()),
           aggregate_characters: Array.from(charMap.values()),
           timeline: sortedTimeline,
@@ -679,11 +678,7 @@ els.btnAnalyze.addEventListener('click', async () => {
       newEvents.forEach(e => eventMap.set(`${e['事件名稱']}-${e['章節']}`, e));
 
       const sortedTimeline = Array.from(eventMap.values()).sort((a, b) => {
-          const getNum = s => {
-              const m = String(s).match(/\d+/);
-              return m ? parseInt(m[0]) : 0;
-          };
-          return getNum(a['章節']) - getNum(b['章節']);
+          return naturalSort(a['章節'], b['章節']);
       });
 
       const aggChars = data.aggregate_characters || Array.from(charMap.values());
@@ -692,8 +687,9 @@ els.btnAnalyze.addEventListener('click', async () => {
         // Chapter-level (what the LLM returned for this chapter only)
         chars: data.chars || [],
         events: data.events || [],
-        summary: data.summary || '',
+        chapter_summary: data.chapter_summary || '',   // Single chapter summary
         // Novel-level aggregate
+        summary: data.summary || '',                   // All chapters concatenated
         characters: aggChars,
         aggregate_characters: aggChars,
         timeline: sortedTimeline,
@@ -1323,8 +1319,19 @@ function renderAnalysis() {
   // ── Summary (scope-aware) ──
   let summaryText = '';
   if (state.scopeSummary === 'chapter') {
-    summaryText = state.aiData.summary || '';
+    // Prefer explicit chapter_summary; fall back to extracting from full summary
+    if (state.aiData.chapter_summary) {
+      summaryText = state.aiData.chapter_summary;
+    } else if (state.currentChapter && state.aiData.summary) {
+      // Try to extract just this chapter's block from the aggregated summary
+      const chName = state.currentChapter.name;
+      const allSummary = state.aiData.summary || '';
+      const regex = new RegExp(`###\\s+${chName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n([\\s\\S]*?)(?=\n###\\s+|$)`);
+      const match = allSummary.match(regex);
+      summaryText = match ? match[1].trim() : '';
+    }
   } else {
+    // Global scope: prefer LLM-consolidated aggregate_summary, fall back to full summary
     summaryText = state.aiData.aggregate_summary || state.aiData.summary || '';
   }
   if (summaryText) {
@@ -1396,6 +1403,19 @@ function renderAnalysis() {
 }
 
 // ── Utils ──
+function naturalSort(a, b) {
+  const ax = [], bx = [];
+  String(a || '').replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]); });
+  String(b || '').replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]); });
+  while (ax.length && bx.length) {
+    const an = ax.shift();
+    const bn = bx.shift();
+    const nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+    if (nn) return nn;
+  }
+  return ax.length - bx.length;
+}
+
 function escapeHTML(str) {
   if (!str) return '';
   return str.replace(/[&<>'"]/g, 

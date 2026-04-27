@@ -204,16 +204,21 @@ async def check_cache(req: AnalyzeRequest):
     e = tasks.load_cache("events", req.novel_id, req.chapter, req.text)
     if e: res["events"] = e
     
-    # Summary is novel-level (aggregated in results.json). Prefer that to avoid
-    # overwriting the global summary with a single-chapter cache.
+    # Chapter-level summary (single chapter)
+    s = tasks.load_cache("summary", req.novel_id, req.chapter, req.text)
+    if s:
+        res["chapter_summary"] = s  # Raw single-chapter summary text
+    
+    # Novel-level aggregated summary (all chapters)
     novel_res = tasks.load_novel_results(req.novel_id)
     novel_summary = (novel_res.get("summary") or "").strip()
     if novel_summary:
         res["summary"] = novel_summary
-    else:
-        s = tasks.load_cache("summary", req.novel_id, req.chapter, req.text)
-        if s:
-            res["summary"] = f"### {req.chapter}\n{s}"
+    
+    # Also return aggregate_summary if it exists (LLM consolidated)
+    agg_summary = (novel_res.get("aggregate_summary") or "").strip()
+    if agg_summary:
+        res["aggregate_summary"] = agg_summary
     
     return res
 
@@ -252,67 +257,37 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     files = sorted(files, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
     batch_status[novel_id] = _create_batch_status(len(files))
     
-    async def process_all():
-        for i, f_path in enumerate(files):
+    async def process_chapter(f_path, sem):
+        async with sem:
             if novel_id in stop_requested:
-                log.info(f"Stop requested for {novel_id}, terminating batch scan.")
-                batch_status[novel_id]["status"] = "stopped"
-                stop_requested.remove(novel_id)
-                return # Exit immediately
-                
+                return
             try:
                 content = _read_file_content(f_path)
                 chapter_name = f_path.name
                 
                 # 1. Check for skips if use_cache is on
                 if req.use_cache:
-                    # If all requested tasks have a VALID cache, skip this file entirely.
-                    cached_mark = None
-                    cached_chars = None
-                    cached_events = None
-                    cached_summary = None
-
-                    if "mark" in requested_tasks:
-                        cached_mark = tasks.load_cache("mark", novel_id, chapter_name, content)
-                    if "chars" in requested_tasks:
-                        cached_chars = tasks.load_cache("chars", novel_id, chapter_name, content)
-                    if "events" in requested_tasks:
-                        cached_events = tasks.load_cache("events", novel_id, chapter_name, content)
-                    if "summary" in requested_tasks:
-                        cached_summary = tasks.load_cache("summary", novel_id, chapter_name, content)
+                    cached_mark = tasks.load_cache("mark", novel_id, chapter_name, content)
+                    cached_chars = tasks.load_cache("chars", novel_id, chapter_name, content)
+                    cached_events = tasks.load_cache("events", novel_id, chapter_name, content)
+                    cached_summary = tasks.load_cache("summary", novel_id, chapter_name, content)
 
                     cache_complete = True
                     for t in requested_tasks:
-                        if t == "mark" and cached_mark is None:
-                            cache_complete = False
-                        elif t == "chars" and cached_chars is None:
-                            cache_complete = False
-                        elif t == "events" and cached_events is None:
-                            cache_complete = False
-                        elif t == "summary" and cached_summary is None:
-                            cache_complete = False
+                        if t == "mark" and cached_mark is None: cache_complete = False
+                        elif t == "chars" and cached_chars is None: cache_complete = False
+                        elif t == "events" and cached_events is None: cache_complete = False
+                        elif t == "summary" and cached_summary is None: cache_complete = False
 
                     if cache_complete:
-                        # Even if skipped, we still merge cached outputs into novel-level results
-                        # so results.json can be (re)constructed without re-running LLM calls.
-                        chapter_summaries = (
-                            [(chapter_name, cached_summary)]
-                            if isinstance(cached_summary, str) and cached_summary.strip()
-                            else None
-                        )
-                        if (isinstance(cached_chars, list) and cached_chars) or (isinstance(cached_events, list) and cached_events) or chapter_summaries:
-                            tasks.update_novel_results(
-                                novel_id,
-                                characters=cached_chars if isinstance(cached_chars, list) else None,
-                                chapter_summaries=chapter_summaries,
-                                events=cached_events if isinstance(cached_events, list) else None,
-                            )
-                        
-                        batch_status[novel_id]["current"] = i + 1
+                        chapter_summaries = [(chapter_name, cached_summary)] if cached_summary else None
+                        if cached_chars or cached_events or chapter_summaries:
+                            await tasks.update_novel_results(novel_id, characters=cached_chars, chapter_summaries=chapter_summaries, events=cached_events)
+                        batch_status[novel_id]["current"] += 1
                         batch_status[novel_id]["last_chapter"] = chapter_name
-                        continue
+                        return
 
-                # 2. Execute requested tasks (only if not skipped)
+                # 2. Execute requested tasks
                 task_map = {}
                 if "mark" in requested_tasks:
                     task_map["mark"] = tasks.run_mark_errors(novel_id, chapter_name, content, use_cache=req.use_cache)
@@ -326,39 +301,35 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 outputs = await asyncio.gather(*task_map.values(), return_exceptions=True)
                 results_map = dict(zip(task_map.keys(), outputs))
 
-                had_error = False
-                for k, v in list(results_map.items()):
-                    if isinstance(v, Exception):
-                        had_error = True
-                        log.error(f"Scan task error ({chapter_name}) [{k}]: {v}")
-                        results_map[k] = None
-
                 c_list = results_map.get("chars") if isinstance(results_map.get("chars"), list) else None
                 evs = results_map.get("events") if isinstance(results_map.get("events"), list) else None
                 s = results_map.get("summary") if isinstance(results_map.get("summary"), str) else None
 
                 chapter_summaries = [(chapter_name, s)] if s else None
                 if c_list or evs or chapter_summaries:
-                    tasks.update_novel_results(
-                        novel_id,
-                        characters=c_list,
-                        chapter_summaries=chapter_summaries,
-                        events=evs,
-                    )
+                    await tasks.update_novel_results(novel_id, characters=c_list, chapter_summaries=chapter_summaries, events=evs)
 
-                batch_status[novel_id]["current"] = i + 1
+                batch_status[novel_id]["current"] += 1
                 batch_status[novel_id]["last_chapter"] = chapter_name
-                if had_error:
-                    batch_status[novel_id]["failed"] += 1
-                    batch_status[novel_id]["failed_files"].append(chapter_name)
-
             except Exception as e:
-                log.error(f"Scan batch error for {f_path.name}: {e}")
+                log.error(f"Error processing {f_path.name}: {e}")
                 batch_status[novel_id]["failed"] += 1
                 batch_status[novel_id]["failed_files"].append(f_path.name)
-                batch_status[novel_id]["current"] = i + 1
+                batch_status[novel_id]["current"] += 1
+
+    async def process_all():
+        # Process multiple chapters concurrently. 
+        # The internal LLM client semaphore (set to 3 or 6) will still protect the servers.
+        chapter_sem = asyncio.Semaphore(5) 
+        tasks_list = [process_chapter(f, chapter_sem) for f in files]
+        await asyncio.gather(*tasks_list)
         
-        batch_status[novel_id]["status"] = "done"
+        if novel_id in stop_requested:
+            batch_status[novel_id]["status"] = "stopped"
+            stop_requested.remove(novel_id)
+        else:
+            batch_status[novel_id]["status"] = "done"
+            log.info(f"Batch scan finished for {novel_id}")
 
     background_tasks.add_task(process_all)
     return {"message": "Scan started", "total": len(files)}
@@ -368,28 +339,34 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
     novel_id = req.novel_id
     batch_status[novel_id] = _create_batch_status(len(req.files))
     
-    async def process_batch():
-        for i, f in enumerate(req.files):
+    async def process_file(f, sem):
+        async with sem:
             if novel_id in stop_requested:
-                log.info(f"Stop requested for batch mark {novel_id}")
-                batch_status[novel_id]["status"] = "stopped"
-                stop_requested.remove(novel_id)
                 return
-                
             try:
-                await tasks.run_mark_errors(novel_id, f["chapter"], f["content"], use_cache=True)
-                batch_status[novel_id]["current"] = i + 1
+                await tasks.run_mark_errors(novel_id, f["chapter"], f["content"], use_cache=req.use_cache)
+                batch_status[novel_id]["current"] += 1
             except Exception as e:
                 log.error(f"Batch process error for {f['filename']}: {e}")
                 batch_status[novel_id]["failed"] += 1
                 batch_status[novel_id]["failed_files"].append(f["filename"])
-                batch_status[novel_id]["current"] = i + 1
+                batch_status[novel_id]["current"] += 1
+
+    async def process_batch():
+        sem = asyncio.Semaphore(5)
+        tasks_list = [process_file(f, sem) for f in req.files]
+        await asyncio.gather(*tasks_list)
         
-        if batch_status[novel_id]["status"] == "processing":
+        if novel_id in stop_requested:
+            log.info(f"Stop requested for batch mark {novel_id}")
+            batch_status[novel_id]["status"] = "stopped"
+            stop_requested.remove(novel_id)
+        else:
             batch_status[novel_id]["status"] = "done"
 
     background_tasks.add_task(process_batch)
     return {"message": "Batch started", "total": len(req.files)}
+
 
 @app.post("/api/batch/stop/{novel_id}")
 async def api_stop_batch(novel_id: str):
@@ -458,7 +435,7 @@ async def api_full_analysis(req: FullAnalyzeRequest):
 
     # Merge into novel-level results.json
     if chars_out or events_out or summaries_out:
-        tasks.update_novel_results(
+        await tasks.update_novel_results(
             req.novel_id,
             characters=chars_out or None,
             chapter_summaries=summaries_out,
@@ -475,10 +452,11 @@ async def api_full_analysis(req: FullAnalyzeRequest):
         results["events"] = events_out  # This chapter's events
         results["timeline"] = novel_res.get("timeline", [])  # Full novel timeline
     if "summary" in tasks_to_run:
-        results["summary"] = chapter_summary or ""  # This chapter's summary
+        results["chapter_summary"] = chapter_summary or ""  # This chapter ONLY
+        results["summary"] = novel_res.get("summary", "")   # All chapters accumulated
 
     # Novel-level aggregate fields (always returned if analysis ran)
-    results["aggregate_summary"] = novel_res.get("aggregate_summary", novel_res.get("summary", ""))
+    results["aggregate_summary"] = novel_res.get("aggregate_summary", "")  # LLM consolidated only
     results["aggregate_characters"] = novel_res.get("aggregate_characters", novel_res.get("characters", []))
     results["aggregate_timeline"] = novel_res.get("timeline", [])
 
