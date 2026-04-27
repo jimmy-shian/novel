@@ -913,6 +913,62 @@ async def update_novel_results(
 
 
 
+async def run_consolidate_all_characters(novel_id: str) -> list:
+    """
+    Exhaustively reads all chapter character caches and merges them into a clean, 
+    de-duplicated global list using LLM.
+    """
+    novel_cache_dir = CACHE_DIR / novel_id
+    all_raw_chars = []
+
+    if novel_cache_dir.exists():
+        # Collect from all *.chars.json in the cache
+        for p in novel_cache_dir.glob("*.chars.json"):
+            try:
+                chars = json.loads(p.read_text("utf-8"))
+                if isinstance(chars, list):
+                    all_raw_chars.extend(chars)
+            except:
+                continue
+    
+    if not all_raw_chars:
+        # Fallback to existing results.json
+        res = load_novel_results(novel_id)
+        all_raw_chars = res.get("characters", [])
+    
+    if not all_raw_chars:
+        return []
+
+    # Local pre-dedup by exact name to reduce LLM payload
+    seen = {}
+    for c in all_raw_chars:
+        name = c.get("角色名稱")
+        if not name: continue
+        # Keep the one with more information (longer string representation)
+        if name not in seen or len(str(c)) > len(str(seen[name])):
+            seen[name] = c
+    
+    compact_chars = list(seen.values())
+    
+    # If it's still too many, we take only the most important looking ones or do it in batches.
+    # For now, let's try a single pass.
+    messages = global_consolidate_characters_prompt(json.dumps(compact_chars, ensure_ascii=False))
+    raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+    
+    try:
+        final_chars = _parse_json(raw)
+        if isinstance(final_chars, list):
+            data = load_novel_results(novel_id)
+            data["characters"] = final_chars
+            # Also sync to aggregate_characters if main.py uses it
+            data["aggregate_characters"] = final_chars
+            save_novel_results(novel_id, data)
+            return final_chars
+    except Exception as e:
+        log.error(f"Failed to parse consolidated characters: {e}")
+    
+    return compact_chars
+
 async def run_consolidate_novel_summary(novel_id: str) -> str:
     """
     LLM-based consolidation: merge all per-chapter summary blocks stored in

@@ -495,8 +495,11 @@ async def api_consolidate_summary(novel_id: str):
     """Trigger LLM-based consolidation of all chapter summaries into a single novel summary."""
     agg = await tasks.run_consolidate_novel_summary(novel_id)
     return {"aggregate_summary": agg}
-
-@app.get("/api/names")
+@app.post("/api/analyze/consolidate_characters")
+async def api_consolidate_characters(novel_id: str):
+    """Trigger LLM-based global consolidation of all character data."""
+    agg = await tasks.run_consolidate_all_characters(novel_id)
+    return {"aggregate_characters": agg}
 async def get_name_dict():
     if NAMES_DICT_PATH.exists():
         return json.loads(NAMES_DICT_PATH.read_text("utf-8"))

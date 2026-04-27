@@ -154,6 +154,7 @@ const els = {
 
   // Scope toggles & consolidate
   btnConsolidate: document.getElementById('btn-consolidate'),
+  btnConsolidateChars: document.getElementById('btn-consolidate-chars'),
   scopeSummaryChapter: document.getElementById('scope-summary-chapter'),
   scopeSummaryGlobal: document.getElementById('scope-summary-global'),
   scopeCharsChapter: document.getElementById('scope-chars-chapter'),
@@ -1289,8 +1290,6 @@ function initScopeToggles() {
           if (els.scopeSummaryGlobal) els.scopeSummaryGlobal.classList.add('active');
           renderAnalysis();
           alert('全書摘要整合完成！');
-        } else {
-          alert('整合完成，但摘要為空（請先執行章節分析）。');
         }
       } catch (err) {
         console.error(err);
@@ -1298,6 +1297,40 @@ function initScopeToggles() {
       } finally {
         els.btnConsolidate.disabled = false;
         els.btnConsolidate.textContent = '🔮 整合全書摘要';
+      }
+    });
+  }
+
+  // Consolidate characters button
+  if (els.btnConsolidateChars) {
+    els.btnConsolidateChars.addEventListener('click', async () => {
+      if (!state.currentNovel) { alert('請先選擇小說'); return; }
+      if (!confirm('整合全書角色將讀取所有章節的提取記錄並進行深度去重與合併，這可能需要一點時間。確定要開始嗎？')) return;
+      
+      els.btnConsolidateChars.disabled = true;
+      els.btnConsolidateChars.textContent = '整合中...';
+      try {
+        const res = await fetch(`${API_BASE}/analyze/consolidate_characters?novel_id=${encodeURIComponent(state.currentNovel.name)}`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (data.aggregate_characters && state.aiData) {
+          state.aiData.aggregate_characters = data.aggregate_characters;
+          // Also auto-switch to global view
+          state.scopeChars = 'global';
+          if (els.scopeCharsChapter) els.scopeCharsChapter.classList.remove('active');
+          if (els.scopeCharsGlobal) els.scopeCharsGlobal.classList.add('active');
+          renderAnalysis();
+          alert('全書角色整合與深度整理完成！');
+        } else {
+          alert('整合完成，但角色列表為空。');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('角色整合失敗：' + err.message);
+      } finally {
+        els.btnConsolidateChars.disabled = false;
+        els.btnConsolidateChars.textContent = '👥 整合全書角色';
       }
     });
   }

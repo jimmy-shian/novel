@@ -125,6 +125,28 @@ def merge_characters_prompt(existing_chars_json: str, new_chars_json: str) -> li
     ]
 
 
+def global_consolidate_characters_prompt(all_chars_json: str) -> list[dict]:
+    system = dedent("""
+        你是一位卓越的小說編輯與資料專家。請對以下「角色資料列表」進行深度的全局整理與去重。
+        
+        任務目標：
+        1. **徹底去重**：找出列表中所有指向同一個人物的條目。特別注意人名變體（如「葉心夏」與「心夏」）、錯別字（如「穆白」與「慕白」）、以及不同章節中對同一人物的不同描述。
+        2. **智慧合併**：將重複角色的「性格特徵」、「能力」、「人際關係」與「角色描述」進行完美整合。描述應涵蓋角色的完整發展，並保持語言流暢、繁體中文。
+        3. **人際關係標準化**：確保所有「人際關係」中提到的人名，都對應到整理後的標準名稱。
+        4. **剔除路人**：再次檢查並移除任何沒有正式姓名或對劇情毫無影響的背景角色（如：抽菸青年、長袍男子等）。
+        
+        輸出格式：
+        - 必須是合法的 JSON 陣列。
+        - 每個物件包含：角色名稱、別名(Array)、身份、性格特徵(Array)、能力(Array)、人際關係(Array)、角色描述。
+        - 全繁體中文。
+    """).strip()
+    user = f"【待整理角色列表】：\n{all_chars_json}"
+    return [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+
+
 # ── 3. Plot events extraction ────────────────────────────────────────────────────
 
 def extract_events_prompt(text: str, chapter: str = "") -> list[dict]:
