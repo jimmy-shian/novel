@@ -246,10 +246,19 @@ async def run_mark_errors(
     use_cache: bool = True,
 ) -> dict:
     if use_cache:
+        # 1. Check if chapter is already proofread/applied
+        applied_path = get_cache_path("mark", novel_id, chapter).with_suffix(".applied")
+        if applied_path.exists():
+            log.info("Chapter %s already proofread (applied), skipping mark_errors.", chapter)
+            return {"issues": [], "applied": True}
+
+        # 2. Check for existing cache
         cached = load_cache("mark", novel_id, chapter, text)
         if cached is not None:
-            log.info("Cache hit for mark_errors %s/%s", novel_id, chapter)
+            log.info("[Hit] Mark: %s", chapter)
             return cached
+        else:
+            log.info("[No Found] Mark: %s", chapter)
 
     rag_ctx = rag.build_rag_context(novel_id, "mark", text[:500])
     messages = mark_errors_prompt(text, rag_ctx)
@@ -259,9 +268,6 @@ async def run_mark_errors(
     
     raw = await chat(messages, max_tokens=MAX_TOKENS_MARK)
     
-    if raw.startswith("錯誤："):
-        return {"issues": local_issues, "error": raw}
-
     try:
         result = _parse_json(raw)
         llm_issues = []
@@ -354,7 +360,10 @@ async def run_extract_characters(
     if use_cache:
         cached = load_cache("chars", novel_id, chapter, text)
         if cached is not None:
+            log.info("[Hit] Chars: %s", chapter)
             return cached
+        else:
+            log.info("[No Found] Chars: %s", chapter)
 
     # Hybrid RAG: Index all names, but only provide descriptions for characters in the current text
     existing_list = []
@@ -382,12 +391,10 @@ async def run_extract_characters(
     rag_ctx = "【已知角色參考字典】：\n" + "\n".join(existing_list) if existing_list else ""
     messages = extract_characters_prompt(text, rag_ctx)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
-    if raw.startswith("錯誤："):
-        return []
 
     try:
         result = _parse_json(raw)
-        if isinstance(result, list) and result:
+        if isinstance(result, list):
             for char in result:
                 rag.add_character(novel_id, char)
             # Always save to cache using the correct chapter name
@@ -409,20 +416,30 @@ async def run_extract_events(
     use_cache: bool = True,
 ) -> list:
     if use_cache:
+        # 1. Check local chapter cache
         cached = load_cache("events", novel_id, chapter, text)
         if cached is not None:
+            log.info("[Hit] Events: %s", chapter)
             return cached
+        else:
+            log.info("[No Found] Events: %s", chapter)
+        
+        # 2. Check global results (if it's already there, we can skip and back-fill cache)
+        res_data = load_novel_results(novel_id)
+        existing_events = [ev for ev in res_data.get("timeline", []) if ev.get("章節") == chapter]
+        if existing_events:
+            log.info("Found existing events for %s in global results, skipping extraction.", chapter)
+            save_cache("events", novel_id, chapter, text, existing_events)
+            return existing_events
 
     # Use a smaller window for event context to prevent AI from summarizing too much history
-    rag_ctx = rag.build_rag_context(novel_id, "event", text[:2000])
-    messages = extract_events_prompt(text, chapter, rag_ctx)
+    # rag_ctx = rag.build_rag_context(novel_id, "event", text[:2000])
+    messages = extract_events_prompt(text, chapter)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
-    if raw.startswith("錯誤："):
-        return []
 
     try:
         result = _parse_json(raw)
-        if isinstance(result, list) and result:
+        if isinstance(result, list):
             for ev in result:
                 ev["章節"] = ev.get("章節") or chapter
                 rag.add_event(novel_id, ev)
@@ -430,9 +447,9 @@ async def run_extract_events(
             save_cache("events", novel_id, chapter, text, result)
         else:
             result = []
+            save_cache("events", novel_id, chapter, text, result)
     except Exception:
         result = []
-
     return result
 
 
@@ -471,9 +488,27 @@ async def run_extract_summary(
         chunks = _chunk_text(full_text, chunk_size=6000, max_chunks=4)
 
     if use_cache:
+        # 1. Check local chapter cache
         cached = load_cache("summary", novel_id, chapter, full_text)
-        if cached:
+        if cached is not None:
+            log.info("[Hit] Summary: %s", chapter)
             return cached
+        else:
+            log.info("[No Found] Summary: %s", chapter)
+
+        # 2. Check global results for this chapter's summary block
+        res_data = load_novel_results(novel_id)
+        raw_summary = res_data.get("summary", "")
+        if f"### {chapter}" in raw_summary:
+            # Extract the specific block
+            pattern = re.compile(rf"(?m)^###\s+{re.escape(chapter)}\s*$\n([\s\S]*?)(?=\n###\s+|$)", re.MULTILINE)
+            match = pattern.search(raw_summary)
+            if match:
+                s_text = match.group(1).strip()
+                if s_text:
+                    log.info("Found existing summary for %s in global results, skipping extraction.", chapter)
+                    save_cache("summary", novel_id, chapter, full_text, s_text)
+                    return s_text
 
     messages = story_summary_prompt(chunks)
     raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
@@ -806,6 +841,33 @@ async def run_consolidate_characters(novel_id: str, new_characters: list) -> lis
     
     if not existing_chars:
         return new_characters
+
+    # --- Pre-check Optimization ---
+    # If all new_characters names already exist in existing_chars 
+    # and their descriptions aren't significantly improved, skip LLM.
+    all_known = True
+    for nc in new_characters:
+        name = nc.get("角色名稱")
+        if not name: continue
+        
+        # Find if this character or an alias exists
+        existing = next((c for c in existing_chars if c.get("角色名稱") == name or name in (c.get("別名") or [])), None)
+        if not existing:
+            all_known = False
+            break
+        
+        # If the new description is significantly longer, we might want the LLM to merge/improve it
+        new_desc_len = len(str(nc.get("角色描述", "")))
+        old_desc_len = len(str(existing.get("角色描述", "")))
+        if new_desc_len > old_desc_len + 50: # Threshold for significant improvement
+            all_known = False
+            break
+            
+    if all_known:
+        log.info("All incoming characters are already known and well-described. Skipping LLM consolidation.")
+        return existing_chars
+
+    # --- Continue with LLM Consolidation ---
 
     # RAG filtering: Only send existing characters that match the new characters
     # (either by name or alias overlap) to prevent prompt overflow and focus the LLM.

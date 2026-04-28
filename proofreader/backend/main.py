@@ -267,20 +267,31 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 
                 # 1. Check for skips if use_cache is on
                 if req.use_cache:
+                    applied_exists = tasks.get_cache_path("mark", novel_id, chapter_name).with_suffix(".applied").exists()
                     cached_mark = tasks.load_cache("mark", novel_id, chapter_name, content)
                     cached_chars = tasks.load_cache("chars", novel_id, chapter_name, content)
                     cached_events = tasks.load_cache("events", novel_id, chapter_name, content)
                     cached_summary = tasks.load_cache("summary", novel_id, chapter_name, content)
 
                     cache_complete = True
-                    for t in requested_tasks:
-                        if t == "mark" and cached_mark is None: cache_complete = False
-                        elif t == "chars" and cached_chars is None: cache_complete = False
-                        elif t == "events" and cached_events is None: cache_complete = False
-                        elif t == "summary" and cached_summary is None: cache_complete = False
+                    # If applied, we always skip mark and potentially others if they exist
+                    if applied_exists:
+                        # For applied chapters, we only care about missing analytical data
+                        for t in requested_tasks:
+                            if t == "chars" and cached_chars is None: cache_complete = False
+                            elif t == "events" and cached_events is None: cache_complete = False
+                            elif t == "summary" and cached_summary is None: cache_complete = False
+                    else:
+                        for t in requested_tasks:
+                            if t == "mark" and cached_mark is None: cache_complete = False
+                            elif t == "chars" and cached_chars is None: cache_complete = False
+                            elif t == "events" and cached_events is None: cache_complete = False
+                            elif t == "summary" and cached_summary is None: cache_complete = False
 
                     if cache_complete:
                         chapter_summaries = [(chapter_name, cached_summary)] if cached_summary else None
+                        # Note: we don't need to update results if it was already applied and cached, 
+                        # but doing so is safe as tasks.update_novel_results is now optimized.
                         if cached_chars or cached_events or chapter_summaries:
                             await tasks.update_novel_results(novel_id, characters=cached_chars, chapter_summaries=chapter_summaries, events=cached_events)
                         batch_status[novel_id]["current"] += 1

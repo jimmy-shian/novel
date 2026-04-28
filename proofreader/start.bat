@@ -16,29 +16,33 @@ echo NOVEL AI PROOFREADER - STARTER (v1.7)
 echo ------------------------------------------
 
 :: [1] Start HF Flask Servers (Windows)
-echo [1/3] Launching Triple HF Transformers Servers...
+echo [1/3] Launching HF Transformers Servers...
+set "VLLM_BASE_URLS="
+
 set "LLM_SERVER_PORT=8000"
 start "HF_SERVER_8000" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+set "VLLM_BASE_URLS=http://127.0.0.1:8000/v1"
 
-set "LLM_SERVER_PORT=8001"
-start "HF_SERVER_8001" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+@REM set "LLM_SERVER_PORT=8001"
+@REM start "HF_SERVER_8001" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+@REM set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8001/v1"
 
-set "LLM_SERVER_PORT=8002"
-start "HF_SERVER_8002" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+@REM set "LLM_SERVER_PORT=8002"
+@REM start "HF_SERVER_8002" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+@REM set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8002/v1"
 
-:: Set multi-URL for backend load balancing
-set "VLLM_BASE_URLS=http://127.0.0.1:8000/v1,http://127.0.0.1:8001/v1,http://127.0.0.1:8002/v1"
-set "LLM_MAX_CONCURRENCY=6"
+:: Set multi-URL is now dynamic above
+set "LLM_MAX_CONCURRENCY=1"
 
-echo Waiting for models to load (approx. 3s)...
-timeout /t 3 /nobreak > nul
+echo Waiting for models to load (1s)...
+timeout /t 1 /nobreak > nul
 
 :: [2] Start Backend
 echo [2/3] Launching Backend...
 start "BACKEND_PROCESS" /D "%BACKEND_DIR%" "%BACKEND_PY%" main.py
 
-echo Waiting for services (5s)...
-timeout /t 5 /nobreak > nul
+echo Waiting for services (8s)...
+timeout /t 8 /nobreak > nul
 
 :: [3] Start UI
 echo [3/3] Opening Browser...
