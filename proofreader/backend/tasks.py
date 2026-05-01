@@ -440,9 +440,25 @@ async def run_extract_events(
     try:
         result = _parse_json(raw)
         if isinstance(result, list):
+            pretty_name = None
             for ev in result:
-                ev["章節"] = ev.get("章節") or chapter
+                # Capture the LLM-provided chapter name as the 'Pretty Name' if it looks valid
+                llm_ch = ev.get("章節")
+                if llm_ch and chapter not in llm_ch:
+                    pretty_name = llm_ch
+                
+                # Internal data always uses the canonical filename for sorting/keys
+                ev["章節"] = chapter
                 rag.add_event(novel_id, ev)
+            
+            # Update chapter_titles mapping in results.json
+            if pretty_name:
+                res_data = load_novel_results(novel_id)
+                titles = res_data.get("chapter_titles", {})
+                titles[chapter] = pretty_name
+                res_data["chapter_titles"] = titles
+                save_novel_results(novel_id, res_data)
+
             # Always save to cache
             save_cache("events", novel_id, chapter, text, result)
         else:
@@ -451,6 +467,59 @@ async def run_extract_events(
     except Exception:
         result = []
     return result
+
+
+async def run_rebuild_timeline_from_cache(novel_id: str) -> list:
+    """
+    Collects all chapter-level event caches and merges them into the novel-level timeline.
+    Useful when the global results.json timeline gets out of sync or needs fresh ordering.
+    """
+    cache_dir = CACHE_DIR / novel_id
+    all_events = []
+    if cache_dir.exists():
+        # Chapter caches are named like "ChapterName.txt.events.json"
+        for p in cache_dir.glob("*.events.json"):
+            try:
+                raw_data = json.loads(p.read_text("utf-8"))
+                # Handle both wrapped { "data": [...] } and raw [...] formats
+                events_list = raw_data.get("data") if isinstance(raw_data, dict) else raw_data
+                
+                if isinstance(events_list, list):
+                    # Canonicalize chapter name from filename
+                    chapter_name = p.name.replace(".txt.events.json", "")
+                    for ev in events_list:
+                        ev["章節"] = chapter_name
+                    all_events.extend(events_list)
+            except Exception as e:
+                log.error(f"Error reading cache {p}: {e}")
+                continue
+    
+    # Consolidate (deduplicate and sort naturally)
+    merged = consolidate_timeline_events(all_events)
+    
+    # Try to extract chapter titles from caches if available
+    chapter_titles = {}
+    if cache_dir.exists():
+        for p in cache_dir.glob("*.events.json"):
+            try:
+                raw_data = json.loads(p.read_text("utf-8"))
+                evs = raw_data.get("data")
+                if isinstance(evs, list) and len(evs) > 0:
+                    internal_id = p.name.replace(".txt.events.json", "")
+                    pretty_name = evs[0].get("章節")
+                    if pretty_name and internal_id not in pretty_name:
+                        chapter_titles[internal_id] = pretty_name
+            except: continue
+
+    # Save to results.json
+    res_data = load_novel_results(novel_id)
+    res_data["timeline"] = merged
+    if chapter_titles:
+        existing_titles = res_data.get("chapter_titles", {})
+        existing_titles.update(chapter_titles)
+        res_data["chapter_titles"] = existing_titles
+    save_novel_results(novel_id, res_data)
+    return merged
 
 
 # ── 5. Timeline consolidation ────────────────────────────────────────────────────
@@ -522,20 +591,19 @@ async def run_extract_summary(
 
 def export_to_assistant(novel_id: str, results_data: dict | None = None):
     """
-    Format results into Assistant JSON format and save to assistant/data.
-    Always uses the novel-level (global) aggregate data from results.json.
-    Aligns with overlay.js character bubble and sidebar requirements.
+    Format results into Assistant JSON format and Markdown files.
+    Saves to c:/Users/user/Downloads/novel/assistant/{novel_id}
     """
-    assistant_data_dir = Path(__file__).parent.parent.parent / "assistant" / "data"
-    assistant_data_dir.mkdir(parents=True, exist_ok=True)
-
-    # Always load the canonical novel-level results so export is always global
-    novel_res = load_novel_results(novel_id)
-
-    # Use aggregate_characters if available, fall back to characters
-    ai_chars = novel_res.get("aggregate_characters") or novel_res.get("characters", [])
-    formatted_chars = []
+    base_dir = Path(r"C:\Users\user\Downloads\novel\assistant") / novel_id
+    base_dir.mkdir(parents=True, exist_ok=True)
     
+    # Always load the canonical novel-level results
+    novel_res = load_novel_results(novel_id)
+    chapter_titles = novel_res.get("chapter_titles", {})
+
+    # 1. JSON Export (for reading assistant app)
+    ai_chars = novel_res.get("characters", [])
+    formatted_chars = []
     for i, c in enumerate(ai_chars):
         char_name = c.get("角色名稱", "")
         formatted_chars.append({
@@ -549,43 +617,55 @@ def export_to_assistant(novel_id: str, results_data: dict | None = None):
             "appearances": []
         })
     
-    # Use aggregate_timeline (global) for appearances
     events = novel_res.get("timeline", [])
     for ev in events:
         involved = ev.get("涉及角色", [])
-        ch_title = ev.get("章節", "未知章節")
-        num_match = re.search(r"(\d+)", ch_title)
-        ch_num = int(num_match.group(1)) if num_match else 1
-        event_desc = ev.get("事件描述", "")
+        raw_ch = ev.get("章節", "未知章節")
+        # Use pretty name if available
+        ch_display = chapter_titles.get(raw_ch, raw_ch)
         
         for name in involved:
             target = next((fc for fc in formatted_chars if fc["name"] == name), None)
             if target:
-                if not any(a["chapterTitle"] == ch_title for a in target["appearances"]):
+                if not any(a["chapterTitle"] == ch_display for a in target["appearances"]):
                     target["appearances"].append({
-                        "chapterNum": ch_num,
-                        "chapterTitle": ch_title,
-                        "event": event_desc,
-                        "url": ""
+                        "chapterTitle": ch_display,
+                        "description": ev.get("事件描述", "")
                     })
 
-    # Use aggregate_summary for a clean prose summary, fall back to chapter blocks
-    export_summary = (
-        novel_res.get("aggregate_summary")
-        or novel_res.get("summary", "")
-    )
+    json_path = base_dir / "novel_data.json"
+    json_path.write_text(json.dumps({"characters": formatted_chars}, ensure_ascii=False, indent=2), "utf-8")
 
-    final_data = {
-        "novel": novel_res.get("novel") or novel_id,
-        "folder": novel_id,
-        "characters": formatted_chars,
-        "summary": export_summary,
-        "timeline": novel_res.get("timeline", [])
-    }
+    # 2. Markdown - Characters
+    char_md = [f"# {novel_id} 角色總表\n"]
+    for c in ai_chars:
+        name = c.get("角色名稱", "未知")
+        aliases = ", ".join(c.get("別名", [])) if isinstance(c.get("別名"), list) else c.get("別名", "")
+        char_md.append(f"## {name} {' (' + aliases + ')' if aliases else ''}")
+        char_md.append(f"- **身份**: {c.get('身份', '未知')}")
+        char_md.append(f"- **能力**: {', '.join(c.get('能力', [])) if isinstance(c.get('能力'), list) else c.get('能力', '無')}")
+        char_md.append(f"- **描述**: {c.get('角色描述', '無')}\n")
+    (base_dir / "Characters.md").write_text("\n".join(char_md), "utf-8")
 
-    out_path = assistant_data_dir / f"{novel_id}.json"
-    out_path.write_text(json.dumps(final_data, ensure_ascii=False, indent=2), "utf-8")
-    return str(out_path)
+    # 3. Markdown - Summary
+    summary_md = [f"# {novel_id} 故事大綱\n"]
+    summary_md.append(novel_res.get("aggregate_summary") or novel_res.get("summary") or "尚無大綱")
+    (base_dir / "Summary.md").write_text("\n".join(summary_md), "utf-8")
+
+    # 4. Markdown - Timeline
+    timeline_md = [f"# {novel_id} 劇情時間軸\n"]
+    for ev in events:
+        raw_ch = ev.get("章節", "")
+        ch_display = chapter_titles.get(raw_ch, raw_ch)
+        importance = ev.get("重要性", "中")
+        timeline_md.append(f"### [{ch_display}] {ev.get('事件名稱', '未知事件')} (重要性: {importance})")
+        timeline_md.append(f"{ev.get('事件描述', '')}")
+        roles = ev.get("涉及角色", [])
+        if roles:
+            timeline_md.append(f"**涉及角色**: {', '.join(roles)}\n")
+    (base_dir / "Timeline.md").write_text("\n".join(timeline_md), "utf-8")
+
+    return str(base_dir)
 
 
 # ── 8. Name normalization ────────────────────────────────────────────────────────
@@ -748,21 +828,33 @@ def _merge_characters(existing_chars: list[dict], incoming_chars: list[dict]) ->
             for key, value in c.items():
                 if key == "角色名稱":
                     continue
-                if key == "別名":
-                    existing_aliases = set(target.get("別名", []) or [])
-                    if isinstance(value, list):
-                        for v in value:
-                            if v:
-                                existing_aliases.add(v)
-                    elif value:
-                        existing_aliases.add(value)
-                    if canonical in existing_aliases:
-                        existing_aliases.remove(canonical)
-                    target["別名"] = sorted(str(x) for x in existing_aliases if str(x).strip())
+                
+                # List-based fields to accumulate
+                if key in ("能力", "性格特徵", "人際關係", "別名"):
+                    existing_list = target.get(key) or []
+                    if not isinstance(existing_list, list):
+                        existing_list = [str(existing_list)]
+                    
+                    incoming_list = value or []
+                    if not isinstance(incoming_list, list):
+                        incoming_list = [str(incoming_list)]
+                    
+                    # Merge and deduplicate
+                    merged_set = {str(x).strip() for x in existing_list + incoming_list if str(x).strip()}
+                    
+                    # If it's the alias list, remove the canonical name itself
+                    if key == "別名" and canonical in merged_set:
+                        merged_set.remove(canonical)
+                        
+                    target[key] = sorted(list(merged_set))
+                
                 elif key == "角色描述":
+                    # Keep the longest description or append if significantly different? 
+                    # For now, keep the longest as per previous logic
                     if value and len(str(value)) > len(str(target.get(key, "") or "")):
                         target[key] = value
                 else:
+                    # For other fields, only set if currently empty
                     if (not target.get(key)) and value:
                         target[key] = value
         else:
@@ -936,38 +1028,41 @@ async def update_novel_results(
 ) -> dict:
     """
     Merge new chapter outputs into novel-level results.json.
-    Two-phase: LLM call outside lock, then locked save.
-    aggregate_summary is NEVER touched here - only by run_consolidate_novel_summary.
     """
     if novel_id not in _novel_locks:
         _novel_locks[novel_id] = asyncio.Lock()
     lock = _novel_locks[novel_id]
 
-    # Phase 1 (slow, unlocked): run LLM character consolidation if needed
-    merged_chars = None
-    if characters:
-        merged_chars = await run_consolidate_characters(novel_id, characters)
-
-    # Phase 2 (fast, locked): re-read fresh data and write atomically
+    # Locked save: re-read fresh data and write atomically
     async with lock:
         data = load_novel_results(novel_id)
 
-        if merged_chars is not None:
-            data["characters"] = merged_chars
-            data["aggregate_characters"] = merged_chars
+        if characters:
+            # Incremental merge: fast, name-based accumulation (no LLM)
+            data["characters"] = _merge_characters(data.get("characters", []), characters)
+            data["aggregate_characters"] = data["characters"]
 
         if chapter_summaries:
             summary_text = data.get("summary", "")
             for ch, s in chapter_summaries:
                 summary_text = _upsert_summary_block(summary_text, ch, s)
             data["summary"] = summary_text
-            # DO NOT touch aggregate_summary here.
-            # It is reserved for user-triggered LLM consolidation only.
 
         if events:
+            # Ensure all events use the same chapter key for deduplication
             existing = data.get("timeline", []) or []
             merged = consolidate_timeline_events(existing + events)
             data["timeline"] = merged
+            
+            # Update chapter titles map if possible
+            titles = data.get("chapter_titles", {})
+            for ev in events:
+                raw_ch = ev.get("章節")
+                if raw_ch and "html" not in raw_ch: # Looks like a pretty name
+                    # Find which internal ID this matches (tricky without context, 
+                    # but usually it's passed in as filename in the loop)
+                    pass 
+            # Note: Pretty names are best captured during run_extract_events or rebuild_timeline
 
         data["novel"] = data.get("novel") or novel_id
         save_novel_results(novel_id, data)
@@ -987,10 +1082,13 @@ async def run_consolidate_all_characters(novel_id: str) -> list:
         # Collect from all *.chars.json in the cache
         for p in novel_cache_dir.glob("*.chars.json"):
             try:
-                chars = json.loads(p.read_text("utf-8"))
-                if isinstance(chars, list):
-                    all_raw_chars.extend(chars)
-            except:
+                raw_data = json.loads(p.read_text("utf-8"))
+                chars_list = raw_data.get("data") if isinstance(raw_data, dict) else raw_data
+                
+                if isinstance(chars_list, list):
+                    all_raw_chars.extend(chars_list)
+            except Exception as e:
+                log.error(f"Error reading character cache {p}: {e}")
                 continue
     
     if not all_raw_chars:

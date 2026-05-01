@@ -23,16 +23,16 @@ set "LLM_SERVER_PORT=8000"
 start "HF_SERVER_8000" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
 set "VLLM_BASE_URLS=http://127.0.0.1:8000/v1"
 
-@REM set "LLM_SERVER_PORT=8001"
-@REM start "HF_SERVER_8001" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
-@REM set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8001/v1"
+set "LLM_SERVER_PORT=8001"
+start "HF_SERVER_8001" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8001/v1"
 
-@REM set "LLM_SERVER_PORT=8002"
-@REM start "HF_SERVER_8002" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
-@REM set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8002/v1"
+set "LLM_SERVER_PORT=8002"
+start "HF_SERVER_8002" "%BACKEND_PY%" "%BACKEND_DIR%\llm_server_hf.py"
+set "VLLM_BASE_URLS=%VLLM_BASE_URLS%,http://127.0.0.1:8002/v1"
 
 :: Set multi-URL is now dynamic above
-set "LLM_MAX_CONCURRENCY=1"
+set "LLM_MAX_CONCURRENCY=3"
 
 echo Waiting for models to load (1s)...
 timeout /t 1 /nobreak > nul

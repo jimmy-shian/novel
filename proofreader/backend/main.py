@@ -252,6 +252,10 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     if not requested_tasks:
         requested_tasks = ["mark"]
 
+    # Clear any previous stop request for this novel
+    if novel_id in stop_requested:
+        stop_requested.remove(novel_id)
+        
     # Get all .txt files except table.txt
     files = [f for f in novel_dir.glob("*.txt") if f.name.lower() != "table.txt"]
     files = sorted(files, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
@@ -260,6 +264,7 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     async def process_chapter(f_path, sem):
         async with sem:
             if novel_id in stop_requested:
+                log.info(f"Stop signal detected. Skipping chapter {f_path.name}")
                 return
             try:
                 content = _read_file_content(f_path)
@@ -337,7 +342,7 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
         
         if novel_id in stop_requested:
             batch_status[novel_id]["status"] = "stopped"
-            stop_requested.remove(novel_id)
+            log.info(f"Batch scan for {novel_id} stopped by user.")
         else:
             batch_status[novel_id]["status"] = "done"
             log.info(f"Batch scan finished for {novel_id}")
@@ -348,6 +353,9 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
 @app.post("/api/batch/mark")
 async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTasks):
     novel_id = req.novel_id
+    if novel_id in stop_requested:
+        stop_requested.remove(novel_id)
+        
     batch_status[novel_id] = _create_batch_status(len(req.files))
     
     async def process_file(f, sem):
@@ -371,7 +379,6 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
         if novel_id in stop_requested:
             log.info(f"Stop requested for batch mark {novel_id}")
             batch_status[novel_id]["status"] = "stopped"
-            stop_requested.remove(novel_id)
         else:
             batch_status[novel_id]["status"] = "done"
 
@@ -381,9 +388,21 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
 
 @app.post("/api/batch/stop/{novel_id}")
 async def api_stop_batch(novel_id: str):
+    if novel_id == "__ALL__":
+        count = 0
+        for nid in list(batch_status.keys()):
+            if batch_status[nid].get("status") == "processing":
+                stop_requested.add(nid)
+                count += 1
+        log.info(f"Global stop requested. Stopped {count} novels.")
+        return {"success": True, "message": f"Stop requested for {count} tasks"}
+        
     if novel_id in batch_status and batch_status[novel_id]["status"] == "processing":
         stop_requested.add(novel_id)
+        log.info(f"Stop requested for novel: {novel_id}")
         return {"success": True, "message": "Stop requested"}
+    
+    log.warning(f"Stop requested for {novel_id} but it is not processing.")
     return {"success": False, "message": "Not running"}
 
 @app.get("/api/batch/status/{novel_id}")
@@ -501,16 +520,25 @@ async def api_export_to_assistant(req: ExportRequest):
     return {"path": str(path), "success": True}
 
 
-@app.post("/api/analyze/consolidate")
+@app.post("/api/novel/consolidate_summary/{novel_id}")
 async def api_consolidate_summary(novel_id: str):
     """Trigger LLM-based consolidation of all chapter summaries into a single novel summary."""
     agg = await tasks.run_consolidate_novel_summary(novel_id)
-    return {"aggregate_summary": agg}
-@app.post("/api/analyze/consolidate_characters")
+    return {"summary": agg}
+@app.post("/api/novel/consolidate_chars/{novel_id}")
 async def api_consolidate_characters(novel_id: str):
     """Trigger LLM-based global consolidation of all character data."""
     agg = await tasks.run_consolidate_all_characters(novel_id)
     return {"aggregate_characters": agg}
+
+@app.post("/api/novel/rebuild_timeline/{novel_id}")
+async def api_rebuild_timeline(novel_id: str):
+    try:
+        timeline = await tasks.run_rebuild_timeline_from_cache(novel_id)
+        return {"success": True, "timeline": timeline}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 async def get_name_dict():
     if NAMES_DICT_PATH.exists():
         return json.loads(NAMES_DICT_PATH.read_text("utf-8"))

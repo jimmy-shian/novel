@@ -155,6 +155,7 @@ const els = {
   // Scope toggles & consolidate
   btnConsolidate: document.getElementById('btn-consolidate'),
   btnConsolidateChars: document.getElementById('btn-consolidate-chars'),
+  btnRebuildTimeline: document.getElementById('btn-rebuild-timeline'),
   scopeSummaryChapter: document.getElementById('scope-summary-chapter'),
   scopeSummaryGlobal: document.getElementById('scope-summary-global'),
   scopeCharsChapter: document.getElementById('scope-chars-chapter'),
@@ -1158,17 +1159,21 @@ els.btnBatchStart.addEventListener('click', async () => {
 
 // Batch Stop
 els.btnBatchStop.addEventListener('click', async () => {
-  if (!state.currentNovel) return;
-  if (!confirm(`確定要停止 ${state.currentNovel.name} 的批次處理嗎？`)) return;
+  const targetNovelId = state.activeBatchNovel || (state.currentNovel ? state.currentNovel.name : null);
+  if (!targetNovelId) return;
+  
+  if (!confirm(`確定要停止批次處理嗎？`)) return;
   
   try {
-    const res = await fetch(`${API_BASE}/batch/stop/${encodeURIComponent(state.currentNovel.name)}`, {
+    const res = await fetch(`${API_BASE}/batch/stop/${encodeURIComponent(targetNovelId)}`, {
       method: 'POST'
     });
     if (res.ok) {
       state.isBatching = false;
       els.btnBatchStart.disabled = false;
       els.btnBatchStop.style.display = 'none';
+      saveActiveBatchNovel(null);
+      state.activeBatchNovel = null;
     }
   } catch (err) {
     console.error('Stop batch error:', err);
@@ -1278,12 +1283,12 @@ function initScopeToggles() {
       els.btnConsolidate.disabled = true;
       els.btnConsolidate.textContent = '整合中...';
       try {
-        const res = await fetch(`${API_BASE}/analyze/consolidate?novel_id=${encodeURIComponent(state.currentNovel.name)}`, {
+        const res = await fetch(`${API_BASE}/novel/consolidate_summary/${encodeURIComponent(state.currentNovel.name)}`, {
           method: 'POST'
         });
         const data = await res.json();
-        if (data.aggregate_summary && state.aiData) {
-          state.aiData.aggregate_summary = data.aggregate_summary;
+        if (data.summary && state.aiData) {
+          state.aiData.aggregate_summary = data.summary;
           // Also auto-switch to global view
           state.scopeSummary = 'global';
           if (els.scopeSummaryChapter) els.scopeSummaryChapter.classList.remove('active');
@@ -1310,7 +1315,7 @@ function initScopeToggles() {
       els.btnConsolidateChars.disabled = true;
       els.btnConsolidateChars.textContent = '整合中...';
       try {
-        const res = await fetch(`${API_BASE}/analyze/consolidate_characters?novel_id=${encodeURIComponent(state.currentNovel.name)}`, {
+        const res = await fetch(`${API_BASE}/novel/consolidate_chars/${encodeURIComponent(state.currentNovel.name)}`, {
           method: 'POST'
         });
         const data = await res.json();
@@ -1331,6 +1336,34 @@ function initScopeToggles() {
       } finally {
         els.btnConsolidateChars.disabled = false;
         els.btnConsolidateChars.textContent = '👥 整合全書角色';
+      }
+    });
+  }
+
+  // Rebuild Timeline button
+  if (els.btnRebuildTimeline) {
+    els.btnRebuildTimeline.addEventListener('click', async () => {
+      if (!state.currentNovel) { alert('請先選擇小說'); return; }
+      
+      els.btnRebuildTimeline.disabled = true;
+      els.btnRebuildTimeline.textContent = '重建中...';
+      try {
+        const res = await fetch(`${API_BASE}/novel/rebuild_timeline/${encodeURIComponent(state.currentNovel.name)}`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (data.success && state.aiData) {
+          state.aiData.timeline = data.timeline;
+          state.aiData.aggregate_timeline = data.timeline;
+          renderAnalysis();
+          alert('時間軸已根據快取重建完成！');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('重建失敗：' + err.message);
+      } finally {
+        els.btnRebuildTimeline.disabled = false;
+        els.btnRebuildTimeline.textContent = '⏳ 重建時間軸';
       }
     });
   }
@@ -1411,6 +1444,7 @@ function renderAnalysis() {
   
   // ── Timeline (always global) ──
   const timeline = state.aiData.aggregate_timeline || state.aiData.timeline || [];
+  const chapterTitles = state.aiData.chapter_titles || {};
   containerTimeline.innerHTML = '';
   if (timeline.length === 0) {
     containerTimeline.innerHTML = '<div class="empty-state">未偵測到事件</div>';
@@ -1421,12 +1455,15 @@ function renderAnalysis() {
       const rolesRaw = ev['涉及角色'] || [];
       const roles = Array.isArray(rolesRaw) ? rolesRaw : [rolesRaw];
       
+      const rawCh = ev['章節'] || '';
+      const chDisplay = chapterTitles[rawCh] || rawCh;
+
       item.innerHTML = `
         <div class="timeline-dot"></div>
         <div class="timeline-content">
           <div class="timeline-header">
             <span class="timeline-title">${escapeHTML(ev['事件名稱'] || '未知事件')}</span>
-            <span class="timeline-chapter">${escapeHTML(ev['章節'] || '')}</span>
+            <span class="timeline-chapter">${escapeHTML(chDisplay)}</span>
           </div>
           <div class="timeline-desc">${escapeHTML(ev['事件描述'] || '')}</div>
           <div class="timeline-tags">
@@ -1568,27 +1605,76 @@ async function pollGlobalBatchForCurrentGlobalState(batchState) {
       return;
     }
 
+    if (statusData.status === 'stopped') {
+      console.log('偵測到背景任務已停止');
+      finalizeGlobalBatch(batchState);
+      clearInterval(timer);
+      return;
+    }
+
     if (statusData.status === 'done' || statusData.status === 'idle') {
       const currentCount = batchState.novelPlan[batchState.currentNovelIndex].count;
       if (batchState.completedChapters < batchState.totalChapters) {
         batchState.completedChapters = Math.min(batchState.totalChapters, batchState.completedChapters + currentCount);
       }
+      
       batchState.currentNovelIndex += 1;
-      batchState.currentNovel = batchState.novelPlan[batchState.currentNovelIndex]?.name || null;
-      saveGlobalBatchState(batchState);
-
+      
       if (batchState.currentNovelIndex >= batchState.novelPlan.length) {
         finalizeGlobalBatch(batchState);
         clearInterval(timer);
         return;
       }
 
-      renderGlobalBatchView(batchState, { current: 0, novelName: batchState.currentNovel });
+      // Start the next novel in the plan
+      const nextNovel = batchState.novelPlan[batchState.currentNovelIndex].name;
+      batchState.currentNovel = nextNovel;
+      saveGlobalBatchState(batchState);
+      
+      console.log(`正在啟動下一部小說: ${nextNovel}`);
+      try {
+        const tasks = [];
+        if (document.getElementById('chk-mark').checked) tasks.push('mark');
+        if (document.getElementById('chk-analyze').checked) tasks.push('chars', 'events', 'summary');
+        
+        await fetch(`${API_BASE}/batch/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            novel_id: nextNovel,
+            use_cache: document.getElementById('chk-use-cache').checked,
+            tasks: tasks.length > 0 ? tasks : ['mark']
+          })
+        });
+      } catch (err) {
+        console.error('Failed to start next novel in resume loop:', err);
+      }
+
+      renderGlobalBatchView(batchState, { current: 0, novelName: nextNovel });
       return;
     }
 
     if (statusData.status === 'not_found') {
-      console.error('Global batch current novel status not found:', novelName);
+      // If not found, it might be that the task hasn't started yet. 
+      // In resume mode, we should try to start it.
+      console.warn('任務狀態為 not_found，嘗試啟動:', novelName);
+      try {
+        const tasks = [];
+        if (document.getElementById('chk-mark').checked) tasks.push('mark');
+        if (document.getElementById('chk-analyze').checked) tasks.push('chars', 'events', 'summary');
+
+        await fetch(`${API_BASE}/batch/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            novel_id: novelName,
+            use_cache: document.getElementById('chk-use-cache').checked,
+            tasks: tasks.length > 0 ? tasks : ['mark']
+          })
+        });
+      } catch (err) {
+        console.error('Failed to (re)start novel in resume loop:', err);
+      }
       renderGlobalBatchView(batchState, { current: 0, novelName });
     }
   };
@@ -1663,100 +1749,25 @@ els.btnGlobalBatch.addEventListener('click', async () => {
       return;
     }
 
-    // Process each novel
-    for (let index = 0; index < chaptersByNovel.length; index++) {
-      const item = chaptersByNovel[index];
-      globalBatchState.currentNovelIndex = index;
-      globalBatchState.currentNovel = item.novel.name;
-      saveGlobalBatchState(globalBatchState);
-      els.globalBatchLabel.textContent = `正在處理: ${item.novel.name}`;
-      
-      try {
-        // Gather selected tasks
-        const requestedTasks = [];
-        if (document.getElementById('chk-mark').checked) requestedTasks.push('mark');
-        if (document.getElementById('chk-analyze').checked) {
-          requestedTasks.push('chars');
-          requestedTasks.push('events');
-          requestedTasks.push('summary');
-        }
+    // Delegate to the more robust timer-based resume logic
+    await resumeGlobalBatchState(globalBatchState);
 
-        // Start batch for this novel
-        const startRes = await fetch(`${API_BASE}/batch/scan`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            novel_id: item.novel.name,
-            use_cache: document.getElementById('chk-use-cache').checked,
-            tasks: requestedTasks.length > 0 ? requestedTasks : ['mark']
-          })
-        });
-        
-        if (!startRes.ok) throw new Error(`HTTP ${startRes.status}`);
-
-        // Poll status for this novel
-        let isDone = false;
-        while (!isDone) {
-          const statusRes = await fetch(`${API_BASE}/batch/status/${encodeURIComponent(item.novel.name)}`);
-          if (!statusRes.ok) break;
-          
-          const statusData = await statusRes.json();
-          
-          if (statusData.status === 'done' || statusData.status === 'idle') {
-            isDone = true;
-          } else {
-            const novelCurrent = statusData.current || 0;
-            const currentProgress = completedChapters + novelCurrent;
-            const pct = Math.min(100, (currentProgress / totalChapters) * 100);
-            
-            if (statusData.last_chapter) {
-              updateChapterCacheBadge(statusData.last_chapter);
-            }
-
-            const elapsedMs = Date.now() - startTime;
-            const remainingChunks = Math.max(0, totalChapters - currentProgress);
-            const avgMsPerChapter = currentProgress > 0 ? elapsedMs / currentProgress : 0;
-            const estimatedRemainingMs = Math.round(avgMsPerChapter * remainingChunks);
-            
-            els.globalBatchProgress.style.width = `${pct}%`;
-            els.globalBatchDetails.textContent = `當前進度: ${currentProgress} / ${totalChapters} (${item.novel.name})`;
-            els.globalBatchETA.textContent = `已執行 ${formatDuration(elapsedMs)} / 剩餘 ${formatDuration(estimatedRemainingMs)}`;
-          }
-          await new Promise(r => setTimeout(r, 2000));
-        }
-      } catch (novelErr) {
-        console.error(`Error processing ${item.novel.name}:`, novelErr);
-      }
-      completedChapters += item.chapters.length;
-      globalBatchState.completedChapters = completedChapters;
-      saveGlobalBatchState(globalBatchState);
-    }
-
-    els.globalBatchLabel.textContent = '全庫自動掃描完成！';
-    els.globalBatchProgress.style.width = '100%';
-    els.btnGlobalBatch.textContent = '掃描完成';
-    clearGlobalBatchState();
   } catch (err) {
-    console.error(err);
-    els.globalBatchLabel.textContent = '批次處理出錯';
+    console.error('Failed to start global batch:', err);
+    els.globalBatchLabel.textContent = '啟動失敗';
     clearGlobalBatchState();
-  } finally {
     state.isGlobalBatching = false;
     els.btnGlobalBatch.disabled = false;
-    if (els.btnGlobalStop) els.btnGlobalStop.style.display = 'none';
   }
 });
 
 els.btnGlobalStop?.addEventListener('click', async () => {
-  if (confirm('確定要停止當前的全庫自動掃描嗎？這將清除目前的進度。')) {
-    // Notify backend to stop the background task
-    const novelId = state.activeBatchNovel || state.currentNovel?.name;
-    if (novelId) {
-      try {
-        await fetch(`${API_BASE}/batch/stop/${encodeURIComponent(novelId)}`, { method: 'POST' });
-      } catch (err) {
-        console.error('Failed to stop backend batch:', err);
-      }
+  if (confirm('確定要停止當前的全庫自動掃描嗎？這將中斷背景任務。')) {
+    // Notify backend to stop ALL background tasks to be safe
+    try {
+      await fetch(`${API_BASE}/batch/stop/__ALL__`, { method: 'POST' });
+    } catch (err) {
+      console.error('Failed to stop backend batch:', err);
     }
     
     state.isGlobalBatching = false;
