@@ -49,6 +49,8 @@ async def chat(
 ) -> str:
     """Send a chat request to the local llm_server_hf.py."""
     async with _get_semaphore():
+        # Proactive rate limiting: brief sleep to stagger concurrent requests
+        await asyncio.sleep(1) 
         clients = _get_clients()
         last_error: Exception | None = None
 

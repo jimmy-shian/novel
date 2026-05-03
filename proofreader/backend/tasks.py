@@ -18,7 +18,7 @@ from prompts import (
     mark_errors_prompt, extract_characters_prompt,
     extract_events_prompt, merge_characters_prompt,
     normalize_names_prompt, story_summary_prompt,
-    aggregate_summary_prompt
+    aggregate_summary_prompt, global_consolidate_characters_prompt
 )
 import rag
 import local_checker
@@ -1110,23 +1110,41 @@ async def run_consolidate_all_characters(novel_id: str) -> list:
     
     compact_chars = list(seen.values())
     
-    # If it's still too many, we take only the most important looking ones or do it in batches.
-    # For now, let's try a single pass.
-    messages = global_consolidate_characters_prompt(json.dumps(compact_chars, ensure_ascii=False))
-    raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+    # Process in batches to avoid exceeding LLM context limits
+    final_chars = []
+    batch_size = 25
+    async def process_char_batch(batch):
+        messages = global_consolidate_characters_prompt(json.dumps(batch, ensure_ascii=False))
+        try:
+            raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
+            batch_result = _parse_json(raw)
+            if isinstance(batch_result, list):
+                return batch_result
+            return batch
+        except Exception as e:
+            log.error(f"Failed to parse consolidated characters batch: {e}")
+            return batch
+
+    tasks_list = []
+    for i in range(0, len(compact_chars), batch_size):
+        batch = compact_chars[i:i+batch_size]
+        tasks_list.append(process_char_batch(batch))
     
-    try:
-        final_chars = _parse_json(raw)
-        if isinstance(final_chars, list):
-            data = load_novel_results(novel_id)
-            data["characters"] = final_chars
-            # Also sync to aggregate_characters if main.py uses it
-            data["aggregate_characters"] = final_chars
-            save_novel_results(novel_id, data)
-            return final_chars
-    except Exception as e:
-        log.error(f"Failed to parse consolidated characters: {e}")
+    results_list = await asyncio.gather(*tasks_list)
+    log.info(f"[{novel_id}] 角色全域整合批次已完成 (共 {len(tasks_list)} 個批次)")
+    for res in results_list:
+        final_chars.extend(res)
+            
+    # Final robust deduplication just in case the LLM split similar names across different batches
+    final_chars = _merge_characters([], final_chars)
     
+    if final_chars:
+        data = load_novel_results(novel_id)
+        data["characters"] = final_chars
+        data["aggregate_characters"] = final_chars
+        save_novel_results(novel_id, data)
+        return final_chars
+        
     return compact_chars
 
 async def run_consolidate_novel_summary(novel_id: str) -> str:
@@ -1135,35 +1153,70 @@ async def run_consolidate_novel_summary(novel_id: str) -> str:
     results.json into a single prose novel-level aggregate_summary.
     Saves the result back to results.json and returns it.
     """
-    data = load_novel_results(novel_id)
-    summary_blocks = data.get("summary", "").strip()
-    if not summary_blocks:
-        return data.get("aggregate_summary", "")
+    if novel_id not in _novel_locks:
+        _novel_locks[novel_id] = asyncio.Lock()
+    
+    async with _novel_locks[novel_id]:
+        data = load_novel_results(novel_id)
+        summary_blocks = data.get("summary", "").strip()
+        if not summary_blocks:
+            return data.get("aggregate_summary", "")
 
-    # Extract individual chapter paragraphs (### Chapter\n...) or use raw text
-    block_pattern = re.compile(r"(?m)^###\s+.+$")
-    chunks: list[str] = []
-    parts = block_pattern.split(summary_blocks)
-    headers = block_pattern.findall(summary_blocks)
-    for i, part in enumerate(parts):
-        part = part.strip()
-        if not part:
-            continue
-        if i < len(headers):
-            chunks.append(f"{headers[i-1]}\n{part}" if i > 0 else part)
-        else:
-            chunks.append(part)
-    if not chunks:
-        chunks = [summary_blocks]
+        # 1. 解析所有章節塊
+        block_pattern = re.compile(r"(?m)^###\s+.+$")
+        chunks: list[str] = []
+        parts = block_pattern.split(summary_blocks)
+        headers = block_pattern.findall(summary_blocks)
+        for i, part in enumerate(parts):
+            part = part.strip()
+            if not part: continue
+            if i > 0 and (i - 1) < len(headers):
+                chunks.append(f"{headers[i-1]}\n{part}")
+            else:
+                chunks.append(part)
+        # 2. 遞歸式分群整合 (Recursive Hierarchical Consolidation)
+        # 只要清單中的片段數量 > 1，就繼續分組濃縮
+        current_level_texts = chunks
+        level = 0
+        batch_size = 20 # 每組處理的數量
+        
+        while len(current_level_texts) > 1:
+            level += 1
+            next_level_texts = []
+            total_groups = (len(current_level_texts) + batch_size - 1) // batch_size
+            
+            log.info(f"[{novel_id}] 正在執行第 {level} 層整合，共 {len(current_level_texts)} 筆資料，將分為 {total_groups} 組")
+            
+            async def process_group(batch, g_idx, total_g):
+                msg = aggregate_summary_prompt(batch, "")
+                summary_raw = await chat(msg, max_tokens=MAX_TOKENS_ANALYSIS)
+                log.info(f"[{novel_id}] Level {level}: 組別 {g_idx}/{total_g} 已完成")
+                if summary_raw.strip():
+                    return summary_raw.strip()
+                else:
+                    return "\n\n".join(batch)[:5000]
 
-    existing_agg = data.get("aggregate_summary", "")
-    messages = aggregate_summary_prompt(chunks, existing_agg)
-    raw = await chat(messages, max_tokens=MAX_TOKENS_ANALYSIS)
-    agg = raw.strip()
-    if agg:
-        data["aggregate_summary"] = agg
-        save_novel_results(novel_id, data)
-    return agg
+            # Parallelize all groups in this level
+            tasks_list = []
+            for i in range(0, len(current_level_texts), batch_size):
+                batch = current_level_texts[i:i+batch_size]
+                group_idx = (i // batch_size) + 1
+                tasks_list.append(process_group(batch, group_idx, total_groups))
+            
+            log.info(f"[{novel_id}] Level {level}: 正在平行處理 {len(tasks_list)} 個分組任務...")
+            next_level_texts = await asyncio.gather(*tasks_list)
+            log.info(f"[{novel_id}] Level {level} 批次整合完成，產生了 {len(next_level_texts)} 個新片段，進入下一層")
+
+            # 進入下一層
+            current_level_texts = next_level_texts
+
+        # 最終結果
+        final_summary = current_level_texts[0] if current_level_texts else ""
+
+        if final_summary:
+            data["aggregate_summary"] = final_summary
+            save_novel_results(novel_id, data)
+        return final_summary
 
 
 def _chunk_text(text: str, chunk_size: int = 6000, max_chunks: int = 4) -> list[str]:

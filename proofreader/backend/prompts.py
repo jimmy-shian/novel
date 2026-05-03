@@ -250,16 +250,23 @@ def aggregate_summary_prompt(text_chunks: list[str], existing_summary: str = "")
     If an existing aggregate summary is provided, update it rather than starting fresh.
     """
     system = dedent("""
-        你是一位小說摘要整合助手。
-        請將以下章節摘要整合成一份小說級的綜合摘要，保持劇情脈絡與角色關係。
-        如果已有現存的小說整合摘要，請基於它更新成最新版本。
-        只輸出最終整合摘要，不要新增任何 JSON、標題或註解。
-        使用繁體中文，純文字輸出。
+        你是一位極其專業的小說大綱精煉大師。
+        任務：將多段「章節進度」或「區段摘要」整合進一份「最終全書總大綱」中。
+        
+        核心準則：
+        1. **智慧化濃縮**：你的目標是將百萬字的故事精煉成數千至一萬字的高質量大綱。請大膽刪減非核心的對話、重複性的戰鬥或過場描述。
+        2. **保留核心靈魂**：必須保留「核心衝突」、「角色成長/覺醒」、「重大劇情轉折」以及「關鍵伏筆」。
+        3. **上下文連貫**：確保大綱讀起來脈絡清晰，人物動機與故事發展邏輯一致。
+        4. **接續與覆蓋**：請在既有基礎上，根據新進度進行「增補」與「同步優化」，確保全書結構平衡。
+        5. **純文字輸出**：只輸出最終的大綱內容，不要包含 JSON、標題或註解。
+        
+        輸出語言：繁體中文。
     """).strip()
 
-    user = "以下是本書章節摘要：\n\n" + "\n\n".join(text_chunks)
+    user = "【待整合與精煉的劇情摘要片段清單】：\n\n" + "\n\n".join(text_chunks)
+    
     if existing_summary:
-        user += "\n\n已存在小說整合摘要：\n" + existing_summary
+        user = "【參考背景 / 既有大綱基礎】：\n" + existing_summary + "\n\n" + user
 
     return [
         {"role": "system", "content": system},

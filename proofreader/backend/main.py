@@ -259,6 +259,7 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     # Get all .txt files except table.txt
     files = [f for f in novel_dir.glob("*.txt") if f.name.lower() != "table.txt"]
     files = sorted(files, key=lambda x: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', x.name)])
+    log.info(f"Starting batch scan for {novel_id} with {len(files)} files. Tasks: {requested_tasks}")
     batch_status[novel_id] = _create_batch_status(len(files))
     
     async def process_chapter(f_path, sem):
@@ -334,9 +335,10 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 batch_status[novel_id]["current"] += 1
 
     async def process_all():
+        log.info(f"Background task process_all started for {novel_id}")
         # Process multiple chapters concurrently. 
         # The internal LLM client semaphore (set to 3 or 6) will still protect the servers.
-        chapter_sem = asyncio.Semaphore(5) 
+        chapter_sem = asyncio.Semaphore(10) 
         tasks_list = [process_chapter(f, chapter_sem) for f in files]
         await asyncio.gather(*tasks_list)
         
@@ -344,6 +346,20 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
             batch_status[novel_id]["status"] = "stopped"
             log.info(f"Batch scan for {novel_id} stopped by user.")
         else:
+            # Auto-consolidation if all tasks were requested
+            if all(t in requested_tasks for t in ["mark", "chars", "events", "summary"]):
+                log.info(f"Batch completed. Starting auto-consolidation for {novel_id}...")
+                
+                # 1. Consolidate Summary
+                batch_status[novel_id]["status"] = "consolidating_summary"
+                await tasks.run_consolidate_novel_summary(novel_id)
+                log.info(f"Auto-consolidation: Summary finished for {novel_id}")
+                
+                # 2. Consolidate Characters
+                batch_status[novel_id]["status"] = "consolidating_chars"
+                await tasks.run_consolidate_all_characters(novel_id)
+                log.info(f"Auto-consolidation: Characters finished for {novel_id}")
+                
             batch_status[novel_id]["status"] = "done"
             log.info(f"Batch scan finished for {novel_id}")
 
@@ -372,7 +388,7 @@ async def api_batch_mark(req: BatchMarkRequest, background_tasks: BackgroundTask
                 batch_status[novel_id]["current"] += 1
 
     async def process_batch():
-        sem = asyncio.Semaphore(5)
+        sem = asyncio.Semaphore(10)
         tasks_list = [process_file(f, sem) for f in req.files]
         await asyncio.gather(*tasks_list)
         

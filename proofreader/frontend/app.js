@@ -1663,7 +1663,7 @@ async function pollGlobalBatchForCurrentGlobalState(batchState) {
         if (document.getElementById('chk-mark').checked) tasks.push('mark');
         if (document.getElementById('chk-analyze').checked) tasks.push('chars', 'events', 'summary');
 
-        await fetch(`${API_BASE}/batch/scan`, {
+        const res = await fetch(`${API_BASE}/batch/scan`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1672,6 +1672,12 @@ async function pollGlobalBatchForCurrentGlobalState(batchState) {
             tasks: tasks.length > 0 ? tasks : ['mark']
           })
         });
+        if (res.ok) {
+          const data = await res.json();
+          console.log(`成功啟動小說分析: ${novelName}, 總數: ${data.total}`);
+        } else {
+          console.error(`啟動分析失敗: ${res.statusText}`);
+        }
       } catch (err) {
         console.error('Failed to (re)start novel in resume loop:', err);
       }
