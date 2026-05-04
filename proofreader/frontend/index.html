@@ -100,7 +100,12 @@
           <!-- 問題列表區 -->
           <div class="issue-pane">
             <div class="issue-header">
-              <h3>偵測到的問題</h3>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button id="btn-toggle-pane" class="icon-btn" title="收合面板">
+                  <span class="toggle-icon">▶</span>
+                </button>
+                <h3>偵測到的問題</h3>
+              </div>
               <button id="btn-accept-all" class="btn small outline">全部接受</button>
             </div>
             <div id="issue-warnings" class="issue-warnings"></div>
@@ -180,6 +185,27 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- 右鍵選單 -->
+  <div id="context-menu" class="context-menu">
+    <div class="menu-header">
+      <div class="menu-info">
+        <span class="menu-orig">原字</span>
+        <span class="menu-arrow">➔</span>
+        <span class="menu-suggest">建議</span>
+      </div>
+    </div>
+    <div class="menu-item" data-action="accept">
+      <span class="menu-icon">✅</span> 接收建議
+    </div>
+    <div class="menu-item" data-action="ignore">
+      <span class="menu-icon">🙈</span> 忽略此處
+    </div>
+    <div class="menu-item" data-action="manual">
+      <span class="menu-icon">✍️</span> 手動修改
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

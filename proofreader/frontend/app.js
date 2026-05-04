@@ -159,7 +159,11 @@ const els = {
   scopeSummaryChapter: document.getElementById('scope-summary-chapter'),
   scopeSummaryGlobal: document.getElementById('scope-summary-global'),
   scopeCharsChapter: document.getElementById('scope-chars-chapter'),
-  scopeCharsGlobal: document.getElementById('scope-chars-global')
+  scopeCharsGlobal: document.getElementById('scope-chars-global'),
+  
+  // Context Menu & Pane Toggle
+  contextMenu: document.getElementById('context-menu'),
+  btnTogglePane: document.getElementById('btn-toggle-pane')
 };
 
 // ── Initialization ──
@@ -827,6 +831,15 @@ function renderEditor() {
     });
     mark.addEventListener('mouseleave', () => {
       if (card) card.classList.remove('hover-sync');
+    });
+
+    // 右鍵選單事件
+    mark.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const issue = state.issues.find(i => i.id == id);
+      if (issue) {
+        showContextMenu(e.pageX, e.pageY, issue);
+      }
     });
   });
 }
@@ -1785,3 +1798,91 @@ els.btnGlobalStop?.addEventListener('click', async () => {
 // Start app
 init();
 initScopeToggles();
+
+// ── Right-Click Context Menu & Pane Toggle Logic ──
+function initExtendedUI() {
+  // 面板收合切換
+  if (els.btnTogglePane) {
+    els.btnTogglePane.addEventListener('click', () => {
+      const pane = document.querySelector('.issue-pane');
+      pane.classList.toggle('collapsed');
+      
+      // 如果面板收合了，建立一個浮動展開按鈕
+      let expandBtn = document.getElementById('dynamic-expand-btn');
+      if (pane.classList.contains('collapsed')) {
+        if (!expandBtn) {
+          expandBtn = document.createElement('button');
+          expandBtn.id = 'dynamic-expand-btn';
+          expandBtn.className = 'expand-btn';
+          expandBtn.innerHTML = '◀';
+          expandBtn.title = '展開面板';
+          document.body.appendChild(expandBtn);
+          expandBtn.addEventListener('click', () => {
+            pane.classList.remove('collapsed');
+            expandBtn.style.display = 'none';
+          });
+        }
+        expandBtn.style.display = 'flex';
+      } else {
+        if (expandBtn) expandBtn.style.display = 'none';
+      }
+    });
+  }
+
+  // 點選其他地方關閉選單
+  document.addEventListener('click', () => {
+    if (els.contextMenu) els.contextMenu.style.display = 'none';
+  });
+
+  // 選單按鈕事件
+  if (els.contextMenu) {
+    els.contextMenu.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const action = item.dataset.action;
+        const issueId = els.contextMenu.dataset.issueId;
+        const issue = state.issues.find(i => i.id == issueId);
+        
+        if (issue) {
+          if (action === 'manual') {
+            openModal(issue);
+          } else {
+            state.decisions[issue.id] = { action };
+            updateAfterDecision();
+          }
+        }
+        els.contextMenu.style.display = 'none';
+      });
+    });
+  }
+}
+
+function showContextMenu(x, y, issue) {
+  if (!els.contextMenu) return;
+  
+  const menu = els.contextMenu;
+  menu.dataset.issueId = issue.id;
+  
+  // 更新選單資訊
+  menu.querySelector('.menu-orig').textContent = issue.original;
+  menu.querySelector('.menu-suggest').textContent = issue.suggestion;
+  
+  menu.style.display = 'flex';
+  
+  // 邊界檢查
+  const menuWidth = menu.offsetWidth;
+  const menuHeight = menu.offsetHeight;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  
+  let left = x;
+  let top = y;
+  
+  if (x + menuWidth > windowWidth) left = x - menuWidth;
+  if (y + menuHeight > windowHeight) top = y - menuHeight;
+  
+  menu.style.left = `${left}px`;
+  menu.style.top = `${top}px`;
+}
+
+// 在最後呼叫擴充 UI 初始化
+initExtendedUI();

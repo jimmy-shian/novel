@@ -501,6 +501,37 @@ mark.hl:hover::after {
   background: #fcfbf9;
   display: flex;
   flex-direction: column;
+  transition: width 0.3s ease, margin-right 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.issue-pane.collapsed {
+  width: 0;
+  border-right: none;
+}
+
+/* 展開按鈕 (當面板收合時顯示) */
+.expand-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.issue-pane.collapsed + .expand-btn {
+  display: flex;
 }
 
 .issue-header {
@@ -1254,4 +1285,97 @@ mark.hl.flash-highlight {
 .scope-btn:hover:not(.active) {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text, #e0d5c5);
+}
+
+/* ── Context Menu ────────────────────────────────────────────────── */
+.context-menu {
+  position: fixed;
+  z-index: 2000;
+  background: #fff;
+  border: 1px solid #d4c4a8;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  min-width: 160px;
+  display: none;
+  flex-direction: column;
+  padding: 4px 0;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.menu-header {
+  padding: 8px 12px;
+  background: #fcfbf9;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 4px;
+}
+
+.menu-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #8b6914;
+}
+
+.menu-arrow {
+  color: #ccc;
+  font-size: 12px;
+}
+
+.menu-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.1s;
+}
+
+.menu-item:hover {
+  background: #f5f2ee;
+}
+
+.menu-item .menu-icon {
+  font-size: 16px;
+}
+
+.menu-item[data-action="accept"]:hover {
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.menu-item[data-action="ignore"]:hover {
+  background: rgba(158, 158, 158, 0.08);
+}
+
+.menu-item[data-action="manual"]:hover {
+  background: rgba(200, 169, 110, 0.08);
+}
+
+/* ── Toggle Button ───────────────────────────────────────────────── */
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--accent);
+}
+
+.toggle-icon {
+  font-size: 12px;
+  transition: transform 0.3s;
+}
+
+.collapsed .toggle-icon {
+  transform: rotate(180deg);
 }
