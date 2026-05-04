@@ -816,7 +816,7 @@ function renderEditor() {
     
     mark.addEventListener('click', () => {
       if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         document.querySelectorAll('.issue-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
       }
@@ -901,7 +901,7 @@ function renderIssues(filterType = 'all') {
     card.addEventListener('click', () => {
       const firstMark = els.editor.querySelector(`mark[data-id="${firstIssue.id}"]`);
       if (firstMark) {
-        firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstMark.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         // Add a temporary highlight effect to the mark
         firstMark.classList.add('flash-highlight');
         setTimeout(() => firstMark.classList.remove('flash-highlight'), 1500);

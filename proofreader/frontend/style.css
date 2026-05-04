@@ -81,6 +81,10 @@ body {
 .sidebar-section {
   padding: 16px;
   border-bottom: 1px solid #ece9e4;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex child overflow */
 }
 
 .sidebar-section h3 {
@@ -88,11 +92,12 @@ body {
   font-weight: 600;
   color: #666;
   margin-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .list-container {
   overflow-y: auto;
-  max-height: 300px;
+  flex: 1;
   margin: 0 -8px;
   padding: 0 8px;
 }
