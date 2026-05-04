@@ -1,3 +1,6 @@
+/* const link = document.querySelector("link[rel='stylesheet']");
+link.href = "style.css?v=" + Date.now(); */
+
 *,
 *::before,
 *::after {
@@ -84,7 +87,8 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Important for flex child overflow */
+  min-height: 0;
+  /* Important for flex child overflow */
 }
 
 .sidebar-section h3 {
@@ -141,8 +145,14 @@ body {
   flex-shrink: 0;
   display: inline-block;
 }
-.cache-dot.mark { background-color: #4caf50; }
-.cache-dot.events { background-color: #2196f3; }
+
+.cache-dot.mark {
+  background-color: #4caf50;
+}
+
+.cache-dot.events {
+  background-color: #2196f3;
+}
 
 .list-item:hover {
   background: #f5f2ee;
@@ -192,15 +202,31 @@ body {
 }
 
 @keyframes pulse-gold {
-  0% { box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(200, 169, 110, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(200, 169, 110, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(200, 169, 110, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 169, 110, 0);
+  }
 }
 
 @keyframes pulse-green {
-  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(46, 125, 50, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(46, 125, 50, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 50, 0);
+  }
 }
 
 .meta-badges {
@@ -452,6 +478,8 @@ mark.hl:hover::after {
   flex: 1;
   background: #fff;
   overflow-y: auto;
+  overflow-x: hidden;
+  /* 防止出現無意義的左右捲動 */
   padding: 40px;
   border-right: 1px solid #e0ddd8;
 }
@@ -463,6 +491,9 @@ mark.hl:hover::after {
   line-height: 2.2;
   color: #333;
   white-space: pre-wrap;
+  word-break: break-word;
+  /* 確保超長單詞也會換行 */
+  overflow-wrap: break-word;
 }
 
 .issue-pane {
@@ -878,7 +909,9 @@ mark.hl.flash-highlight {
   overflow-y: auto;
 }
 
-.summary-box h1, .summary-box h2, .summary-box h3 {
+.summary-box h1,
+.summary-box h2,
+.summary-box h3 {
   color: #8b6914;
   margin: 1em 0 0.5em;
   font-size: 1.1em;
@@ -888,7 +921,8 @@ mark.hl.flash-highlight {
   margin-bottom: 1em;
 }
 
-.summary-box ul, .summary-box ol {
+.summary-box ul,
+.summary-box ol {
   padding-left: 20px;
   margin-bottom: 1em;
 }
@@ -1134,6 +1168,7 @@ mark.hl.flash-highlight {
   font-weight: normal;
   margin-left: 4px;
 }
+
 /* --- Chapter List Meta Badges --- */
 .chapter-item {
   display: flex !important;
@@ -1162,9 +1197,20 @@ mark.hl.flash-highlight {
 }
 
 @keyframes pulse-gold {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.7); }
-  70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(200, 169, 110, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(200, 169, 110, 0); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.7);
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(200, 169, 110, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(200, 169, 110, 0);
+  }
 }
 
 /* ── Scope Toggle (本章 / 全書) ─────────────────────────────────────── */
@@ -1174,17 +1220,20 @@ mark.hl.flash-highlight {
   justify-content: space-between;
   margin-bottom: 8px;
 }
+
 .analysis-section-header h4 {
   margin: 0;
 }
+
 .scope-toggle {
   display: flex;
   gap: 2px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   padding: 2px;
 }
+
 .scope-btn {
   padding: 2px 10px;
   font-size: 11px;
@@ -1196,11 +1245,13 @@ mark.hl.flash-highlight {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
+
 .scope-btn.active {
   background: var(--accent, #c8a96e);
   color: #1a1008;
 }
+
 .scope-btn:hover:not(.active) {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text, #e0d5c5);
 }
