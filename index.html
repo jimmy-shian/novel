@@ -1,27 +1,34 @@
 <!doctype html>
 <html lang="zh-TW">
+
   <head>
     <!-- Required meta tags -->
     <meta name="google-site-verification" content="yYD82Aavnj3Ey0ieJxHEPL61iH9767ncuevx9vPzSsI" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2415998114933157" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2415998114933157"
+      crossorigin="anonymous"></script>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://jimmy-shian.github.io/novel/novel.css">
-    
+
     <link rel="icon" type="image/png" href="https://jimmy-shian.github.io/novel/picture/webico.png">
-    
+
     <title>Jimmy 小說庫 - 書架</title>
 
     <style>
       :root {
-        --bg-main: #121212;
-        --bg-secondary: #1e1e1e;
-        --text-primary: #e0e0e0;
-        --text-secondary: #888888;
-        --border-color: #333333;
+        --bg-main: #393939;
+        /* Match original dark gray */
+        --bg-secondary: #2c2c2c;
+        --bg-card: #404040;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --border-color: #555555;
+        --accent: #f1b74b;
       }
+
       body {
         background-color: var(--bg-main);
         color: var(--text-primary);
@@ -29,6 +36,7 @@
         margin: 0;
         padding: 0;
       }
+
       .header-title {
         text-align: center;
         margin-top: 60px;
@@ -38,6 +46,7 @@
         color: #ffffff;
         letter-spacing: 2px;
       }
+
       .header-sub {
         text-align: center;
         color: var(--text-secondary);
@@ -46,32 +55,42 @@
         margin-bottom: 30px;
         font-weight: 500;
       }
+
       .tools-section {
         text-align: center;
         margin-bottom: 30px;
       }
+
       .btn-reading-assistant {
         background: var(--bg-secondary);
         border: 1px solid var(--border-color);
         color: var(--text-primary);
         padding: 10px 24px;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         border-radius: 6px;
         font-weight: 500;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         display: inline-block;
         letter-spacing: 1px;
       }
+
       .btn-reading-assistant:hover {
-        background: #2a2a2a;
-        color: #ffffff;
-        border-color: #555;
+        background: #1a1a1a;
+        color: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(241, 183, 75, 0.2);
       }
+
       .search-section {
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
         margin-bottom: 40px;
+        flex-wrap: wrap;
       }
+
       .search-input {
         padding: 12px 20px;
         width: 300px;
@@ -81,25 +100,120 @@
         color: var(--text-primary);
         outline: none;
         font-size: 1rem;
-        margin-right: 15px;
-        transition: border-color 0.2s ease;
+        transition: all 0.3s ease;
       }
+
       .search-input:focus {
-        border-color: var(--text-secondary);
+        border-color: var(--accent);
+        box-shadow: 0 0 8px rgba(241, 183, 75, 0.3);
       }
+
       .search-input::placeholder {
-        color: #666;
+        color: #999;
       }
-      .search-select {
+
+      /* Custom Select Styling with Animations */
+      .custom-select-wrapper {
+        position: relative;
+        width: 200px;
+        user-select: none;
+      }
+
+      .custom-select {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         padding: 12px 20px;
         border-radius: 30px;
         border: 1px solid var(--border-color);
         background: var(--bg-secondary);
         color: var(--text-primary);
-        outline: none;
         font-size: 1rem;
         cursor: pointer;
+        transition: all 0.3s ease;
       }
+
+      .custom-select:hover,
+      .custom-select.open {
+        border-color: var(--accent);
+        box-shadow: 0 0 8px rgba(241, 183, 75, 0.3);
+      }
+
+      .custom-select-trigger span {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 130px;
+      }
+
+      .arrow {
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid var(--text-secondary);
+        border-bottom: 2px solid var(--text-secondary);
+        transform: rotate(45deg);
+        transition: transform 0.3s ease;
+        margin-top: -4px;
+        margin-right: 4px;
+      }
+
+      .custom-select.open .arrow {
+        transform: rotate(-135deg);
+        margin-top: 4px;
+      }
+
+      .custom-options {
+        position: absolute;
+        display: block;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-sizing: border-box;
+        background: var(--bg-card);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-10px);
+        margin-top: 8px;
+        z-index: 10;
+        max-height: 250px;
+        overflow-y: auto;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .custom-select.open+.custom-options {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transform: translateY(0);
+      }
+
+      .custom-option {
+        position: relative;
+        display: block;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .custom-option:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent);
+      }
+
+      .custom-option.selected {
+        color: var(--accent);
+        font-weight: 600;
+        background: rgba(241, 183, 75, 0.1);
+      }
+
       .bookshelf {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -109,43 +223,64 @@
         margin: 0 auto;
         background-color: transparent;
       }
+
       .book-card {
-        background: var(--bg-secondary);
-        border-radius: 8px;
+        background: var(--bg-card);
+        border-radius: 12px;
         overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease, border-color 0.3s ease;
         cursor: pointer;
         text-decoration: none;
         display: flex;
         flex-direction: column;
         border: 1px solid var(--border-color);
       }
+
       .book-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.4);
-        border-color: #555;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        border-color: var(--accent);
       }
+
       .book-cover-wrapper {
+        position: relative;
         width: 100%;
-        aspect-ratio: 2 / 3;
+        aspect-ratio: 5 / 5;
+        /* Wider, more square-like */
         overflow: hidden;
-        background: #0a0a0a;
+        background: #222;
         flex-shrink: 0;
         border-bottom: 1px solid var(--border-color);
       }
+
+      .book-cover-wrapper::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        /* Thinner fake book edge */
+        height: 100%;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+        z-index: 1;
+        pointer-events: none;
+      }
+
       .book-cover {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        object-position: top center;
+        margin-left: 10px;
+        object-fit: fill;
         display: block;
         transition: transform 0.5s ease, opacity 0.3s ease;
-        opacity: 0.9;
+        opacity: 0.95;
       }
+
       .book-card:hover .book-cover {
         transform: scale(1.05);
         opacity: 1;
       }
+
       .book-info {
         padding: 15px 10px;
         text-align: center;
@@ -153,45 +288,67 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--bg-secondary);
+        background: var(--bg-card);
       }
+
       .book-title {
         font-size: 0.95rem;
         font-weight: 600;
         line-height: 1.4;
         color: var(--text-primary);
       }
+
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
+
       ::-webkit-scrollbar-track {
         background: var(--bg-main);
       }
+
       ::-webkit-scrollbar-thumb {
-        background: #333;
+        background: #555;
         border-radius: 4px;
       }
+
       ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: #777;
       }
-      .spacer { height: 40px; }
+
+      .spacer {
+        height: 40px;
+      }
     </style>
   </head>
+
   <body>
 
     <div id="content-nav"></div>
 
     <h1 class="header-title">Jimmy 小說庫</h1>
     <p class="header-sub">MY NOVEL LIBRARY</p>
-    
+
     <div class="tools-section">
       <a href="assistant/index.html" target="_blank" class="btn-reading-assistant">閱讀助手 &mdash; 人物 / 章節筆記</a>
     </div>
 
     <div class="search-section">
       <input type="text" id="searchInput" class="search-input" placeholder="搜尋書名...">
-      <select id="authorSelect" class="search-select">
+
+      <div class="custom-select-wrapper" id="authorSelectWrapper">
+        <div class="custom-select" id="customSelect">
+          <div class="custom-select-trigger"><span id="custom-select-text">所有作者</span></div>
+          <div class="arrow"></div>
+        </div>
+        <div class="custom-options" id="customOptions">
+          <span class="custom-option selected" data-value="">所有作者 <span class="count-tag"
+              id="total-count"></span></span>
+          <!-- Dynamically populated options will go here -->
+        </div>
+      </div>
+      <!-- Hidden native select for state management -->
+      <select id="authorSelect" class="search-select" style="display:none;">
         <option value="">所有作者</option>
       </select>
     </div>
@@ -203,27 +360,32 @@
     <div class="spacer"></div>
     <div style="max-width: 800px; margin: 0 auto; text-align: center; padding: 20px;">
       <hr style="border-color: var(--border-color); margin-bottom: 30px;">
-      <div style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; font-size: 0.95rem;">
-        歡迎來到我的網站，有甚麼想要反映的，請 <a target="_blank" href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報" style="color: #ffffff; text-decoration: underline; font-weight: 500;">寫信</a> 告訴我！謝謝你～
-      </div>  
+      <div
+        style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; font-size: 0.95rem;">
+        歡迎來到我的網站，有甚麼想要反映的，請 <a target="_blank"
+          href="mailto:jimmy910824@gmail.com?subject=ok&body= 您好：%0D%0A請問您所遇到的問題是~%0D%0A%0D%0A問題1.%0D%0A%0D%0A謝謝您的回報"
+          style="color: #ffffff; text-decoration: underline; font-weight: 500;">寫信</a> 告訴我！謝謝你～
+      </div>
     </div>
-    
+
     <div id="content-end"></div>
 
     <script src="https://jimmy-shian.github.io/novel/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+      crossorigin="anonymous"></script>
+
     <!-- Load Waku JS for nav and structure -->
     <script>
-      (function() {
-          var script = document.createElement('script');
-          script.defer = true;
-          if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-              script.src = 'index.waku.js';
-          } else {
-              script.src = 'https://jimmy-shian.github.io/novel/index.waku.js';
-          }
-          document.head.appendChild(script);
+      (function () {
+        var script = document.createElement('script');
+        script.defer = true;
+        if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          script.src = 'index.waku.js';
+        } else {
+          script.src = 'https://jimmy-shian.github.io/novel/index.waku.js';
+        }
+        document.head.appendChild(script);
       })();
     </script>
 
@@ -266,7 +428,7 @@
 
       // Extract authors from folder names
       const authors = [...new Set(books.map(b => b.url.split('/')[0].split('-')[1]).filter(Boolean))];
-      
+
       // Map pinyin author names to Chinese (simplified heuristic mapping based on current list)
       const authorMap = {
         "yanbixiaosheng": "厭筆蕭生",
@@ -289,18 +451,69 @@
         "zuibaidewuya": "最白的烏鴉"
       };
 
+      const customOptionsContainer = document.getElementById('customOptions');
+
+      const authorCounts = {};
+      books.forEach(b => {
+        const author = b.url.split('/')[0].split('-')[1];
+        if (author) {
+          authorCounts[author] = (authorCounts[author] || 0) + 1;
+        }
+      });
+      document.getElementById('total-count').textContent = `(${books.length})`;
+
       authors.forEach(author => {
+        const count = authorCounts[author] || 0;
+        const displayName = `${authorMap[author] || author} (${count})`;
+
+        // Populate Native Select
         const option = document.createElement('option');
         option.value = author;
-        option.textContent = authorMap[author] || author;
+        option.textContent = displayName;
         authorSelect.appendChild(option);
+
+        // Populate Custom Select
+        const span = document.createElement('span');
+        span.className = 'custom-option';
+        span.setAttribute('data-value', author);
+        span.textContent = displayName;
+        customOptionsContainer.appendChild(span);
+      });
+
+      // Custom Select Logic
+      const customSelect = document.getElementById('customSelect');
+      const customSelectText = document.getElementById('custom-select-text');
+
+      customSelect.addEventListener('click', function (e) {
+        customSelect.classList.toggle('open');
+        e.stopPropagation();
+      });
+
+      customOptionsContainer.addEventListener('click', function (e) {
+        if (e.target.classList.contains('custom-option')) {
+          // Update selected style
+          document.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+          e.target.classList.add('selected');
+
+          // Update text and hidden select value
+          customSelectText.textContent = e.target.textContent;
+          authorSelect.value = e.target.getAttribute('data-value');
+
+          // Close dropdown and trigger filter
+          customSelect.classList.remove('open');
+          renderBooks();
+        }
+      });
+
+      document.addEventListener('click', function () {
+        customSelect.classList.remove('open');
       });
 
       function renderBooks() {
         container.innerHTML = '';
         const query = searchInput.value.toLowerCase();
         const author = authorSelect.value;
-        
+
         const filtered = books.filter(b => {
           const matchTitle = b.title.toLowerCase().includes(query);
           const bAuthor = b.url.split('/')[0].split('-')[1];
@@ -328,10 +541,7 @@
       authorSelect.addEventListener('change', renderBooks);
       renderBooks();
     </script>
-    
+
   </body>
+
 </html>
-
-
-
-
