@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 import tasks
+import llm_client
 from config import RESULTS_DIR, NAMES_DICT_PATH, NOVEL_NAMES_PATH, LOGS_DIR
 
 logging.basicConfig(
@@ -262,10 +263,11 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
     log.info(f"Starting batch scan for {novel_id} with {len(files)} files. Tasks: {requested_tasks}")
     batch_status[novel_id] = _create_batch_status(len(files))
     
-    async def process_chapter(f_path, sem):
+    async def process_chapter(f_path, sem, results_accumulator):
         async with sem:
+            import random
+            await asyncio.sleep(random.uniform(0.01, 0.1))
             if novel_id in stop_requested:
-                log.info(f"Stop signal detected. Skipping chapter {f_path.name}")
                 return
             try:
                 content = _read_file_content(f_path)
@@ -280,9 +282,7 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                     cached_summary = tasks.load_cache("summary", novel_id, chapter_name, content)
 
                     cache_complete = True
-                    # If applied, we always skip mark and potentially others if they exist
                     if applied_exists:
-                        # For applied chapters, we only care about missing analytical data
                         for t in requested_tasks:
                             if t == "chars" and cached_chars is None: cache_complete = False
                             elif t == "events" and cached_events is None: cache_complete = False
@@ -295,11 +295,10 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                             elif t == "summary" and cached_summary is None: cache_complete = False
 
                     if cache_complete:
-                        chapter_summaries = [(chapter_name, cached_summary)] if cached_summary else None
-                        # Note: we don't need to update results if it was already applied and cached, 
-                        # but doing so is safe as tasks.update_novel_results is now optimized.
-                        if cached_chars or cached_events or chapter_summaries:
-                            await tasks.update_novel_results(novel_id, characters=cached_chars, chapter_summaries=chapter_summaries, events=cached_events)
+                        if cached_chars: results_accumulator["chars"].extend(cached_chars)
+                        if cached_events: results_accumulator["events"].extend(cached_events)
+                        if cached_summary: results_accumulator["summaries"].append((chapter_name, cached_summary))
+                        
                         batch_status[novel_id]["current"] += 1
                         batch_status[novel_id]["last_chapter"] = chapter_name
                         return
@@ -322,9 +321,9 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 evs = results_map.get("events") if isinstance(results_map.get("events"), list) else None
                 s = results_map.get("summary") if isinstance(results_map.get("summary"), str) else None
 
-                chapter_summaries = [(chapter_name, s)] if s else None
-                if c_list or evs or chapter_summaries:
-                    await tasks.update_novel_results(novel_id, characters=c_list, chapter_summaries=chapter_summaries, events=evs)
+                if c_list: results_accumulator["chars"].extend(c_list)
+                if evs: results_accumulator["events"].extend(evs)
+                if s: results_accumulator["summaries"].append((chapter_name, s))
 
                 batch_status[novel_id]["current"] += 1
                 batch_status[novel_id]["last_chapter"] = chapter_name
@@ -336,29 +335,66 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
 
     async def process_all():
         log.info(f"Background task process_all started for {novel_id}")
-        # Process multiple chapters concurrently. 
-        # The internal LLM client semaphore (set to 3 or 6) will still protect the servers.
-        chapter_sem = asyncio.Semaphore(10) 
-        tasks_list = [process_chapter(f, chapter_sem) for f in files]
-        await asyncio.gather(*tasks_list)
+        _, max_concurrency = llm_client.get_llm_config()
+        # chapter_sem limits how many chapters we read from disk/process at once.
+        # We set it slightly higher than LLM concurrency to keep the pipe full.
+        chapter_sem = asyncio.Semaphore(max_concurrency + 10) 
+        results_acc = {"chars": [], "events": [], "summaries": []}
+        pending_tasks = set()
         
+        for f in files:
+            if novel_id in stop_requested: break
+            
+            # If we have too many pending tasks, wait for some to finish
+            if len(pending_tasks) >= 80:
+                done, pending_tasks = await asyncio.wait(pending_tasks, return_when=asyncio.FIRST_COMPLETED)
+                
+            t = asyncio.create_task(process_chapter(f, chapter_sem, results_acc))
+            pending_tasks.add(t)
+            
+            # Periodically flush results during the run (every 50 chapters)
+            if len(results_acc["summaries"]) >= 50:
+                # Copy and clear to allow background flush if needed, but here we await it for safety.
+                s_list = results_acc["summaries"]
+                c_list = results_acc["chars"]
+                e_list = results_acc["events"]
+                results_acc["summaries"], results_acc["chars"], results_acc["events"] = [], [], []
+                
+                await tasks.update_novel_results(
+                    novel_id, 
+                    characters=c_list if c_list else None,
+                    chapter_summaries=s_list if s_list else None,
+                    events=e_list if e_list else None
+                )
+
+        # Wait for remaining tasks
+        if pending_tasks:
+            await asyncio.gather(*pending_tasks)
+            
+        # Final flush
+        if results_acc["chars"] or results_acc["events"] or results_acc["summaries"]:
+            await tasks.update_novel_results(
+                novel_id, 
+                characters=results_acc["chars"] if results_acc["chars"] else None,
+                chapter_summaries=results_acc["summaries"] if results_acc["summaries"] else None,
+                events=results_acc["events"] if results_acc["events"] else None
+            )
+
         if novel_id in stop_requested:
             batch_status[novel_id]["status"] = "stopped"
             log.info(f"Batch scan for {novel_id} stopped by user.")
         else:
             # Auto-consolidation if all tasks were requested
-            if all(t in requested_tasks for t in ["mark", "chars", "events", "summary"]):
-                log.info(f"Batch completed. Starting auto-consolidation for {novel_id}...")
-                
-                # 1. Consolidate Summary
-                batch_status[novel_id]["status"] = "consolidating_summary"
-                await tasks.run_consolidate_novel_summary(novel_id)
-                log.info(f"Auto-consolidation: Summary finished for {novel_id}")
-                
-                # 2. Consolidate Characters
-                batch_status[novel_id]["status"] = "consolidating_chars"
-                await tasks.run_consolidate_all_characters(novel_id)
-                log.info(f"Auto-consolidation: Characters finished for {novel_id}")
+            # if all(t in requested_tasks for t in ["mark", "chars", "events", "summary"]):
+            #     log.info(f"Batch completed. Starting auto-consolidation for {novel_id}...")
+            #     
+            #     # 1. Consolidate Summary
+            #     batch_status[novel_id]["status"] = "consolidating_summary"
+            #     await tasks.run_consolidate_novel_summary(novel_id)
+            #     
+            #     # 2. Consolidate Characters
+            #     batch_status[novel_id]["status"] = "consolidating_chars"
+            #     await tasks.run_consolidate_all_characters(novel_id)
                 
             batch_status[novel_id]["status"] = "done"
             log.info(f"Batch scan finished for {novel_id}")

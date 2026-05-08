@@ -7,7 +7,7 @@ chcp 65001 > nul
 :: ==========================================
 
 :: How many servers to run PER KEY
-set "NUM_PER_KEY=3"
+set "NUM_PER_KEY=4"
 
 :: Total API keys
 set "TOTAL_KEYS=4"
@@ -62,8 +62,11 @@ echo Total Servers   : %TOTAL_SERVERS%
 echo Port Range      : %START_PORT% - %END_PORT%
 echo.
 
+:: Loop count fix
+set /a "LAST_SERVER_IDX=%TOTAL_SERVERS% - 1"
+
 :: Loop to start servers
-for /L %%I in (0,1,%TOTAL_SERVERS%-1) do (
+for /L %%I in (0,1,%LAST_SERVER_IDX%) do (
 
     set /a "CUR_PORT=%START_PORT% + %%I"
 
@@ -92,8 +95,8 @@ for /L %%I in (0,1,%TOTAL_SERVERS%-1) do (
 :: Concurrency
 :: ==========================================
 
-:: Roughly 1 request per server
-set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS%"
+:: Roughly 4 requests per server (API handles concurrency well)
+set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS% * 4"
 
 echo.
 echo Waiting for models to load (3s)...
