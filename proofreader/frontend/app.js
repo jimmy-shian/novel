@@ -1043,15 +1043,26 @@ els.btnApply.addEventListener('click', async () => {
     const data = await res.json();
     alert(`儲存成功！\n儲存路徑：${data.saved_to}`);
     
-    // Reload chapter text
-    const readRes = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(state.currentChapter.path)}`);
-    const readData = await readRes.json();
-    state.originalText = readData.content;
-    state.issues = [];
-    state.decisions = {};
-    renderEditor();
-    renderIssues();
     updateChapterCacheBadge(state.currentChapter.name, 'applied');
+    
+    // 自動跳轉到下一個章節
+    const currentIndex = state.chapters.findIndex(c => c.name === state.currentChapter.name);
+    if (currentIndex >= 0 && currentIndex < state.chapters.length - 1) {
+      const nextChapter = state.chapters[currentIndex + 1];
+      const btn = [...document.querySelectorAll('#chapter-list .list-item')].find(el => el.dataset.name === nextChapter.name);
+      if (btn) {
+        selectChapter(nextChapter, btn);
+      }
+    } else {
+      // 如果是最後一章，則重新載入本章
+      const readRes = await fetch(`${API_BASE}/fs/read?path=${encodeURIComponent(state.currentChapter.path)}`);
+      const readData = await readRes.json();
+      state.originalText = readData.content;
+      state.issues = [];
+      state.decisions = {};
+      renderEditor();
+      renderIssues();
+    }
     
   } catch (err) {
     console.error(err);
@@ -1794,6 +1805,67 @@ els.btnGlobalStop?.addEventListener('click', async () => {
     location.reload(); // Hard reset to stop all frontend loops
   }
 });
+
+els.btnGlobalRebuild = document.getElementById('btn-global-rebuild');
+if (els.btnGlobalRebuild) {
+  els.btnGlobalRebuild.addEventListener('click', async () => {
+    if (!confirm('將重新整理系統內所有小說的 時間軸/全書角色/全書摘要。這可能需要一段時間，確定要開始嗎？')) return;
+    
+    // Disable UI
+    els.btnGlobalRebuild.disabled = true;
+    els.btnGlobalRebuild.textContent = '全庫重建中...';
+    els.globalBatchUI.style.display = 'block';
+    
+    try {
+      const novelRes = await fetch(`${API_BASE}/fs/novels`);
+      const novelData = await novelRes.json();
+      let novels = novelData.novels;
+      
+      // If user selected specific novels, only rebuild those, else all
+      if (state.selectedNovels.size > 0) {
+        novels = novels.filter(n => state.selectedNovels.has(n.name));
+      }
+      
+      let completed = 0;
+      const total = novels.length;
+      
+      for (const novel of novels) {
+        els.globalBatchProgress.style.width = `${(completed / total) * 100}%`;
+        els.globalBatchLabel.textContent = `正在整理: ${novel.name}`;
+        els.globalBatchDetails.textContent = `當前任務: 整合全書角色...`;
+        
+        await fetch(`${API_BASE}/novel/consolidate_chars/${encodeURIComponent(novel.name)}`, { method: 'POST' });
+        
+        els.globalBatchDetails.textContent = `當前任務: 整合全書摘要...`;
+        await fetch(`${API_BASE}/novel/consolidate_summary/${encodeURIComponent(novel.name)}`, { method: 'POST' });
+        
+        els.globalBatchDetails.textContent = `當前任務: 重建時間軸...`;
+        await fetch(`${API_BASE}/novel/rebuild_timeline/${encodeURIComponent(novel.name)}`, { method: 'POST' });
+        
+        completed++;
+      }
+      
+      els.globalBatchProgress.style.width = `100%`;
+      els.globalBatchLabel.textContent = `全庫重新整理完成！`;
+      els.globalBatchDetails.textContent = ``;
+      setTimeout(() => {
+        els.globalBatchUI.style.display = 'none';
+      }, 3000);
+      
+      // Reload current novel analysis if active
+      if (state.currentNovel) {
+        await fetchNovelResults(state.currentNovel.name);
+      }
+      
+    } catch (err) {
+      console.error('Failed to rebuild globally:', err);
+      alert('全庫重新整理發生錯誤：' + err.message);
+    } finally {
+      els.btnGlobalRebuild.disabled = false;
+      els.btnGlobalRebuild.textContent = '單獨重新整理時間軸、全書角色、全書摘要';
+    }
+  });
+}
 
 // Start app
 init();
