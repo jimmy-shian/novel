@@ -317,6 +317,11 @@ async def api_batch_scan(req: BatchScanRequest, background_tasks: BackgroundTask
                 outputs = await asyncio.gather(*task_map.values(), return_exceptions=True)
                 results_map = dict(zip(task_map.keys(), outputs))
 
+                # Log any task-specific exceptions
+                for t_name, t_output in results_map.items():
+                    if isinstance(t_output, Exception):
+                        log.error(f"Task '{t_name}' failed for {chapter_name}: {t_output}")
+
                 c_list = results_map.get("chars") if isinstance(results_map.get("chars"), list) else None
                 evs = results_map.get("events") if isinstance(results_map.get("events"), list) else None
                 s = results_map.get("summary") if isinstance(results_map.get("summary"), str) else None
@@ -508,7 +513,10 @@ async def api_full_analysis(req: FullAnalyzeRequest):
             chapter_summary = await tasks.run_extract_summary(req.novel_id, req.chapter, req.text, req.use_cache)
 
     # Run tasks concurrently (LLM concurrency is controlled in llm_client).
-    await asyncio.gather(*(run_task(t) for t in tasks_to_run))
+    outputs = await asyncio.gather(*(run_task(t) for t in tasks_to_run), return_exceptions=True)
+    for i, t_output in enumerate(outputs):
+        if isinstance(t_output, Exception):
+            log.error(f"Full analysis task '{tasks_to_run[i]}' failed: {t_output}")
 
     # Chapter-level outputs (raw from this chapter's analysis)
     chars_out = results.get("chars") if isinstance(results.get("chars"), list) else []

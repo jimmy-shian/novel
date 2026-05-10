@@ -63,9 +63,10 @@ async def chat(
     if num_clients == 0:
         raise RuntimeError("No LLM clients configured.")
 
+    log.debug("Waiting for LLM semaphore slot...")
     async with _get_semaphore():
         # Brief stagger to avoid simultaneous spikes on multiple request start
-        await asyncio.sleep(5) 
+        await asyncio.sleep(0.1) 
         
         last_error: Exception | None = None
         # Use round-robin to decide which client to start with
@@ -87,7 +88,7 @@ async def chat(
                     stream=False,
                     timeout=600,
                 )
-                await asyncio.sleep(2) 
+                await asyncio.sleep(5) 
                 return resp.choices[0].message.content or ""
             except Exception as e:
                 last_error = e

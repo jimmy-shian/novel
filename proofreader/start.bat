@@ -96,7 +96,7 @@ for /L %%I in (0,1,%LAST_SERVER_IDX%) do (
 :: ==========================================
 
 :: Safer concurrency (2x servers) to avoid hitting 40 RPM limit too fast
-set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS% * 1"
+set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS% * 2"
 
 echo.
 echo Waiting for models to load (3s)...

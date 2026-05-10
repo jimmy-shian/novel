@@ -248,7 +248,7 @@ async def run_mark_errors(
         else:
             log.info("[No Found] Mark: %s", chapter)
 
-    rag_ctx = rag.build_rag_context(novel_id, "mark", text[:500])
+    rag_ctx = await asyncio.to_thread(rag.build_rag_context, novel_id, "mark", text[:500])
     messages = mark_errors_prompt(text, rag_ctx)
 
     # RUN LOCAL CHECKS FIRST

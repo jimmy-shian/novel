@@ -29,21 +29,16 @@ def run_local_checks(text: str) -> list[dict]:
             # For brevity, we'll mark the whole changed segments
             
             # Simple heuristic: find contiguous segments of change
-            i = 0
-            while i < len(line):
-                if line[i] != converted[i]:
-                    start = i
-                    # Find end of this change segment
-                    while i < len(line) and line[i] != converted[i]:
-                        i += 1
-                    end = i
-                    
-                    orig_segment = line[start:end]
-                    sugg_segment = converted[start:end]
+            import difflib
+            s = difflib.SequenceMatcher(None, line, converted)
+            for tag, i1, i2, j1, j2 in s.get_opcodes():
+                if tag != 'equal':
+                    orig_segment = line[i1:i2]
+                    sugg_segment = converted[j1:j2]
                     
                     # Provide context (10 chars before/after)
-                    ctx_start = max(0, start - 10)
-                    ctx_end = min(len(line), end + 10)
+                    ctx_start = max(0, i1 - 10)
+                    ctx_end = min(len(line), i2 + 10)
                     context = line[ctx_start:ctx_end].replace("\n", " ")
                     
                     issues.append({
@@ -54,11 +49,9 @@ def run_local_checks(text: str) -> list[dict]:
                         "context": context,
                         "reason": "偵測到簡體字或非標準繁體詞彙，建議轉換。",
                         "confidence": 1.0,
-                        "start": offset + start,
-                        "end": offset + end
+                        "start": offset + i1,
+                        "end": offset + i2
                     })
-                else:
-                    i += 1
         
         offset += len(line)
         
