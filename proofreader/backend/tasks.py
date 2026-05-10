@@ -142,71 +142,59 @@ def _fix_offsets(text: str, issues: list[dict]) -> tuple[list[dict], list[dict]]
 
         matched = False
         if context:
-            # Create a lenient regex pattern from context
-            # We allow tags/spaces between any character in the context
-            # To avoid regex performance issues, we only do this for characters near the 'orig' part
-            # or just escape the whole thing but allow tags between words.
-            
-            # Escape each char and join with optional tag separator
-            # Only do character-level lenient for short-to-medium contexts to avoid explosion
-            if len(context) < 100:
-                pattern = TAG_SEP.join([re.escape(c) for c in context])
-            else:
-                pattern = re.escape(context).replace(r"\ ", TAG_SEP)
+            # 1. Try exact context match (fastest)
+            c_idx_in_text = text.find(context)
+            if c_idx_in_text != -1:
+                o_idx_in_context = context.find(orig)
+                if o_idx_in_context != -1:
+                    new_issue = issue.copy()
+                    new_issue["start"] = c_idx_in_text + o_idx_in_context
+                    new_issue["end"] = new_issue["start"] + len(orig)
+                    fixed.append(new_issue)
+                    matched = True
 
-            try:
-                # Use DOTALL so . matches newlines if any
-                match = re.search(pattern, text, re.DOTALL)
-                if match:
-                    match_text = match.group(0)
-                    match_start = match.start()
-                    
-                    # Map characters in match_text to their original indices (ignoring tags)
-                    clean_match = ""
-                    mapping = [] # mapping[clean_idx] = original_idx_in_match_text
-                    
-                    i = 0
-                    while i < len(match_text):
-                        if match_text[i] == '<':
-                            end_tag = match_text.find('>', i)
-                            if end_tag != -1:
-                                i = end_tag + 1
-                                continue
-                        if match_text.startswith('&nbsp;', i):
-                            i += 6
-                            continue
-                        if match_text.startswith('&emsp;', i):
-                            i += 6
-                            continue
-                        
-                        clean_match += match_text[i]
-                        mapping.append(i)
-                        i += 1
-                    
-                    # Try to find 'orig' in clean_match (logical text)
-                    c_idx = clean_match.find(orig)
-                    
-                    # If not found (due to S2T mismatch), use position in the 'context' string
-                    # Since clean_match corresponds to the context
-                    if c_idx == -1 and orig in context:
-                        c_idx = context.find(orig)
-                    
-                    if c_idx != -1 and c_idx < len(mapping):
-                        start_in_match = mapping[c_idx]
-                        # Find end index based on character length
-                        end_clean_idx = min(c_idx + len(orig) - 1, len(mapping) - 1)
-                        end_in_match = mapping[end_clean_idx] + 1
-                        
-                        found_orig = match_text[start_in_match:end_in_match]
-                        
-                        new_issue = issue.copy()
-                        new_issue["original"] = found_orig
-                        new_issue["start"] = match_start + start_in_match
-                        new_issue["end"] = match_start + end_in_match
-                        fixed.append(new_issue)
-                        matched = True
-            except Exception as e:
-                log.debug(f"Regex match failed: {e}")
+            if not matched:
+                # 2. Try lenient word-level match (prevents CPU hang)
+                words = re.split(r'\s+', context.strip())
+                if 0 < len(words) < 200: # Safety limit
+                    pattern = TAG_SEP.join([re.escape(w) for w in words if w])
+                    try:
+                        match = re.search(pattern, text, re.DOTALL)
+                        if match:
+                            match_text = match.group(0)
+                            match_start = match.start()
+                            
+                            # Character mapping to handle tags inside the match
+                            clean_match = ""
+                            mapping = []
+                            i = 0
+                            while i < len(match_text):
+                                if match_text[i] == '<':
+                                    et = match_text.find('>', i)
+                                    if et != -1: i = et + 1; continue
+                                if match_text.startswith('&nbsp;', i) or match_text.startswith('&emsp;', i):
+                                    i += 6; continue
+                                clean_match += match_text[i]
+                                mapping.append(i)
+                                i += 1
+                            
+                            # Find position in cleaned text
+                            c_idx = clean_match.find(orig)
+                            if c_idx == -1 and orig in context: # Fallback for S2T differences
+                                c_idx = context.find(orig)
+                                
+                            if c_idx != -1 and c_idx < len(mapping):
+                                start_in_match = mapping[c_idx]
+                                end_clean_idx = min(c_idx + len(orig) - 1, len(mapping) - 1)
+                                end_in_match = mapping[end_clean_idx] + 1
+                                
+                                new_issue = issue.copy()
+                                new_issue["original"] = match_text[start_in_match:end_in_match]
+                                new_issue["start"] = match_start + start_in_match
+                                new_issue["end"] = match_start + end_in_match
+                                fixed.append(new_issue)
+                                matched = True
+                    except: pass
 
         if not matched:
             # Fallback: exact match in full text

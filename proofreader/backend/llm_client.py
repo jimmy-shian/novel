@@ -38,7 +38,7 @@ def _get_clients() -> list[AsyncOpenAI]:
         base_urls, _ = get_llm_config()
         log.info(f"Initializing LLM Clients with {len(base_urls)} endpoints: {base_urls}")
         _clients = [
-            AsyncOpenAI(base_url=url, api_key="not-needed")
+            AsyncOpenAI(base_url=url, api_key="not-needed", max_retries=0)
             for url in base_urls
         ]
     return _clients
@@ -65,7 +65,7 @@ async def chat(
 
     async with _get_semaphore():
         # Brief stagger to avoid simultaneous spikes on multiple request start
-        await asyncio.sleep(0.05) 
+        await asyncio.sleep(5) 
         
         last_error: Exception | None = None
         # Use round-robin to decide which client to start with
@@ -85,8 +85,9 @@ async def chat(
                     temperature=temperature,
                     top_p=top_p,
                     stream=False,
-                    timeout=600, # 10 min timeout for complex novel analysis
+                    timeout=600,
                 )
+                await asyncio.sleep(2) 
                 return resp.choices[0].message.content or ""
             except Exception as e:
                 last_error = e
@@ -94,10 +95,10 @@ async def chat(
                 log.warning(f"Server {idx} failed (Attempt {attempt_idx+1}): {e}")
                 
                 if "429" in err_str or "too many requests" in err_str:
-                    # Stagger before next server attempt
-                    await asyncio.sleep(2)
+                    log.warning(f"Server {idx} rate limited (429). Switching...")
+                    await asyncio.sleep(5)
                 else:
-                    # Immediate try next server with brief pause
-                    await asyncio.sleep(0.1)
+                    log.error(f"Server {idx} failed: {e}")
+                    await asyncio.sleep(3)
 
         raise last_error or RuntimeError("All LLM backends failed after exhaustive retries")

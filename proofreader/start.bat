@@ -95,8 +95,8 @@ for /L %%I in (0,1,%LAST_SERVER_IDX%) do (
 :: Concurrency
 :: ==========================================
 
-:: Roughly 4 requests per server (API handles concurrency well)
-set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS% * 4"
+:: Safer concurrency (2x servers) to avoid hitting 40 RPM limit too fast
+set /a "LLM_MAX_CONCURRENCY=%TOTAL_SERVERS% * 1"
 
 echo.
 echo Waiting for models to load (3s)...
