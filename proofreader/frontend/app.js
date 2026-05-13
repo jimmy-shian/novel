@@ -1828,11 +1828,17 @@ if (els.btnGlobalRebuild) {
       
       let completed = 0;
       const total = novels.length;
+      const startTime = Date.now();
       
       for (const novel of novels) {
+        const elapsedMs = Date.now() - startTime;
+        const avgMsPerItem = completed > 0 ? elapsedMs / completed : 0;
+        const remainingMs = Math.round(avgMsPerItem * (total - completed));
+        
         els.globalBatchProgress.style.width = `${(completed / total) * 100}%`;
         els.globalBatchLabel.textContent = `正在整理: ${novel.name}`;
         els.globalBatchDetails.textContent = `當前任務: 整合全書角色...`;
+        els.globalBatchETA.textContent = `預計剩餘：${formatDuration(remainingMs)}`;
         
         await fetch(`${API_BASE}/novel/consolidate_chars/${encodeURIComponent(novel.name)}`, { method: 'POST' });
         
